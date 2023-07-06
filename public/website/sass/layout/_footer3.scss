@@ -1,0 +1,239 @@
+/* Footer 3*/
+.ht-footer {
+    background: url('../images/bg/home3bg.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+
+    .htf-shapes {
+        img {
+            width: inherit;
+        }
+
+        .drs1 {
+            position: absolute;
+            right: 9%;
+            bottom: 17%;
+            width: 70px;
+        }
+
+        .drs2 {
+            position: absolute;
+            bottom: 13%;
+            left: 9%;
+            width: 100px;
+
+            @include tablet {
+                display: none;
+            }
+
+            @include desktop {
+                bottom: 6%;
+                left: 24%;
+            }
+
+            @include screen-1200 {
+                bottom: 6%;
+                left: 29%;
+            }
+
+            @include screen-1440 {
+                left: 2%;
+            }
+        }
+
+        .drs3 {
+            position: absolute;
+            right: 8%;
+            transform: rotate(75deg);
+            width: 50px;
+
+            @include desktop {
+                top: 25%;
+            }
+
+            @include screen-1200 {
+                top: 24%;
+            }
+        }
+
+        .drs4 {
+            position: absolute;
+            left: 6%;
+            width: 100px;
+
+            @include tablet {
+                left: 3%;
+                top: 16%;
+            }
+
+            @include desktop {
+                left: 17%;
+            }
+
+            @include screen-1200 {
+                top: 23%;
+            }
+
+            @include tablet {
+                left: 0%;
+            }
+        }
+    }
+
+    .ht-footer-top {
+        .widget {
+            .logo {
+                width: 120px;
+                margin-bottom: 30px;
+
+                @include portrait-phone {
+                    margin: 0 auto;
+                    margin-bottom: 20px;
+                }
+
+                img {
+                    width: 100%;
+                }
+            }
+
+            h6 {
+                margin-bottom: 20px;
+            }
+
+            h5 {
+                margin-bottom: 10px;
+                color: $home3_primary-color;
+
+                span {
+                    margin-right: 10px;
+                }
+            }
+
+            a {
+                color: $home3_primary-color;
+                text-transform: capitalize;
+                font-family: $body-font;
+                font-weight: 500;
+
+
+            }
+
+            a.ht-link {
+                margin-bottom: 10px;
+                display: block;
+            }
+
+            a.ht-email {
+                text-transform: initial;
+                color: $secondary-color;
+                transition: .3s;
+
+                &:hover {
+                    color: $home3_primary-color;
+                }
+            }
+
+            ul {
+                margin-bottom: 20px;
+
+                li {
+                    a {
+                        color: $secondary-color;
+                        margin-bottom: 10px;
+                        display: block;
+                        font-family: $body-font;
+                        font-weight: 400;
+                        transition: .3s;
+
+                        &:hover {
+                            color: $home3_primary-color;
+                        }
+
+                    }
+                }
+            }
+
+            // social-box 
+            .social-box {
+                span {
+                    a {
+                        color: $home3_primary-color;
+                        transition: .3s;
+                        margin-right: 5px;
+
+                        &:hover {
+                            transform: scale(.8);
+                        }
+                    }
+                }
+            }
+
+            .newsletter {
+                margin-bottom: 20px;
+
+                @include portrait-phone {
+                    justify-content: center;
+                }
+
+                form {
+                    position: relative;
+
+                    input {
+                        padding: 12px 70px 12px 20px;
+                        border: 1px solid $border-color;
+                        border-radius: 10px;
+                        width: 100%;
+                        text-transform: capitalize;
+                        background: $bg-color;
+                    }
+
+                    button {
+                        position: absolute;
+                        right: 2%;
+                        top: 13%;
+                        background-color: $home3_primary-color;
+                        color: $white-color;
+                        padding: 5px 16px;
+                        border-radius: 10px;
+                        border: 1px solid transparent;
+                    }
+                }
+            }
+
+            .btn2 {
+                color: $white-color;
+
+                &:hover {
+                    color: $home3_primary-color;
+                }
+            }
+        }
+    }
+
+    .divider {
+        margin-bottom: 60px;
+
+        hr {
+            width: 100%;
+            background: $home3_primary-color;
+            border: 1px solid dotted;
+            display: block;
+        }
+    }
+
+    .ht-footer-bottom {
+        .ht-copyright-area {
+            p {
+                font-family: $body-font;
+                text-transform: capitalize;
+
+                a {
+                    color: $home3_primary-color;
+                    font-family: $body-font;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+}

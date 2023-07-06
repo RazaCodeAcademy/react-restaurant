@@ -1,0 +1,14 @@
+.fk-badge {
+    display: inline-block;
+    padding: 2px 5px;
+    letter-spacing: .3px;
+    font-weight: 700;
+    &--secondary {
+        color: $secondary;
+        background: rgba($secondary, .15);
+    }
+    &--dark {
+        color: $heading-text;
+        background: rgba($heading-text, .15);
+    }
+}

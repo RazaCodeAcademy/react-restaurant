@@ -1,0 +1,22 @@
+.fk-nav-slider {
+    padding-left: 15px;
+    padding-right: 15px;
+    &__link {
+        min-width: max-content;
+        padding: 7px 15px;
+        font-size: 12px;
+        letter-spacing: 0.2px;
+        text-transform: uppercase;
+        &:hover {
+            color: $epsilon;
+        }
+    }
+    &__list {
+        text-align: center;
+    }
+    .slick-current {
+        .fk-nav-slider__link {
+            color: $epsilon;
+        }
+    }
+}

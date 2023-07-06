@@ -1,0 +1,145 @@
+/* Header Section */
+body {
+    position: relative;
+}
+
+header {
+    position: absolute;
+    top: 0%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 1;
+
+    .header-top {
+        background: $black-color;
+        padding-top: 15px;
+        padding-bottom: 10px;
+        z-index: 11;
+
+        .contact-box {
+            display: flex;
+
+
+            @include portrait-phone {
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            span {
+                margin-right: 20px;
+
+                a {
+                    color: $white-color;
+                    transition: .3s;
+
+                    &:hover {
+                        color: $primary-color;
+                    }
+                }
+            }
+        }
+
+        .social-box {
+            display: flex;
+            justify-content: flex-end;
+
+            @include portrait-phone {
+                display: block;
+            }
+
+            span {
+                margin-left: 35px;
+                font-size: 14px;
+
+                @include portrait-phone {
+                    margin-right: 20px;
+                    margin-left: 0px;
+                }
+
+                a {
+                    color: $white-color;
+                    transition: .3s;
+
+                    &:hover {
+                        color: $primary-color;
+                        transform: scale(1.1);
+                    }
+                }
+            }
+        }
+    }
+
+    .header-bottom {
+        .logo {
+            width: 140px;
+            position: relative;
+            z-index: 11;
+
+            @include sm-divice {
+                width: 90px !important;
+            }
+
+            img {
+                width: 100%;
+            }
+        }
+
+        .customer-area {
+            text-align: right;
+            position: relative;
+            z-index: 11;
+
+            span {
+                margin-right: 20px;
+                display: inline-block;
+                color: $white-color;
+                border: 1px solid $white-color;
+                padding: 10px;
+                border-radius: 50%;
+                text-align: center;
+                transition: .3s;
+
+
+                @include portrait-phone {
+                    margin-right: 0;
+                }
+
+                a {
+                    color: $white-color;
+                }
+
+                @include desktop {
+                    margin-right: 10px;
+                }
+
+                &:hover {
+                    background: $primary-color;
+                    border: 1px solid transparent;
+                }
+
+                i {
+                    display: block;
+                }
+            }
+
+            .btn {
+                margin-left: 30px;
+
+                @include desktop {
+                    margin-left: 0;
+                }
+
+                @include sm-divice {
+                    padding: 5px 15px;
+                }
+
+                @include portrait-phone {
+                    margin-left: 0;
+                }
+            }
+
+        }
+
+    }
+}

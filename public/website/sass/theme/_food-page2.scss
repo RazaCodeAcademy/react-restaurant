@@ -1,0 +1,112 @@
+/* Food Page 2 */
+// food-area
+.food-area {
+    position: relative;
+    overflow: hidden;
+
+    .pshapes {
+        .ps-1 {
+            position: absolute;
+            top: 50%;
+            right: 0;
+        }
+
+        .ps-2 {
+            position: absolute;
+            top: 27%;
+            left: 5%;
+        }
+
+        .ps-4 {
+            position: absolute;
+            bottom: 38%;
+            left: 8%;
+        }
+
+        .ps3 {
+            position: absolute;
+            top: 24%;
+            right: 0 !important;
+        }
+
+        .ps-5 {
+            position: absolute;
+            top: 40%;
+            right: 17%;
+        }
+
+        .ps-6 {
+            right: 0;
+            bottom: -6%;
+        }
+
+        .ps-7 {
+            position: absolute;
+            left: 16%;
+            bottom: 18%;
+        }
+    }
+
+    nav {
+        background: $bg-color5;
+        padding-right: 30px;
+        padding-left: 30px;
+
+        @include sm-divice {
+            justify-content: center;
+        }
+
+        .sorting-area {
+            @include sm-divice {
+                margin: 20px auto 0 auto;
+            }
+        }
+
+        .nav-link {
+            padding: 10px 25px;
+            transition: .3s;
+        }
+
+        .nav-link.active {
+            background: transparent;
+            color: $primary-color;
+        }
+
+        span {
+            text-transform: capitalize;
+        }
+
+
+
+        select {
+            border: 1px solid transparent;
+            background: $bg-color5;
+        }
+    }
+
+    // pagination
+    .pagination-area {
+        .pagination {
+            display: inline-block;
+        }
+
+        .pagination a.active {
+            background: $primary-color;
+            color: $white-color;
+
+        }
+
+        .pagination a {
+            color: $primary-color;
+            background: transparent;
+            float: left;
+            padding: 8px 10px;
+            border: 1px solid $primary-color;
+            text-decoration: none;
+            margin-right: 10px;
+            border-radius: 5px;
+            font-weight: 700;
+            font-family: $heading-font;
+        }
+    }
+}

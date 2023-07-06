@@ -1,0 +1,48 @@
+.fk-brand {
+    max-width: 130px;
+    position: relative;
+    &--footer {
+        width: 50px;
+        &-sqr {
+            height: 50px;
+        }
+        &-img {
+            display: inline-block;
+            width: 100%;
+            height: 50px;
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+    }
+    @include lg-screen {
+        // &::after {
+        //     content: "";
+        //     position: absolute;
+        //     top: 100%;
+        //     left: 0;
+        //     border-left: 40px solid transparent;
+        //     border-right: 40px solid transparent;
+        //     border-top: 35px solid $primary;
+        // }
+    }
+    &--sr-lg {
+        height: 50px;
+    }
+    &__name {
+        font-family: $heading-font;
+        font-size: 24px;
+        font-weight: 700;
+    }
+    &__img {
+        display: inline-block;
+        width: 100%;
+        height: 50px;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        &--fk {
+            background-image: url(../img/foodkhan.png);
+        }
+    }
+}

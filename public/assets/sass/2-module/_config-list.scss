@@ -1,0 +1,12 @@
+.config-list {
+    &__item {
+        margin-bottom: 10px;
+        @include md-screen {
+            margin-bottom: 0;
+            margin-right: 15px;
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+}

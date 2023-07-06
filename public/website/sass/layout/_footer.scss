@@ -1,0 +1,187 @@
+/* Footer Section */
+footer {
+    background: $black-color;
+    overflow: hidden;
+    position: relative;
+
+    .fo-shapes {
+        @include desktop {
+            display: none;
+        }
+
+        @include tablet {
+            display: none;
+        }
+
+        @include sm-divice {
+            display: none;
+        }
+
+        img {
+            width: inherit;
+        }
+
+        .fs-1 {
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            @include screen-1200 {
+                width: 85px;
+            }
+
+            @include desktop {
+                width: 85px;
+            }
+
+        }
+
+        .fs-2 {
+            position: absolute;
+            right: 3%;
+            transform: rotate(226deg);
+
+        }
+
+        .fs-3 {
+            position: absolute;
+            right: 11%;
+            bottom: 12%;
+
+        }
+
+        .fs-4 {
+            position: absolute;
+            top: 38%;
+            left: 5%;
+
+            @include screen-1200 {
+                display: none;
+            }
+
+            @include desktop {
+                display: none;
+            }
+        }
+
+        .fs-5 {
+            position: absolute;
+            top: 44%;
+            right: 13%;
+
+
+        }
+
+        .fs-6 {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+
+        }
+
+        .fs-7 {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    }
+
+    hr {
+        border: 1px dotted $white-color;
+    }
+
+    .footer-top {
+        .f-logo {
+            width: 150px;
+
+            img {
+                width: 100%;
+            }
+
+        }
+
+        .f-title {
+            h4 {
+                color: $white-color;
+
+                span {
+                    color: $orange-color;
+                }
+            }
+        }
+
+        a.btn {
+            @include desktop {
+                padding: 11px 14px;
+            }
+        }
+    }
+
+    .footer-bottom {
+        .widget {
+            h6 {
+                color: $white-color;
+                margin-bottom: 20px;
+            }
+
+            p {
+                color: $white-color;
+
+                span {
+                    text-transform: capitalize;
+                }
+            }
+
+            a {
+                color: $orange-color;
+                text-transform: capitalize;
+                transition: .3s;
+
+                &:hover {
+                    color: $white-color;
+                }
+            }
+
+            .newsletter {
+                margin-bottom: 20px;
+
+                input {
+                    background: transparent;
+                    border: 1px solid $border-color;
+                    color: $white-color;
+                    padding: 10px;
+                    background: $black-color;
+
+                    @include desktop {
+                        width: 75%;
+                    }
+                }
+
+                button {
+                    background: $primary-color;
+                    color: $white-color;
+                    border: 1px solid transparent;
+                    padding: 10px 20px;
+                    margin-left: -11px;
+
+                    @include desktop {
+                        margin-top: 10px;
+                        margin-left: -4px;
+                        width: 25%;
+                    }
+                }
+            }
+        }
+    }
+
+    .copyright-area {
+
+        p {
+            color: $white-color;
+
+            a {
+                color: $orange-color;
+            }
+        }
+    }
+}

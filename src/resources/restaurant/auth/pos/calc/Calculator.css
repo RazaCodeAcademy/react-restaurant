@@ -1,0 +1,4 @@
+.Calculator {
+  height: calc(100vh - 180px);
+  display: block;
+}

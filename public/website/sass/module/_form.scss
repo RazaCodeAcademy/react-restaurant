@@ -1,0 +1,181 @@
+/* Form */
+.form-area {
+    margin-top: -33px;
+    z-index: 1;
+
+    .form-box {
+        padding-left: 40px;
+        padding-right: 40px;
+        box-shadow: 0px 25px 60px 0px rgba(0, 21, 100, 0.1);
+        background: $white-color;
+        position: relative;
+
+        .form-shapes {
+
+            img {
+                width: inherit;
+            }
+
+            .fs-1 {
+                position: absolute;
+                top: 0;
+                left: -14px;
+            }
+
+            .fs-2 {
+                position: absolute;
+                top: 0;
+                right: -14px;
+            }
+
+            .fs-3 {
+                position: absolute;
+                top: 97px;
+                left: 115px;
+                width: 70px;
+            }
+
+            .fs-4 {
+                position: absolute;
+                top: 97px;
+                right: 115px;
+                width: 70px;
+            }
+
+            .fs-5 {
+                position: absolute;
+                bottom: 0px;
+                right: 0px;
+                width: 70px;
+
+                @include sm-divice {
+                    display: none;
+                }
+            }
+
+            .fs-6 {
+                position: absolute;
+                bottom: 0px;
+                left: 0px;
+                width: 70px;
+
+                @include sm-divice {
+                    display: none;
+                }
+            }
+
+            .fs-7 {
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                width: 70px;
+            }
+
+            .fs-8 {
+                position: absolute;
+                bottom: 0px;
+                left: 50%;
+                width: 50px;
+            }
+        }
+
+
+        @include sm-divice {
+            background-image: inherit;
+        }
+
+        @include tablet {
+            background-image: inherit;
+        }
+
+        .form-wraper {
+            .form-item2 {
+                width: 23%;
+                padding: 15px 30px;
+                border: 1px solid rgb(229, 229, 229);
+                border-radius: 5px;
+                margin-right: 10px;
+
+                @include tablet {
+                    width: 100%;
+                    margin-bottom: 20px;
+                }
+
+                @include sm-divice {
+                    width: 100%;
+                    margin-bottom: 20px;
+                }
+            }
+
+            button {
+                background: $primary-color;
+                padding: 12px 40px;
+                color: $white-color;
+                font-size: 16px;
+                font-family: $heading-font;
+                font-weight: 600;
+                text-transform: capitalize;
+                border: 1px solid transparent;
+                transition: .3s;
+
+                &:hover {
+                    background: transparent;
+                    color: $primary-color;
+                    border: 1px solid $primary-color;
+                }
+
+                @include tablet {
+                    width: 100%;
+
+                }
+
+                @include sm-divice {
+                    width: 100%;
+
+                }
+            }
+        }
+    }
+}
+
+// contact us page
+.writeto-us {
+    .contact-form-area {
+        box-shadow: 0px 25px 60px 0px rgba(0, 21, 100, 0.1);
+        background: $white-color;
+        padding: 40px 22px;
+
+
+        h3 {
+            font-weight: 700;
+            margin-bottom: 40px;
+
+            span {
+                color: $primary-color;
+            }
+        }
+
+        form {
+            input {
+                width: 100%;
+                margin-bottom: 20px;
+                padding: 20px 40px;
+                border: 1px solid $border-color2;
+                border-radius: 5px;
+                text-transform: capitalize;
+            }
+
+            textarea {
+                width: 100%;
+                padding: 20px 40px;
+                border: 1px solid $border-color2;
+                border-radius: 5px;
+                text-transform: capitalize;
+            }
+
+            button {
+                margin-top: 30px;
+            }
+        }
+    }
+}

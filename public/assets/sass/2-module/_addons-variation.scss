@@ -1,0 +1,20 @@
+.fk-addons-variation {
+    margin-right: 10px;
+    margin-left: 10px;
+    position: relative;
+    background: $white;
+    height: 340px;
+    @include xl-screen {
+        height: calc(100vh - 168px);
+    }
+    &__cart {
+        @include xl-screen {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            overflow: hidden;
+        }
+    }
+}

@@ -1,0 +1,27 @@
+.kh-floating-cart {
+    display: inline-block;
+    padding: 20px 25px;
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 9998;
+    background: $primary-color;
+    border-radius: 10px 0 0 10px;
+    &__text {
+        display: block;
+        font-family: $heading-font;
+        font-size: 12px;
+        letter-spacing: .03em;
+        color: $white-color;
+    }
+    &__money {
+        display: block;
+        border-radius: 3px;
+        font-family: $heading-font;
+        font-size: 14px;
+        letter-spacing: .03em;
+        color: $primary-color;
+        background: $white-color;
+    }
+}

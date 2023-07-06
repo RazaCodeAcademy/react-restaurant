@@ -1,0 +1,268 @@
+/* Shoping Cart */
+.shopping-cart {
+    position: relative;
+
+    .shopping-shapes {
+        img {
+            width: inherit;
+        }
+
+        span.ps1 {
+            position: absolute;
+            top: 29%;
+            left: 4%;
+
+            @include tablet {
+                display: none;
+            }
+
+            @include desktop {
+                display: none;
+            }
+
+            @include screen-1200 {
+                display: none;
+            }
+        }
+
+        span.pss2 {
+            position: absolute;
+            right: 17%;
+            bottom: 33%;
+            z-index: -1;
+        }
+
+        span.ps3 {
+            position: absolute;
+            top: 40%;
+            left: 1%;
+
+            @include tablet {
+                display: none;
+            }
+
+            @include desktop {
+                display: none;
+            }
+
+            @include screen-1200 {
+                display: none;
+            }
+        }
+
+        span.ps4 {
+            position: absolute;
+            right: 0;
+            top: 40%;
+
+            @include tablet {
+                display: none;
+            }
+
+            @include desktop {
+                display: none;
+            }
+
+            @include screen-1200 {
+                display: none;
+            }
+        }
+
+        span.pss5 {
+            position: absolute;
+            bottom: 0%;
+            right: 0%;
+        }
+
+        span.ps6 {
+            position: absolute;
+            top: 4%;
+            left: 2%;
+        }
+
+        @include sm-divice {
+            display: none;
+        }
+    }
+
+    // upper-table
+    .upper-table {
+        .upper-t-left {
+            input[type="text"] {
+                background: $bg-color6;
+                border: 1px solid $border-color;
+                padding: 12px 55px;
+                border-radius: 10px;
+                text-transform: capitalize;
+
+                @include desktop {
+                    padding: 10px 30px;
+                }
+
+                @include tablet {
+                    padding: 10px 30px;
+                }
+
+                @include sm-divice {
+                    padding: 10px;
+                }
+            }
+
+            .btn {
+                padding: 12px 55px;
+
+                @include desktop {
+                    padding: 10px 30px;
+                }
+
+                @include tablet {
+                    padding: 10px 30px;
+                }
+
+                @include sm-divice {
+                    padding: 10px;
+                }
+            }
+        }
+
+        .upper-t-right {
+            .btn {
+                padding: 12px 55px;
+                background: $bg-color6;
+                border: 1px solid $border-color;
+                color: $secondary-color;
+
+                @include desktop {
+                    padding: 10px 30px;
+                }
+
+                @include tablet {
+                    padding: 10px 30px;
+                }
+
+                @include sm-divice {
+                    padding: 10px 30px;
+                }
+
+                &:hover {
+                    color: $white-color;
+                    background: $primary-color;
+                }
+            }
+        }
+    }
+
+    // table
+    table {
+        thead.table-one-head {
+            background: $bg-color4;
+
+            tr.table-one-tr {
+                th {
+                    border-right: 1px solid $border-color;
+                    padding: 15px 50px;
+                    text-transform: capitalize;
+                    font-size: 18px;
+
+
+                    &:nth-child(4) {
+                        border-right: 1px solid transparent;
+                    }
+
+                    &:nth-child(5) {
+                        border-right: 1px solid transparent;
+                    }
+                }
+            }
+        }
+
+        tbody {
+            tr {
+                border: 5px solid $white-color;
+
+                td {
+                    padding: 15px 50px;
+                    background: $bg-color6;
+                    border-right: 1px solid $border-color;
+                    font-size: 18px;
+                    font-weight: 700;
+
+                    &:nth-child(4) {
+                        border-right: 1px solid transparent;
+                    }
+
+                    &:nth-child(5) {
+                        border-right: 1px solid transparent;
+                    }
+
+                    .remove {
+                        background: $primary-color;
+                        width: 25px;
+                        height: 25px;
+                        display: block;
+                        line-height: 25px;
+                        text-align: center;
+                        border-radius: 50%;
+                        opacity: .5;
+                        transition: .3s;
+                        transform: rotate(44deg);
+
+                        a {
+                            color: $white-color;
+                        }
+
+                        &:hover {
+                            opacity: 1;
+                        }
+                    }
+
+                    .table-img {
+                        img {
+                            width: 100%;
+                            background: $bg-color4;
+                            border-radius: 50%;
+                            padding: 10px;
+
+                            @include tablet {
+                                padding: 0;
+                                display: none;
+                            }
+
+                            @include desktop {
+                                padding: 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //lower table
+    .lower-table {
+        h6 {
+            background-color: $bg-color4;
+            color: $secondary-color;
+            padding: 15px 30px;
+            font-family: $body-font;
+        }
+
+        .lower-table-info {
+            background-color: $bg-color6;
+            padding: 30px;
+
+            ul {
+                li {
+                    font-weight: 700;
+                    font-family: $body-font;
+                }
+            }
+
+            button.btn {
+                padding: 12px 55px;
+                width: 100%;
+                margin-top: 30px;
+            }
+        }
+    }
+}

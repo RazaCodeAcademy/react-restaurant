@@ -1,0 +1,177 @@
+/*  Single Dish Page  */
+
+// portfolio-banner-area
+.portfolio-banner {
+    position: relative;
+
+    .banner-shapes {
+        img {
+            width: inherit;
+        }
+
+        .bs1 {
+            position: absolute;
+            right: 1%;
+            top: 28%;
+        }
+
+        .bs2 {
+            position: absolute;
+            right: 16%;
+            top: 50%;
+        }
+    }
+
+    .inner-portfolio-box {
+        position: relative;
+
+        .play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            display: block;
+            background: $primary-color;
+            text-align: center;
+            border-radius: 50%;
+            color: $white-color;
+
+
+        }
+    }
+}
+
+// portfolio-info
+.portfolio-info {
+    position: relative;
+
+    h2 {
+        font-weight: 900;
+    }
+
+    p {
+        margin-top: 20px;
+    }
+
+    .portfolio-shapes {
+        img {
+            width: inherit;
+        }
+
+        .ps1 {
+            position: absolute;
+            top: 0%;
+            left: 5%;
+        }
+
+        span.ps2 {
+            position: absolute;
+            left: 17%;
+            top: 11%;
+        }
+
+        span.ps3 {
+            position: absolute;
+            left: 0;
+            top: 12%;
+            transform: rotate(524deg);
+        }
+
+        span.ps4 {
+            position: absolute;
+            right: 0%;
+            top: 26%;
+        }
+
+        span.ps5 {
+            position: absolute;
+            right: 0%;
+            bottom: 0%;
+        }
+    }
+
+    .portfolio-info-left {
+        position: relative;
+        background: $primary-color;
+        border-radius: 5px;
+        padding: 35px 25px 21px 30px;
+        color: $white-color;
+        margin-top: -23%;
+
+        .cat-pos {
+            position: absolute;
+            left: 36%;
+
+            .social-icon {
+                transition: .5s;
+
+                &:hover {
+                    color: $orange-color;
+                }
+            }
+        }
+
+        img {
+            width: inherit;
+        }
+
+        .s1 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 33;
+        }
+
+        .s2 {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            z-index: 33;
+        }
+
+        h5 {
+            color: $white-color;
+            position: relative;
+            z-index: 40;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 15px;
+            text-transform: capitalize;
+            font-weight: 600 !important;
+            position: relative;
+            z-index: 111;
+            font-family: $heading-font;
+
+            span {
+                font-weight: 400;
+                font-family: $body-font;
+
+                a {
+                    color: $white-color;
+                    margin-left: 10px;
+
+                    &:hover {
+                        transform: rotate(45deg);
+                    }
+                }
+            }
+        }
+    }
+
+
+    .portfolio-info-right {
+        padding: 50px 40px;
+
+        .inner-portfolio-gallery {
+            img {
+                width: inherit;
+                margin-bottom: 20px;
+            }
+        }
+    }
+}

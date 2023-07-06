@@ -1,0 +1,94 @@
+/* Gallery Page  */
+.main-gallery {
+    .pshapes {
+        @include sm-divice {
+            display: none;
+        }
+    }
+
+    .gallery-btn {
+        margin-right: 50px;
+
+        @include sm-divice {
+            display: flex;
+            justify-content: center;
+        }
+
+        button {
+            font-family: $heading-font;
+            font-size: 18px;
+            border: none;
+            background: transparent;
+            transition: .3s;
+            text-transform: capitalize;
+            font-weight: 600;
+            padding: 12px 25px;
+            border-radius: 5px;
+
+            @include sm-divice {
+                font-size: 14px;
+                padding: 6px 6px;
+            }
+
+            &:hover {
+                background: $primary-color;
+                color: $white-color;
+            }
+        }
+
+        button.active {
+            background: $primary-color;
+            color: $white-color;
+        }
+    }
+
+    .gallery-img {
+        margin-bottom: 20px;
+        position: relative;
+        height: 280px;
+        width: 100%;
+        transition: .5s;
+
+        &:hover {
+            .gallery-info {
+                visibility: visible;
+                opacity: .9;
+                left: 0;
+            }
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .gallery-info {
+            position: absolute;
+            width: 70%;
+            height: 80%;
+            position: absolute;
+            bottom: 0;
+            left: 0px;
+            background: $primary-color;
+            opacity: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            transition: .5s;
+
+
+            .inner-info {
+                p {
+                    color: $white-color;
+                    text-transform: capitalize;
+                    margin-bottom: 0;
+                }
+
+                h6 {
+                    color: $white-color;
+                }
+            }
+        }
+    }
+}

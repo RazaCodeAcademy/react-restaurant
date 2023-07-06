@@ -1,0 +1,37 @@
+.fk-phn-nav {
+    
+    &__icon {
+        transition: all .3s ease;
+        &:hover {
+            cursor: pointer;
+            color: $primary;
+        }
+    }
+    &__menu {
+        padding: 15px 15px;
+        width: 100%;
+        background: darken($white, 3%);
+        position: absolute;
+        left: 0;
+        top: 100%;
+        z-index: -9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: all .3s ease;
+        @include lg-screen {
+            padding: 0;
+            position: relative;
+            left: auto;
+            background: transparent;
+            box-shadow: none;
+            z-index: 1200;
+            opacity: 1;
+            visibility: visible;
+        }
+        &.active {
+            z-index: 1200;
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+}

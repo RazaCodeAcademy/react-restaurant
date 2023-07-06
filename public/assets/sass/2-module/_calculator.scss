@@ -1,0 +1,180 @@
+.fk-calculator {
+    margin: -1rem;
+    padding: .5rem;
+    display: block;
+    border-radius: 0.3rem;
+    background: $lambda;
+    &-container {
+      position: relative;
+    }
+    &__head {
+        margin: -0.5rem;
+        display: block;
+        border-radius: 0.3rem;
+        background: $eta;
+    }
+    &__result {
+        display: block;
+        .container-fluid {
+            display: block;
+        }
+        &-text {
+            display: block;
+            padding-top: 30px;
+            padding-bottom: 30px;
+            font-size: 34px;
+            font-weight: 700;
+            color: $white;
+            text-align: right;
+        }
+    }
+    &__body {
+        display: block;
+        margin-top: 1.5rem;
+
+        .container-fluid {
+            display: block;
+        }
+    }
+    &__btn {
+        display: flex;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        padding: 15px;
+        background: $white;
+        font-size: 24px;
+        line-height: 1;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        &:hover {
+            cursor: pointer;
+            background: $eta;
+            color: $white;
+        }
+    }
+}
+
+
+
+.calculator {
+    width: 310px;
+    padding: 20px;
+    -webkit-box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 1px;
+    background: $lambda;
+    position: absolute;
+    bottom: 0;
+    right: 100%;
+    transition: all .3s ease;
+    opacity: 0;
+    visibility: hidden;
+    &.active {
+      opacity: 1;
+      visibility: visible;
+      z-index: 3;
+    }
+  }
+  
+  .input {
+    border: 1px solid $eta;
+    border-radius: 1px;
+    height: 80px;
+    padding-right: 15px;
+    padding-top: 10px;
+    text-align: right;
+    margin-right: 6px;
+    font-size: 2.5rem;
+    overflow-x: auto;
+    transition: all .2s ease-in-out;
+    background: $eta;
+    color: $white;
+  }
+  
+  .input:hover {
+    border: 1px solid #bbb;
+    -webkit-box-shadow: inset 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
+  }
+
+  
+  .operators div {
+    display: inline-block;
+    border: 1px solid $secondary;
+    border-radius: 1px;
+    width: 60px;
+    text-align: center;
+    padding: 10px;
+    margin: 20px 4px 10px 0;
+    cursor: pointer;
+    background-color: $secondary;
+    transition: border-color .2s ease-in-out, background-color .2s, box-shadow .2s;
+    color: $white;
+  }
+  
+  .operators div:hover {
+    background-color: darken($secondary, 5%);
+    -webkit-box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
+    border-color: $secondary;
+  }
+  
+  .operators div:active {
+    font-weight: bold;
+  }
+  
+  .leftPanel {
+    display: inline-block;
+  }
+  
+  .numbers div {
+    display: inline-block;
+    border: 1px solid #ddd;
+    border-radius: 1px;
+    width: 60px;
+    text-align: center;
+    padding: 10px;
+    margin: 10px 4px 10px 0;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    transition: border-color .2s ease-in-out, background-color .2s, box-shadow .2s;
+  }
+  
+  .numbers div:hover {
+    background-color: #f1f1f1;
+    -webkit-box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
+    border-color: #bbb;
+  }
+  
+  .numbers div:active {
+    font-weight: bold;
+  }
+  
+  div.equal {
+    display: inline-block;
+    border: 1px solid $secondary;
+    border-radius: 1px;
+    width: 22%;
+    text-align: center;
+    padding: 109px 10px;
+    margin: 10px 6px 10px 0;
+    vertical-align: top;
+    cursor: pointer;
+    color: #FFF;
+    background-color: $secondary;
+    transition: all .2s ease-in-out;
+  }
+  
+  div.equal:hover {
+    background-color: darken($secondary, 5%);
+    -webkit-box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
+    border-color: $secondary;
+  }
+  
+  div.equal:active {
+    font-weight: bold;
+  }

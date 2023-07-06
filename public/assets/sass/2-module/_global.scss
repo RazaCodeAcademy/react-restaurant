@@ -1,0 +1,84 @@
+.fk-global {
+    &-access {
+        position: relative;
+        height: 100vh;
+        min-height: 667px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    &-img {
+        width: calc(100vw - 580px);
+        height: calc(100vh - 150px);
+        position: absolute;
+        right: 50px;
+        top: 50%;
+        transform: translateY(-50%);
+        @include xl-screen {
+            width: calc(100vw - 680px);
+        }
+        @include xli-screen {
+            width: calc(100vw - 600px);
+        }
+        @include xliv-screen {
+            width: calc(100vw - 650px);
+        }
+        @include xlv-screen {
+            width: calc(100vw - 700px);
+        }
+        @include xxl-screen {
+            width: calc(100vw - 850px);
+        }
+        &__is {
+            object-fit: contain;
+            height: 100%;
+        }
+        &__obj {
+            position: absolute;
+            transition: all .1s ease;
+            &-1 {
+                left: 100px;
+            }
+            &-2 {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            &-3 {
+                right: 100px;
+            }
+            &-4 {
+                right: 100px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+            &-5 {
+                right: 100px;
+                bottom: 100px;
+            }
+            &-6 {
+                bottom: 100px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            &-7 {
+                left: 100px;
+                bottom: 100px;
+            }
+            &-8 {
+                left: 100px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+    }
+    &-link {
+        min-width: max-content;
+        padding: 10px 5px;
+        font-size: 12px;
+        letter-spacing: 0.2px;
+        text-transform: uppercase;
+    }
+    &-footer {
+        padding: 15px 0;
+    }
+}

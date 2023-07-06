@@ -1,0 +1,124 @@
+/* Contact Page */
+.writeto-us {
+    position: relative;
+
+    .form-shapes {
+        img {
+            width: inherit;
+        }
+
+        .fs1 {
+            position: absolute;
+            right: 14%;
+            top: 7%;
+        }
+
+        .fs2 {
+            position: absolute;
+            bottom: 22%;
+            left: 3%;
+        }
+
+        .fs3 {
+            position: absolute;
+            top: 50%;
+        }
+
+        .fs4 {
+            position: absolute;
+            bottom: 8%;
+            right: 15%;
+        }
+
+        .fs5 {
+            position: absolute;
+            left: 12%;
+            top: 8%;
+        }
+    }
+
+    .contact-form-area {
+        input {
+            padding: 10px !important;
+        }
+
+        textarea {
+            padding: 10px !important;
+        }
+    }
+}
+
+.info-area {
+    position: relative;
+
+    img {
+        width: inherit;
+    }
+
+    .info-shapes {
+        .info-s-1 {
+            position: absolute;
+            left: 0;
+            top: 3%;
+            transform: rotate(-171deg);
+        }
+
+        .info-s-2 {
+            position: absolute;
+            right: 0;
+            top: 3%;
+        }
+    }
+
+    .single-info {
+        border: 1px solid $border-color2;
+        padding: 15px 20px;
+        border-radius: 5px;
+        height: 100%;
+        background: $white-color;
+        margin-bottom: 30px;
+
+        @include sm-divice {
+            height: inherit;
+        }
+
+        .info-img {
+            margin-right: 10px;
+            margin-bottom: 20px;
+
+            img {
+                width: inherit;
+            }
+        }
+
+        .info-content {
+            p {
+                padding-top: 10px;
+            }
+        }
+    }
+}
+
+.map-area {
+    position: relative;
+
+    .map-shapes {
+        @include sm-divice {
+            display: none;
+        }
+
+        img {
+            width: inherit;
+        }
+
+        .ms-1 {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+    }
+
+    iframe {
+        width: 100%;
+    }
+}

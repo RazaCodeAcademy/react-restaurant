@@ -1,0 +1,63 @@
+/* Button */
+.btn {
+    background: $primary-color;
+    padding: 12px 40px;
+    color: $white-color;
+    font-size: 18px;
+    font-family: $heading-font;
+    font-weight: 500;
+    text-transform: capitalize;
+    display: inline-block;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    transition: .3s;
+
+    &:focus {
+        outline: none;
+    }
+
+    &:focus-visible {
+        outline: none;
+    }
+
+    &:hover {
+        background: transparent;
+        border: 1px solid $primary-color;
+        color: $primary-color;
+    }
+    &--save {
+        padding: 8px 30px;
+        font-size: 16px;
+        border-radius: 3px;
+    }
+
+}
+
+.btn2 {
+    background: $home3_primary-color;
+    padding: 12px 40px;
+    color: $white-color;
+    font-size: 18px;
+    font-family: $heading-font;
+    font-weight: 500;
+    text-transform: capitalize;
+    display: inline-block;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    transition: .3s;
+
+    &:focus {
+        outline: none;
+    }
+
+    &:focus-visible {
+        outline: none;
+    }
+
+    &:hover {
+        background: transparent;
+        border: 1px solid $home3_primary-color;
+        color: $home3_primary-color;
+    }
+
+}

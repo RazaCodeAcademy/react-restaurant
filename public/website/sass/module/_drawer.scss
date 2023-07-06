@@ -1,0 +1,107 @@
+.kh-drawer {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 9999;
+    background: $white-offset;
+    @include lg-screen {
+        max-width: 350px;
+        left: auto;
+        right: 0;
+    }
+    &__container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    &__close {
+        padding: 10px 15px;
+        border: none;
+        background: transparent;
+        font-size: 20px;
+        line-height: 1;
+        color: $primary-color;
+    }
+    &__back {
+        padding: 10px 15px;
+        border: none;
+        background: transparent;
+        font-size: 20px;
+        line-height: 1;
+        color: $paragraph-color;
+    }
+    &__head {
+        padding-left: 15px;
+        padding-right: 15px;
+        background: $white-color;
+        &-title {
+            display: block;
+            font-size: 18px;
+            font-weight: 500;
+        }
+    }
+    &__body {
+        height: calc(100vh - 315px);
+        background: $white-color;
+    }
+    &__list {
+        &-item {
+            padding-bottom: 15px;
+            padding-top: 15px;
+        }
+    }
+    &__product {
+        &-title {
+            display: block;
+            font-size: 16px;
+            line-height: 1;
+            font-weight: 500;
+            color: $dribbble;
+            &:hover {
+                color: $dribbble;
+            }
+        }
+        &-subtitle {
+            display: block;
+            font-size: 13px;
+            color: $paragraph-color;
+            &:hover {
+                color: $paragraph-color;
+            }
+        }
+        &-price {
+            display: block;
+            min-width: 85px;
+            font-size: 14px;
+        }
+        &-quantity {
+            &-btn {
+                border: none;
+                background: transparent;
+            }
+            &-value {
+                width: 30px;
+            }
+        }
+    }
+    &__foot {
+        background: $white-color;
+    }
+    &__details {
+        &-count {
+            width: 40px;
+            height: 40px;
+            background: $primary-color;
+            font-size: 20px;
+            line-height: 1;
+            font-weight: 500;
+            color: $white-color;
+        }
+        &-title {
+            padding-left: 15px;
+            padding-right: 15px;
+            font-size: 20px;
+        }
+    }
+}

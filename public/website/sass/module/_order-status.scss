@@ -1,0 +1,11 @@
+.kh-order-status {
+    &__box {
+        padding: 30px 15px;
+        box-shadow: 0 0 10px $white-offset;
+        border: 1px solid $white-offset;
+        background: $white-color;
+    }
+    &__text {
+        letter-spacing: .03em;
+    }
+}

@@ -1,0 +1,38 @@
+.fk-sm-footnav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    box-shadow: 0 -5px 10px 5px rgba($dark, .05);
+    background: $white;
+    &__cart {
+        padding-left: 15px;
+        padding-right: 15px;
+        box-shadow: 0 -5px 10px 5px rgba($dark, .05);
+    }
+    &__order {
+        padding-left: 15px;
+        padding-right: 15px;
+        box-shadow: 0 -5px 10px 5px rgba($dark, .05);
+    }
+    &__container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    &__list {
+        display: flex;
+        border-top: 1px solid rgba($border, 0.5);
+        &-item {
+            margin-right: 15px;
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+    &__link {
+        padding-top: 3px;
+        padding-bottom: 3px;
+        font-size: 30px;
+        color: $heading-text;
+    }
+}

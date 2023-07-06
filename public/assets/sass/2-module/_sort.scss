@@ -1,0 +1,25 @@
+.fk-sort {
+    display: flex;
+    flex-wrap: wrap;
+    &__list {
+        margin-right: 10px;
+        margin-bottom: 5px;
+        &:last-child {
+            margin-right: 0;
+        }
+        @include lg-screen {
+            margin-bottom: 0;
+        }
+    }
+    .select2-selection--single {
+        padding: 18px 10px;
+        background-color: lighten($epsilon, 30%);
+        border: 1px solid lighten($epsilon, 30%);
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: $epsilon;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+        border-color: $epsilon transparent transparent transparent;
+    }
+}

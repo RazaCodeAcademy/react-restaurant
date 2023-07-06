@@ -1,0 +1,283 @@
+/* Navbar */
+.main-menu {
+    display: flex;
+    justify-content: flex-end;
+
+    li {
+        display: inline-block;
+        position: relative;
+
+        .submenu {
+            width: 220px;
+            position: absolute;
+            top: 90%;
+            left: 0;
+            background: $primary-color;
+            visibility: hidden;
+            opacity: 0;
+            transition: .3s;
+            padding: 20px 10px;
+            border-radius: 5px;
+            z-index: 9999;
+
+            li {
+                display: block;
+
+                a {
+                    padding: 5px 15px;
+                    display: block;
+                    text-transform: capitalize;
+                    transition: .3s;
+                    font-size: 14px;
+
+                    &:hover {
+                        margin-left: 10px;
+                    }
+                }
+            }
+        }
+
+        &:hover {
+            .submenu {
+                top: 70%;
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+
+        &:hover>a {
+            color: $white-color
+        }
+
+        a {
+            padding: 30px 15px;
+            display: block;
+            font-family: $heading-font;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: $white-color;
+
+            span {
+                i {
+                    transition: .3s;
+                }
+            }
+
+
+            @include desktop {
+                padding: 30px 8px;
+                font-size: 14px;
+            }
+
+            @include tablet {
+                font-size: 14px;
+            }
+
+            @include sm-divice {
+                font-size: 14px;
+            }
+
+        }
+    }
+}
+
+// homepage 2 start
+.main-menu2 {
+    li {
+        a {
+            padding: 30px 12px;
+            color: $secondary-color;
+            font-weight: 700;
+
+            @include desktop {
+                padding: 30px 8px;
+            }
+
+            &:hover {
+                color: $primary-color;
+            }
+        }
+
+        .submenu {
+            li {
+                a {
+                    color: $white-color;
+                }
+            }
+        }
+
+        &:hover>a {
+            color: $primary-color;
+        }
+    }
+}
+
+// homepage 2 footer nav
+.footer-nav {
+    .main-menu {
+        justify-content: center;
+
+        li {
+            a {
+                font-weight: 700;
+            }
+        }
+    }
+}
+
+.mean-container a.meanmenu-reveal span {
+    background: $primary-color;
+}
+
+.mean-container a.meanmenu-reveal {
+    color: $primary-color;
+}
+
+// homepage 2 end
+
+
+// homepage 3 start
+.main-menu3 {
+
+
+    @include desktop {
+        padding-right: 60px;
+    }
+
+    @include screen-1200 {
+        padding-right: 60px;
+    }
+
+    @include screen-1440 {
+        padding-right: 60px;
+    }
+
+    @include screen-1600 {
+        padding-right: 60px;
+    }
+
+    li {
+        a {
+            padding: 30px 12px;
+            color: $secondary-color;
+            font-weight: 700;
+
+            @include desktop {
+                padding: 30px 8px;
+            }
+
+            &:hover {
+                color: $home3_primary-color;
+            }
+        }
+
+        .submenu {
+            background-color: $home3_primary-color;
+            z-index: 11111;
+
+            li {
+                a {
+                    color: $white-color;
+                }
+            }
+        }
+
+        &:hover>a {
+            color: $home3-primary-color;
+        }
+    }
+}
+
+
+// homepage 3 end
+
+// homepage 1/2 mobile-menu
+.mobile-menu {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+
+    .main-menu {
+        li {
+            a {
+                span {
+                    display: none;
+                }
+            }
+
+            .submenu {
+                padding: 0;
+                opacity: 1;
+            }
+        }
+    }
+
+    @include portrait-phone {
+        top: -6px;
+    }
+
+    .main-menu li .submenu {
+        position: static;
+        width: 100%;
+    }
+
+    .mean-nav ul {
+        flex-wrap: wrap;
+    }
+
+    .mean-bar {
+        background: transparent;
+
+        .mean-nav {
+            margin-top: 58px;
+            background: $primary-color;
+        }
+    }
+
+    .mean-nav ul li a.mean-expand:hover {
+        background: $primary-color;
+    }
+
+}
+
+.mean-container .mean-nav ul li a.mean-expand {
+    width: 25px;
+    height: 25px;
+}
+
+// homepage 3 mobile-menu
+.mobile-menu.home3-mobile-menu.mean-container {
+    right: -11px;
+    top: 10px;
+
+    @include portrait-phone {
+        right: 2px;
+        top: -7px;
+    }
+
+    @include landscape-phone {
+        right: -14px;
+        top: 5px;
+    }
+
+    a.meanmenu-reveal span {
+        color: $home3_primary-color !important;
+    }
+
+    a.meanmenu-reveal span {
+        background: $home3_primary-color;
+    }
+
+    a.meanmenu-reveal {
+        color: $home3_primary-color;
+    }
+
+    .mean-nav ul {
+        background: $home3_primary-color;
+    }
+
+    .mean-nav ul li a.mean-expand {
+        background: $home3_primary-color;
+    }
+}

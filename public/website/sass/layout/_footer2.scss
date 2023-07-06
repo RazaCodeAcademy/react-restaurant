@@ -1,0 +1,214 @@
+/* Footer 2*/
+.footer2 {
+    background: $white-color;
+    position: relative;
+
+    .fo-shapes {
+        .fs-1 {
+            position: absolute;
+            top: 10%;
+            left: 4%;
+        }
+
+        .fss-2 {
+            position: absolute;
+            bottom: 0%;
+            left: 0%;
+
+            @include screen-1200 {
+                width: 90px;
+            }
+        }
+
+        .fss-3 {
+            position: absolute;
+            bottom: 0%;
+            right: 0%;
+
+            @include screen-1200 {
+                width: 90px;
+            }
+        }
+
+        .fss-4 {
+            position: absolute;
+            top: 20%;
+            right: 8%;
+        }
+
+        .fss-5 {
+            position: absolute;
+            bottom: 2%;
+            left: 20%;
+        }
+
+        .fss-6 {
+            position: absolute;
+            bottom: 2%;
+            right: 25%;
+        }
+    }
+
+    hr {
+        border: 1px dotted $primary-color;
+    }
+
+    .footer-top {
+        .form2 {
+            position: relative;
+
+            input {
+                background: transparent;
+                border: 1px solid $border-color;
+                color: $secondary-color;
+                padding: 10px 55px;
+                border-radius: 5px;
+
+
+                @include desktop {
+                    padding: 10px 45px;
+                }
+            }
+
+            span {
+                position: absolute;
+                left: 4%;
+                top: 23%;
+
+                @include sm-divice {
+                    top: 14%;
+                }
+            }
+
+            .btn.bttn {
+                padding: 10px 55px;
+                border-radius: 5px;
+
+                @include sm-divice {
+                    margin-top: 20px;
+                }
+
+                @include portrait-phone {
+                    width: 100%;
+                    display: block;
+                }
+
+                @include desktop {
+                    padding: 10px 30px;
+                }
+            }
+        }
+
+        .f-title {
+            @include tablet {
+                margin-bottom: 30px;
+                text-align: center;
+            }
+
+            @include sm-divice {
+                margin-bottom: 30px;
+                text-align: center;
+            }
+
+            h4 {
+                color: $secondary-color;
+
+                span {
+                    color: $primary-color;
+                }
+            }
+        }
+
+
+
+        a.btn {
+
+            @include desktop {
+                padding: 11px 14px;
+            }
+        }
+    }
+
+    .footer-bottom {
+        .widget {
+            h6 {
+                color: $secondary-color;
+                margin-bottom: 20px;
+            }
+
+            p {
+                color: $secondary-color;
+            }
+
+            a {
+                color: $primary-color;
+                text-transform: capitalize;
+                transition: .3s;
+
+                &:hover {
+                    color: $orange-color;
+                }
+            }
+
+            .newsletter {
+                margin-bottom: 20px;
+
+                select {
+                    background: transparent;
+                    border: 1px solid $border-color;
+                    color: $secondary-color;
+                    padding: 10px;
+                    width: 100%;
+                    border-radius: 5px;
+                    margin-bottom: 10px;
+                }
+
+                input {
+                    background: transparent;
+                    border: 1px solid $border-color;
+                    color: $secondary-color;
+                    padding: 10px;
+                    width: 100%;
+                    border-radius: 5px;
+                    margin-bottom: 10px;
+                }
+
+                .btn {
+                    border-radius: 5px;
+                    padding: 10px 55px;
+                    margin-left: 3px;
+
+                    &:hover {
+                        background: transparent;
+                        color: $primary-color;
+                        border: 1px solid $primary-color;
+                    }
+                }
+            }
+        }
+    }
+
+    .copyright-area {
+        .copyright-content {
+            .f-logo {
+                width: 150px;
+                margin: 0 auto;
+
+                img {
+                    width: 100%;
+                }
+            }
+
+            p {
+                color: $secondary-color;
+
+                a {
+                    color: $primary-color;
+                    font-weight: 700;
+                    text-transform: capitalize;
+                }
+            }
+
+        }
+    }
+}

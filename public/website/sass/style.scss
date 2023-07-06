@@ -1,0 +1,91 @@
+/*-------------------------------------------------------------
+Template Name: Khadyo HTML 5 Template
+Template URL:
+Author Name: SoftTech IT
+Author URL: https://themeforest.net/user/softtech-it/portfolio
+Version: 1.0
+Description:
+Tags: Restaurant,
+Text Domain: khadyo
+-------------------------------------------------------------*/
+
+/*-------------------------------------------------------------
+TABLE OF CONTENTS:
+---------------------------------------------------------------
+>> Author CSS
+>> Navbar
+>> Header Section
+>> Footer Section
+>> Breadcrumb Section
+>> Preloader
+>> Button
+>> Form
+>> Theme
+>> Home Page 01
+>> About Page
+>> 404 Page
+>> Checkout Page
+>> Contact Page
+>> Single Food Page
+>> Food Page 2
+>> Food Page
+>> Gallery Page
+>> Menu Page
+>> Single Dish Page
+>> Shoping Cart
+>> Blog Page
+>> Blog Details Page
+>> Homepage 2
+>> Footer 2
+>> Header 2 Section
+>> Header 3 Section
+>> Homepage 3
+>> Footer 3
+--------------------------------------------------------------*/
+//Vendor
+@import 'vendor/simplebar';
+// Setting
+@import 'settings/variable';
+@import 'settings/mixin';
+
+// Base
+@import 'base/base';
+
+// Layout
+@import 'layout/navbar';
+@import 'layout/header';
+@import 'layout/footer';
+@import 'layout/breadcrumb';
+@import 'layout/footer2';
+@import 'layout/header2';
+@import 'layout/header3';
+@import 'layout/footer3';
+
+// Module
+@import 'module/preloader';
+@import 'module/button';
+@import 'module/form';
+@import 'module/drawer';
+@import 'module/payment-opt';
+@import 'module/floating-cart';
+@import 'module/user';
+@import 'module/order-status';
+
+// Themes
+@import 'theme/theme';
+@import 'theme/home-page-01';
+@import 'theme/about-page';
+@import 'theme/404';
+@import 'theme/checkout';
+@import 'theme/contact';
+@import 'theme/single-food';
+@import 'theme/food-page2';
+@import 'theme/food-page';
+@import 'theme/gallery';
+@import 'theme/menu';
+@import 'theme/single-dish';
+@import 'theme/shopping-cart';
+@import 'theme/blog-page';
+@import 'theme/blog-details-page';
+@import 'theme/homepage2.scss';
+@import 'theme/homepage3.scss';

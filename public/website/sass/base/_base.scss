@@ -1,0 +1,95 @@
+/* Author CSS */
+body {
+    margin: 0;
+    position: relative;
+    color: $paragraph-color;
+    font-family: $body-font;
+}
+
+h1 {
+    color: $heading-color;
+    font-size: 60px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+h2 {
+    color: $heading-color;
+    font-size: 48px;
+    font-weight: 700;
+}
+
+h3 {
+    color: $heading-color;
+    font-size: 36px;
+    font-weight: 700;
+}
+
+h4 {
+    color: $heading-color;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+h5 {
+    color: $heading-color;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+h6 {
+    color: $heading-color;
+    font-size: 18px;
+    margin-bottom: 0;
+    font-weight: 700;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: $heading-font;
+    text-transform: capitalize;
+    line-height: 1.2;
+    margin-bottom: 0;
+}
+
+p {
+    color: $paragraph-color;
+    margin-bottom: 16px;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+a:hover,
+a:focus {
+    text-decoration: none;
+    outline: none;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+button:focus,
+.slick-slide {
+    outline: none;
+}
+
+img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+button {
+    cursor: pointer;
+}
+.sm-text {
+font-size: 14px;
+}

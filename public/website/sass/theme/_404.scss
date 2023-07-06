@@ -1,0 +1,40 @@
+/* 404 Page */
+.error-area {
+    position: relative;
+
+    .btn {
+        outline: none;
+
+        &:focus {
+            outline: none;
+        }
+
+        &:hover {
+            color: $primary-color;
+            border: 1px solid $primary-color;
+            background: transparent;
+        }
+    }
+
+    .error-shapes {
+        img {
+            width: inherit;
+        }
+
+        @include sm-divice {
+            display: none;
+        }
+
+        .e-s-1 {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+        }
+
+        .e-s-2 {
+            position: absolute;
+            top: 20%;
+            right: 0;
+        }
+    }
+}

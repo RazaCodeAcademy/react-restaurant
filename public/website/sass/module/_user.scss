@@ -1,0 +1,99 @@
+.kh-user {
+    &__sidebar {
+        padding: 15px;
+        border: 1px solid $white-offset;
+        background: $white-offset;
+
+        &-head {
+            padding: 30px 15px;
+            border-radius: 3px;
+            background: $white-color;
+        }
+    }
+
+    &__img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        overflow: hidden;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    &__sidebar-list {
+        padding: 30px 15px;
+        border-radius: 3px;
+        background: $white-color;
+    }
+    &__list {
+        &-item {
+            margin-bottom: 5px;
+        }
+    }
+    &__link {
+        padding: 10px 15px;
+        border-left: 3px solid transparent;
+        color: $paragraph-color;
+        line-height: 1;
+        &:hover {
+            color: $paragraph-color;
+            background: $white-offset;
+        }
+        &.active {
+            border-left: 3px solid $primary-color;
+            background: $white-offset;
+            .kh-user__icon {
+                background: darken($white-offset, 10%);
+            }
+        }
+    }
+    &__icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+        height: 30px;
+        margin-left: 5px;
+        margin-right: 5px;
+        border-radius: 50%;
+        background: darken($white-offset, 5%);
+        text-align: center;
+    }
+    &__text {
+        margin-left: 5px;
+        margin-right: 5px;
+        display: block;
+    }
+    &__body {
+        padding: 15px;
+        border: 1px solid $white-offset;
+        background: $white-offset;
+        &-box {
+            padding: 40px 15px;
+            border-radius: 3px;
+            background: $white-color;
+        }
+        &-title {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: .03em;
+        }
+    }
+    &__button {
+        display: inline-block;
+        padding: 3px 8px;
+        border: 1px solid $primary-color;
+        font-size: 12px;
+        line-height: 1;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: .03em;
+        color: $primary-color;
+        transition: all .3s ease;
+        &:hover {
+            background: $primary-color;
+            color: $white-color;
+        }
+    }
+}

@@ -1,0 +1,11 @@
+.fk-language {
+    &__flag {
+        width: 30px;
+        height: 30px;
+        border-radius: 30px;
+        background-image: url(../img/flag-2.png);
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+}

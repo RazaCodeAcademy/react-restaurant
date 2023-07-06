@@ -1,0 +1,13 @@
+.fk-table-container-order {
+    transition: all .3s ease;
+    &:hover {
+        cursor: pointer;
+    }
+    &.active {
+        background: $epsilon;
+        color: $white;
+        .fk-qty__input {
+            color: $white;
+        }
+    }
+}

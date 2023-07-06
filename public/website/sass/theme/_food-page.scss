@@ -1,0 +1,359 @@
+/* Food Page*/
+// food-area
+.food-area-wrapper {
+    position: relative;
+
+    .pshapes {
+        img {
+            width: inherit;
+        }
+
+        .ps-1 {
+            position: absolute;
+            top: 50%;
+            right: 0;
+        }
+
+        .ps-2 {
+            position: absolute;
+            top: 27%;
+            left: 5%;
+        }
+
+        .ps-4 {
+            position: absolute;
+            bottom: 38%;
+            left: 8%;
+        }
+
+        .ps3 {
+            position: absolute;
+            top: 24%;
+            right: 0 !important;
+        }
+
+        .ps-5 {
+            position: absolute;
+            top: 40%;
+            right: 17%;
+        }
+
+        .ps-6 {
+            position: absolute;
+            right: 0;
+            bottom: -6%;
+        }
+
+        .ps-7 {
+            position: absolute;
+            left: 16%;
+            bottom: 18%;
+        }
+    }
+
+    // .sidebar-widget-1
+    .sidebar-widget-1 {
+        padding: 50px 0;
+        border: 1px solid $border-color;
+        border-radius: 5px;
+        margin-bottom: 30px;
+        background: $white-color;
+
+        h5 {
+            margin-bottom: 20px;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .sidebar-widget:last-child {
+            border-bottom: none;
+        }
+
+        .sidebar-widget {
+            border-bottom: 1px solid $border-color;
+            padding: 20px 15px;
+
+            .dish-img {
+                margin-right: 10px;
+
+                img {
+                    width: 75px;
+                }
+            }
+
+            .small-dish-img {
+                margin-right: 10px;
+
+                img {
+                    width: 50px;
+                }
+            }
+
+            .dish-content {
+                h6 {
+                    margin-bottom: 10px;
+
+                    a {
+                        color: $secondary-color;
+                        transition: .5s;
+
+                        &:hover {
+                            color: $primary-color;
+                        }
+                    }
+                }
+
+                a.cart-select {
+                    color: $primary-color;
+                    background: transparent;
+                    transition: .5s;
+                    border: 1px solid $primary-color;
+                    width: 30px;
+                    height: 30px;
+                    line-height: 30px;
+                    border-radius: 50%;
+                    display: inline-block;
+                    text-align: center;
+                    margin-left: 10px;
+
+
+                    &:hover {
+                        color: $white-color;
+                        background: $primary-color;
+                    }
+                }
+            }
+        }
+    }
+
+    // .sidebar-widget-2
+    .sidebar-widget-2 {
+        padding: 50px 10px;
+        border: 1px solid $border-color;
+        border-radius: 5px;
+        margin-bottom: 30px;
+        background: $white-color;
+
+        .filter-sidebar {
+            position: relative;
+
+            .ui-widget.ui-widget-content {
+                border: 1px solid $primary-color;
+                height: 1px;
+            }
+
+            .ui-slider-handle.ui-corner-all.ui-state-default {
+                border-radius: 50%;
+                background-color: $primary-color;
+                border: 1px solid transparent;
+                outline: none;
+                width: 10px;
+                height: 10px;
+            }
+
+            .ui-slider-handle.ui-corner-all.ui-state-default.ui-state-active {
+                border-radius: 50%;
+                background-color: $primary-color;
+                border: 1px solid transparent;
+            }
+
+            .textbold {
+                font-weight: 500;
+                color: $secondary-color;
+                border: none;
+                font-family: $body-font;
+
+            }
+
+            button.btn {
+                padding: 2px 14px;
+                border-radius: 0;
+                font-weight: 500;
+                font-family: $body-font;
+                position: absolute;
+                top: 47%;
+                right: 5%;
+            }
+        }
+
+
+    }
+
+    // .sidebar-widget-3
+    .sidebar-widget-3 {
+        padding: 50px 10px;
+        border: 1px solid $border-color;
+        border-radius: 5px;
+        margin-bottom: 30px;
+        background: $white-color;
+
+        h5 {
+            a {
+                color: $secondary-color;
+            }
+        }
+
+        .sidebar-widget {
+            padding: 20px 0;
+
+            .dish-img {
+                margin-right: 20px;
+
+                img {
+                    width: inherit;
+                }
+            }
+
+            .dish-content {
+                h6 {
+                    font-size: 14px;
+                    font-weight: 700;
+
+                    a {
+                        color: $secondary-color;
+                    }
+                }
+
+                span {
+                    margin-left: 20px;
+                    position: absolute;
+                    right: 50px;
+                }
+            }
+        }
+    }
+
+    // sidebar-widget-4
+    .sidebar-widget-4 {
+        .gallery-img-4 {
+            @include sm-divice {
+                display: none;
+            }
+
+            background: #cc3333;
+            height: 450px;
+            position: relative;
+            padding: 30px 20px;
+            overflow: hidden;
+
+            .gshape-1 {
+                position: absolute;
+                top: 5%;
+                transform: rotate(-60deg);
+                right: -17%;
+
+                img {
+                    width: inherit;
+                }
+            }
+
+            h5 {
+                color: $white-color;
+            }
+
+            .btn {
+                color: $primary-color;
+                background: $white-color;
+                padding: 12px 15px;
+                text-transform: uppercase;
+                margin-top: 20px;
+                border-radius: 5px;
+
+                &:hover {
+                    color: $white-color;
+                    background: transparent;
+                    border: 1px solid $white-color;
+                }
+            }
+
+            img {
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                width: 150%;
+                margin-right: -60%;
+            }
+
+            .gprice-4 {
+                img {
+                    width: inherit;
+                }
+
+                position: absolute;
+                top: 36%;
+                width: 75px;
+                right: 19%;
+            }
+        }
+    }
+
+    .food-area {
+        position: relative;
+        overflow: hidden;
+        background: inherit !important;
+
+        nav {
+            background: $bg-color5;
+            padding-right: 30px;
+            padding-left: 30px;
+
+            @include sm-divice {
+                justify-content: center;
+            }
+
+            .sorting-area {
+                @include sm-divice {
+                    margin: 20px auto 0 auto;
+                }
+            }
+
+            .nav-link {
+                padding: 10px 25px;
+                transition: .3s;
+            }
+
+            .nav-link.active {
+                background: transparent;
+                color: $primary-color;
+            }
+
+            span {
+                text-transform: capitalize;
+            }
+        }
+
+
+        select {
+            border: 1px solid transparent;
+            background-color: $bg-color5;
+        }
+
+    }
+
+    // pagination
+    .pagination-area {
+        .pagination {
+            display: inline-block;
+        }
+
+        .pagination a.active {
+            background: $primary-color;
+            color: $white-color;
+
+        }
+
+        .pagination a {
+            color: $primary-color;
+            background: transparent;
+            float: left;
+            padding: 8px 10px;
+            border: 1px solid $primary-color;
+            text-decoration: none;
+            margin-right: 10px;
+            border-radius: 5px;
+            font-weight: 700;
+            font-family: $heading-font;
+            transition: .5s;
+        }
+    }
+}

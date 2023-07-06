@@ -1,0 +1,9 @@
+/* Footer 3*/
+.ht-footer {
+  background: url("../images/bg/home3bg.png");
+  background-size: cover;
+  background-repeat: no-repeat; }
+  .ht-footer .ht-footer-top .widget .logo {
+    width: 120px; }
+    .ht-footer .ht-footer-top .widget .logo img {
+      width: 100%; }

@@ -1,0 +1,15 @@
+
+.fk-scroll {
+    &--pos-menu {
+        height: calc(100vh - 115px);
+        @include xl-screen {
+            height: calc(100vh - 168px);
+        }
+    }
+    &--order-history {
+        height: calc(100vh - 278px);
+    }
+    &--index {
+        height: calc(100vh - 130px);
+    }
+}

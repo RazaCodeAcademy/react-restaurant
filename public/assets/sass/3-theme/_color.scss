@@ -1,0 +1,60 @@
+.t-text-white {
+    color: $white;
+}
+.t-text-dark {
+    color: $dark;
+    &--light-20 {
+        color: lighten($dark, 20%);
+    }
+    &--light-30 {
+        color: lighten($dark, 30%);
+    }
+    &--light-40 {
+        color: lighten($dark, 40%);
+    }
+    &--light-50 {
+        color: lighten($dark, 50%);
+    }
+    &--light-60 {
+        color: lighten($dark, 60%);
+    }
+    &--light-70 {
+        color: lighten($dark, 70%);
+    }
+    &--light-15 {
+        color: lighten($dark, 15%);
+    }
+}
+.t-text-alpha {
+    color: $alpha;
+}
+.t-text-beta {
+    color: $beta;
+}
+.t-text-gamma {
+    color: $gamma;
+}
+.t-text-delta {
+    color: $delta;
+}
+.t-text-primary {
+    color: $primary;
+}
+.t-text-heading {
+    color: $heading-text;
+}
+.t-text-epsilon {
+    color: $epsilon;
+}
+.t-text-zeta {
+    color: $zeta;
+}
+.t-text-eta {
+    color: $eta;
+}
+.t-text-kappa {
+    color: $kappa;
+}
+.t-text-light-2 {
+    color: $light-2;
+}

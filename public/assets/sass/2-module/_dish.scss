@@ -1,0 +1,73 @@
+.fk-dish {
+    flex-wrap: wrap;
+    flex-direction: row;
+    border-radius: 0;
+    padding-left: auto;
+    box-sizing: border-box;
+    &--scroll {
+        height: calc(100vh - 468px);
+        @include xl-screen {
+            height: calc(100vh - 168px);
+        }
+    }
+    &-card {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        box-shadow: 0 5px 10px 0 rgba($dark, .15);
+        &:hover {
+            .fk-dish-card__img {
+                img {
+                    transform: scale(1.05);
+                }
+            }
+        }
+        &__img {
+            width: 100%;
+            display: flex;
+            overflow: hidden;
+            background: $border;
+            
+            img {
+                transition: all .3s ease;
+            }
+        }
+        &__title {
+            display: flex;
+            flex-grow: 1;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-left: 5px;
+            padding-right: 5px;
+            background: $white;
+            font-family: $heading-font;
+            font-weight: 600;
+            font-size: 12px;
+            @include lg-screen {
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+            @include xl-screen {
+                padding-left: 10px;
+                padding-right: 10px;
+                font-size: 14px;
+            }
+            @include xxl-screen {
+                font-size: 16px;
+            }
+        }
+    }
+    &__link {
+        display: flex !important;
+        &.active {
+            .fk-dish-card__title {
+                background: $primary;
+                color: $white;
+            }
+        }
+    }
+}
+

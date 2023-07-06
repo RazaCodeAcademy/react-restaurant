@@ -1,0 +1,15 @@
+.form-control {
+    &--light-1 {
+        background: darken($light-2, 1%);
+        &:focus {
+            background: darken($light-2, 1%);
+        }
+    }
+    &--light-2 {
+        background: white;
+        &:focus {
+            background: white;
+        }
+    }
+
+}

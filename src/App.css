@@ -1,0 +1,687 @@
+html {
+  --primary: #de222a;
+}
+
+/* body {
+  overflow: hidden;
+} */
+
+/* for less table data */
+.min-table-height {
+  min-height: 130px;
+}
+
+/* for clock font size */
+.font-10px {
+  font-size: 10px;
+}
+
+/* for toast notification */
+.toast-notification {
+  text-align: center;
+}
+
+/* active page in pagination */
+.pagination-active {
+  background-color: var(--primary);
+  color: #fff;
+}
+/* no pagination style */
+.no-pagination-style {
+  height: 33px;
+}
+
+/* table data loading */
+.loading {
+  top: 50%;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  margin-left: -25px;
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid var(--primary);
+  border-top: 2px solid transparent;
+  animation: loading-animation 1s infinite linear;
+  -webkit-animation: laoding-animation 1s infinite linear;
+  -moz-animation: laoding-animation 1s infinite linear;
+  z-index: 1000;
+}
+@keyframes laoding-animation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* background of language */
+.fk-language__flag {
+  background-size: cover;
+}
+
+/* hide pagination */
+@media screen and (min-width: 1200px) {
+  .table-bottom-info-hide {
+    height: calc(100vh - 120px);
+  }
+}
+
+/* image in table td */
+.table-img-large {
+  width: 60px;
+  height: 60px;
+  background-size: cover;
+  border-radius: 60px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url("/assets/img/waiter.jpg");
+}
+
+/* manage page border-right show */
+.simplebar-content {
+  margin-right: -16px !important;
+}
+
+/* translation-input */
+.translation-input {
+  max-width: 150px;
+}
+
+/*  custom-bg-secondary */
+.custom-bg-secondary {
+  background-color: #ebeef6;
+}
+
+/* variation-min-price-input-width */
+.variation-min-price-input-width {
+  min-width: 250px;
+}
+
+/* text-decoration: line-through; */
+.text-deleted {
+  text-decoration: line-through;
+}
+
+/*Logo background on load*/
+.fk-brand__img--fk {
+  background-image: none;
+}
+
+/*  text-green for workperiod */
+.text-green {
+  color: #28a745;
+}
+
+/* Calculator css override */
+.calculator {
+  width: 350px;
+}
+
+/* payment type multiple clear all button hide */
+.payment-type-parent .select__indicator.select__clear-indicator {
+  display: none !important;
+}
+.payment-type-parent .select__multi-value__remove {
+  display: none !important;
+}
+.payment-type-parent .select__multi-value {
+  min-width: 60px !important;
+  text-align: center !important;
+}
+.payment-type-parent .select__multi-value__label {
+  padding-right: 6px !important;
+  padding-left: 6px !important;
+}
+
+/* Pos page group name shaddow remove */
+.btn-outline-danger:focus {
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+/* reverse the ordre list items */
+.reverse-this {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+/* for remove button from order list in POS */
+.make-this-relative {
+  position: relative;
+  top: 26px;
+  left: 0;
+  margin-top: -31px;
+  margin-left: 48%;
+  cursor: pointer;
+  max-width: 51.88px;
+}
+
+.make-this-relative-mobile {
+  position: relative;
+  top: -53px;
+  left: 25px;
+  /* margin-top: -31px; */
+  margin-left: 25%;
+  cursor: pointer;
+  max-width: 51.88px;
+}
+
+/*  pointer-cursor */
+.pointer-cursor {
+  cursor: pointer;
+}
+
+/*  change-background */
+.change-background {
+  background-color: #f64e60 !important;
+}
+
+/* new-customer-pos */
+.new-customer-pos {
+  font-weight: 450 !important;
+  font-size: 12px !important;
+}
+
+/* pos page work period css */
+.fk-left-over {
+  position: relative;
+}
+.fk-left-overlay {
+  border-radius: 4px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  background: #f64e5fa9;
+  z-index: 3;
+}
+@media screen and (min-width: 768px) {
+  .fk-left-overlay {
+    position: absolute;
+  }
+}
+.fk-left-overlay__content {
+  min-width: 400px;
+  background-color: #ffffffef;
+  padding: 20px;
+  border-radius: 4px;
+}
+
+/* checkbox align item center cancel */
+.mx-checkbox {
+  -webkit-box-align: flex-start !important;
+  align-items: flex-start !important;
+}
+.mx-checkbox__input-sm {
+  margin-top: 12px !important;
+}
+.mt-0-kitchen {
+  margin-top: 0px !important;
+}
+
+/* POS Page Tab Screen Order List */
+li.addons-list__item.active {
+  background: #de222a;
+  color: white !important;
+  border-radius: 2px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+/* profile update */
+.profile-update-full {
+  height: calc(100vh - 174px) !important;
+}
+
+.no-order {
+  height: calc(100vh - 230px);
+}
+
+.main-height-100 {
+  height: calc(100vh - 20px) !important;
+}
+
+.installation-full-page {
+  height: calc(100vh - 30px) !important;
+}
+
+.login-page-background {
+  background-image: url("/assets/img/logo.png") !important;
+}
+
+/* safari pos issue */
+.fk-dish-card__img {
+  align-items: center;
+}
+
+.congratulation-page {
+  height: calc(100vh - 30px) !important;
+  display: flex;
+  width: 100%;
+}
+
+.congratulation-page-margin {
+  margin: auto;
+}
+
+/* Updates of settle */
+
+.myBorder {
+  border-top: 1px dotted black;
+  border-bottom: 1px dotted black;
+}
+
+.myBorderTop {
+  margin-top: 10px;
+  border-top: 1px dotted black;
+}
+.myBorderBottom {
+  border-bottom: 1px dotted black;
+}
+
+.myBorderTopCustomer {
+  border-top: 1px dotted black;
+}
+
+/* SETTLE STYLE */
+.fk-settle-container {
+  height: calc(100vh - 100px);
+}
+.fk-settle {
+  background: #fff;
+  height: calc(100vh - 130px);
+}
+.fk-settle__products {
+  height: calc(100vh - 198px);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+.fk-settle__products .simplebar-content {
+  overflow-x: hidden;
+}
+.fk-settle-group__label {
+  display: inline-block;
+}
+.fk-settle-group__input {
+  display: inline-block;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+.fk-settle-cal {
+  height: calc(100vh - 241px);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+
+.fk-settle-cal-btn {
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+@media screen and (min-width: 768px) {
+  .fk-settle-cal-btn {
+    font-size: 30px;
+  }
+}
+@media screen and (min-width: 992px) {
+  .fk-settle-cal-btn {
+    font-size: 18px;
+  }
+}
+@media screen and (min-width: 1200px) {
+  .fk-settle-cal-btn {
+    font-size: 30px;
+  }
+}
+
+.t-bg-w {
+  background: #fff;
+}
+.t-bg-p {
+  background: #3ad38d;
+}
+.t-bg-p:hover {
+  background: #2bc580;
+}
+
+.t-bg-d {
+  background: #23282c;
+}
+.t-bg-ac {
+  /* background: #0073AA; */
+  background: #23282c77;
+}
+.t-bg-r {
+  background: #fe574e;
+}
+.fk-settle__pay {
+  height: calc(100vh - 160px);
+}
+
+/* Pos page dept tag */
+
+.button {
+  display: inline-block;
+  font-family: "Montserrat", "Trebuchet MS", Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  padding: 0.8em 1.4em;
+  padding-right: 4.7em;
+  background: #009ed8;
+  border: none;
+  color: white;
+  transition: 0.2s;
+}
+.button:before,
+.button:after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  padding-top: inherit;
+  padding-bottom: inherit;
+  width: 2.8em;
+  content: "\00a0";
+  font-family: "FontAwesome", sans-serif;
+  font-size: 1.2em;
+  text-align: center;
+  transition: 0.2s;
+  transform-origin: 50% 60%;
+}
+.button:before {
+  background: rgba(0, 0, 0, 0.1);
+}
+.button:hover {
+  background: #0079a5;
+}
+.button:active,
+.button:focus {
+  background: #002e3f;
+  outline: none;
+}
+.button {
+  min-width: 100%;
+}
+.arrow {
+  background: #09c2de;
+}
+.arrow:hover {
+  background: #09c2de;
+}
+.arrow:active,
+.arrow:focus {
+  background: #0ac090;
+}
+.button.arrow.active {
+  background: #0ac090;
+}
+.arrow:after {
+  content: "\F054";
+}
+.arrow:hover:after {
+  -webkit-animation: bounceright 0.3s alternate ease infinite;
+  animation: bounceright 0.3s alternate ease infinite;
+}
+/* active crust */
+.activeCrust {
+  background: #0ac090;
+}
+
+.activeCrust:hover {
+  background: #0ac090;
+}
+
+.addonPadding48 {
+  padding-top: 35px;
+}
+
+.addonPadding35 {
+  padding-top: 26px;
+}
+
+.addonPadding24 {
+  padding-top: 0px;
+}
+
+.akash-table-for-print-padding.table > :not(caption) > * > * {
+  padding: 0.2rem 0.5rem;
+}
+
+/* website */
+.custom-nav .nav-link {
+  display: block;
+  padding: 0.5rem 0.9rem !important;
+}
+
+.langSelect {
+  background: transparent;
+  border: 1px solid #e6e6e6;
+  color: #2a435d;
+  padding: 10px;
+  width: 100%;
+  border-radius: 5px;
+  cursor: pointer;
+}
+/* website variation drawer */
+.kh-drawer__body_cart {
+  height: calc(100vh - 200px);
+  background: #ffffff;
+}
+
+.overflow-y-scroll {
+  overflow-y: scroll !important;
+  position: relative;
+  height: 300px;
+}
+
+/* custom button */
+.btn-gradient-mini {
+  padding: 4px 12px;
+  font-size: 12px;
+  margin: 5px;
+  border: none !important;
+}
+
+/* Saas profile card */
+.saas_card_profile {
+  border-radius: 20px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0px 15px 39.2px 0.8px rgba(17, 0, 92, 0.1);
+  padding-top: 65px;
+  padding-bottom: 65px;
+  position: relative;
+  margin-right: 20px;
+}
+.upper_bg_shape {
+  height: 150px;
+  width: 100%;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  background: #ffd9cf;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+.saas_user_img {
+  border-radius: 50%;
+  outline: 1px solid #f33d3d;
+  position: relative;
+  z-index: 22;
+}
+.avatar_img_wrapper {
+  margin-left: 35px;
+  margin-bottom: 30px;
+}
+
+.saas_card_profile .user_title {
+  background: #eff3ff;
+  border-left: 2px solid #f33d3d;
+padding: 20px;
+  width: 95%;
+  margin: 0 auto;
+  display: block;
+  font-size: 18px;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 35px;
+}
+.saas_card_profile .user_title .icon {
+  font-weight: 400;
+  margin-right: 15px;
+}
+
+.user_info_wrapper {
+padding-left: 40px;
+margin-right: 40px;
+}
+.user_info_wrapper .user_icon{
+  width: 50px;
+  height: 50px;
+  border-radius: 16px;
+  text-align: center;
+  line-height: 50px;
+  color: #002e3f;
+  display: inline-block;
+  border: 1px solid #002e3f;
+  margin-right: 15px;
+}
+
+.user_info_wrapper .list_wrapper {
+  font-size: 18px;
+  display: flex;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+.user_info_wrapper .title_wrapper .title {
+  font-size: 18px;
+  display: block;
+  font-weight: 700;
+}
+.user_info_wrapper .title_wrapper .subtitle {
+  font-size: 14px;
+  display: block;
+  font-weight: 400;
+}
+
+.wrapper-margin-40 {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+/* subs title  */
+.saas_subs_title {
+  font-weight: 500;
+  text-transform: capitalize;
+}
+.saas_subs_title .saas_subs_icon{
+  background-color: #f33d3d;
+  color: #fff;
+  width: 30px;
+  height: 30px;
+  border-radius:50%;
+  line-height: 30px;
+  display: inline-block;
+  text-align: center;
+  margin-right: 20px;
+  }
+
+.saas_subs_title .color-red{
+  color: #f33d3d;
+  font-weight: 700;
+}
+/* single_saas_info_card*/
+.single_saas_info_card {
+    border-radius: 10px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 0px 20px 0px rgba(99, 99, 99, 0.1);
+    padding: 10px;
+}
+.single_saas_info_card .saas_info_img{
+    max-width: 100px;
+    max-height: 70px;
+    margin-bottom: 10px;
+    display: flex;
+   margin-right: auto;
+   margin-left: auto;
+
+}
+.single_saas_info_card .count_number{
+    font-size: 36px;
+    font-weight: 900;
+    display: block;
+    text-align: center;
+}
+.single_saas_info_card .title{
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    display: block;
+    text-align: center;
+}
+
+/* saas_profile_history_wrapper */
+.saas_history_form {
+  border: 1px solid #ffeee9;
+}
+.saas_profile_history_wrapper {
+    border-radius: 10px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 0px 20px 0px rgba(99, 99, 99, 0.1);
+    padding: 30px;
+    height: 633px;
+    overflow-y: scroll;
+}
+
+.saas_payment_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.saas_payment_header .title {
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+/* saas_history_table */
+.saas_history_head  {
+background: #ffeee9;
+}
+
+.saas_history_table_row {
+  border-bottom: 1px solid #ffeee9;
+}
+.saas_history_table_body {
+  border: 1px solid #ffeee9;
+}
+
+/* loading  style*/
+.saas_card_loading {
+  width: 30px;
+  margin: 0 auto;
+}
+
+.history_rolling {
+  margin-top: 100px;
+  margin-left: 255%;
+}
+.payment-btn {
+  display: inline-block;
+  padding: 10px!important;
+  border-radius: 5px!important;
+  width: initial;
+  font-size: 12px!important;
+  font-weight: 500;
+  border: none;
+  margin-top: 12px;
+}
+
+

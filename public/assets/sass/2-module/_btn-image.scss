@@ -1,0 +1,12 @@
+.btn-image {
+    padding: 0;
+    border: none;
+    background: white;
+    &__title {
+        display: block;
+        padding: 10px;
+        font-family: $heading-font;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+}

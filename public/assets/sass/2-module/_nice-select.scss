@@ -1,0 +1,36 @@
+.fk-select {
+    margin-bottom: 10px;
+    .list {
+        width: 100%;
+    }
+}
+.select2-container--default {
+    width: 100% !important;
+    &:focus {
+        outline: none !important;
+    }
+}
+.select2-container--default .select2-selection--single {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 25px 10px;
+    background-color: $white;
+    border: 1px solid $border;
+    border-radius: 0;
+    font-size: 14px;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: auto; 
+    position: relative; 
+    top: auto; 
+    right: auto; 
+    width: auto; 
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    margin-left: -15px;
+}
+.select2-results__option {
+    font-size: 14px;
+    color: $heading-text;
+}

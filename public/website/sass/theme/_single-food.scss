@@ -1,0 +1,416 @@
+/* Single Food Page */
+.chicken-recipe-area {
+    position: relative;
+
+    .recipe-shapes {
+        @include sm-divice {
+            display: none;
+        }
+
+        img {
+            width: inherit;
+        }
+
+        .rs1 {
+            position: absolute;
+            bottom: 4%;
+            left: 2%;
+        }
+
+        .rs2 {
+            position: absolute;
+            top: 60%;
+            left: 5%;
+        }
+
+        .rs3 {
+            position: absolute;
+            right: 11%;
+            top: 60%;
+        }
+    }
+
+    .recipe-left {
+        .product-content {
+            position: relative;
+
+            img {
+                width: inherit;
+            }
+
+            img.mp {
+                background: $bg-color4;
+                padding: 60px 20px;
+                border-radius: 62% 38% 46% 54% / 44% 34% 66% 56%;
+            }
+
+            .pbadge {
+                position: absolute;
+                top: 13%;
+                right: 25%;
+                width: 100px;
+            }
+        }
+
+        .pnav {
+            position: relative;
+            display: inline-block;
+            width: 100px;
+
+            img {
+                background: $bg-color4;
+                padding: 20px;
+                width: 100px;
+                border-radius: 62% 38% 46% 54% / 44% 34% 66% 56%;
+
+                &:hover {
+                    background: $primary-color;
+                }
+            }
+        }
+
+    }
+
+    .recipe-right {
+        h2 {
+            margin-bottom: 30px;
+        }
+
+        .chickens-inforbar {
+            background: $bg-color4;
+            margin-bottom: 30px;
+
+            span {
+                text-transform: capitalize;
+            }
+
+            .cp {
+                font-family: $heading-font;
+                font-size: 30px;
+                color: $secondary-color;
+                font-weight: 700;
+
+                del {
+                    font-family: $body-font;
+                    font-size: 18px;
+                    font-weight: 400;
+
+                }
+            }
+
+            .rate {
+                background: $primary-color;
+                color: $white-color;
+                padding: 0 5px;
+
+            }
+
+            .colored {
+                color: $primary-color;
+            }
+        }
+
+        .chickens-details {
+            margin-bottom: 30px;
+            margin-top: 30px;
+
+            label {
+                text-transform: capitalize;
+                font-weight: 700;
+
+            }
+
+            input {
+                width: 70px;
+                background: $bg-color4;
+                border: 1px solid transparent;
+                text-align: center;
+            }
+        }
+
+        .chickens-meta {
+            margin-bottom: 30px;
+
+            ul {
+                li {
+                    text-transform: capitalize;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+}
+
+// product-description
+.product-des-area {
+    position: relative;
+
+    .pdes-shapes {
+        @include sm-divice {
+            display: none;
+        }
+
+        @include tablet {
+            display: none;
+        }
+
+        @include desktop {
+            display: none;
+        }
+
+        @include screen-1200 {
+            display: none;
+        }
+
+        img {
+            width: inherit;
+        }
+
+        .pds1 {
+            position: absolute;
+            top: 18%;
+            right: 0;
+
+        }
+
+        .pds2 {
+            position: absolute;
+            top: 18%;
+            left: 0;
+
+        }
+    }
+
+    .product-des-nav {
+        .nav-link {
+            color: $secondary-color;
+            font-family: $heading-font;
+            text-transform: capitalize;
+            font-weight: 600;
+            padding: 13px 45px;
+            border-radius: 0;
+            transition: .5s;
+
+            @include desktop {
+                padding: 13px 32px;
+            }
+
+            @include portrait-phone {
+                padding: 13px 14px;
+            }
+
+
+        }
+
+        .nav-link.active {
+            color: $white-color;
+            background: $primary-color;
+
+
+        }
+    }
+
+    .product-des-content {
+        padding: 50px 25px;
+        box-shadow: 0px 0px 10px 0px rgba(39, 53, 160, 0.1);
+        position: relative;
+        overflow: hidden;
+
+        .pd-inner-content {
+            .pd-shapes {
+                img {
+                    width: 50px;
+                }
+
+                .pds1 {
+                    position: absolute;
+                    bottom: 5px;
+                    right: 1px;
+                }
+
+                .pds2 {
+                    position: absolute;
+                    top: 0%;
+                    right: 0%;
+                }
+
+                .pds3 {
+                    position: absolute;
+                    top: 45%;
+                    right: 20%;
+                }
+            }
+
+            table,
+            th,
+            td {
+                border: 2px solid $secondary-color;
+                border-collapse: collapse;
+                color: $secondary-color;
+            }
+
+            th {
+                padding: 10px;
+                text-align: center;
+                text-transform: capitalize;
+                font-weight: 700;
+                font-family: $body-font;
+            }
+
+            td {
+                padding: 10px;
+                text-align: center;
+                text-transform: capitalize;
+                font-weight: 400;
+                font-family: $body-font;
+            }
+
+            .heading {
+                font-size: 16px;
+            }
+        }
+    }
+}
+
+// related product
+.related-product {
+    position: relative;
+
+    .related-shapes {
+        img {
+            width: inherit;
+        }
+
+        .rs1 {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+        }
+    }
+
+    h3 {
+        margin-bottom: 30px;
+
+        span {
+            color: $primary-color;
+        }
+    }
+
+    .single-dishes {
+        border: 1px solid $border-color;
+        padding: 20px;
+        position: relative;
+        transition: .3s;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        background: $white-color;
+        transition: .5s;
+
+        @include sm-divice {
+            text-align: center;
+        }
+
+        &:hover {
+            border: 1px solid transparent;
+            box-shadow: 0px 25px 60px 0px rgba(0, 21, 100, 0.1);
+
+            .cart-opt {
+                visibility: visible;
+                opacity: 1;
+            }
+        }
+
+        .dish-img {
+            img {
+                width: 130px !important;
+                text-align: center;
+                margin: 0 auto;
+            }
+        }
+
+        .dish-content {
+            h5 {
+                padding: 20px 0;
+
+                a {
+                    color: $secondary-color;
+
+                    &:hover {
+                        color: $primary-color;
+                    }
+                }
+            }
+
+            .price {
+                font-weight: 700;
+                font-family: $heading-font;
+                font-size: 18px;
+                color: $secondary-color;
+                text-transform: capitalize;
+            }
+
+            .rating {
+                font-weight: 700;
+                font-family: $heading-font;
+                font-size: 18px;
+                color: $secondary-color;
+                text-transform: capitalize;
+            }
+        }
+
+        .badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: $secondary-color;
+            color: $white-color;
+            padding: 5px 10px;
+            text-transform: uppercase;
+        }
+
+        .badge-bg-color {
+            background: $primary-color;
+        }
+
+        .badge-color {
+            color: $primary-color !important;
+        }
+
+        .cart-opt {
+            width: 20px;
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            visibility: hidden;
+            opacity: 0;
+            transition: .5s;
+
+            span {
+                border: 1px solid $primary-color;
+                background: transparent;
+                margin-bottom: 20px;
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+                border-radius: 50%;
+                display: block;
+                text-align: center;
+                transition: .5s;
+
+                &:hover {
+                    background: $primary-color;
+
+                    a {
+                        color: $white-color;
+                    }
+                }
+
+                a {
+                    color: $primary-color;
+                    transition: .5s;
+                }
+
+            }
+        }
+    }
+}

@@ -1,0 +1,7 @@
+1.6.0
+.....
+####UPDATE_DeveloperGuide
+changeCssVersion
+CpyBuildFilesWithoutLocaleFolderIn_frontendFolder
+CpyBackendAppRoutesIn_backendFolder
+MkZipAndPutItInMainFile

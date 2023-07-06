@@ -1,0 +1,20 @@
+.fk-slick-arrow {
+    padding: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    line-height: 1;
+    transition: all .3s ease;
+    &:hover {
+        color: $epsilon;
+    }
+    &__prev {
+        left: 0;
+    }
+    &__next {
+        right: 0;
+    }
+}

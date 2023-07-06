@@ -1,0 +1,18 @@
+.fk-print {
+  font-family: $print-font;
+  line-height: 1;
+  &-text {
+    font-family: $print-font;
+    line-height: 1;
+    &--bold {
+      font-family: $print-font;
+      font-weight: 600;
+      line-height: 1;
+    }
+  }
+  &__title {
+    font-family: $print-font;
+    font-size: 28px;
+    line-height: 1;
+  }
+}

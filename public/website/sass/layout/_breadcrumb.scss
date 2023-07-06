@@ -1,0 +1,110 @@
+/* Breadcrumb Section */
+// breadcumb-area
+.breadcrumb-area {
+    position: relative;
+    overflow: hidden;
+    background-image: url('../images/bg/breadcrumb.png') !important;
+
+    nav {
+        z-index: 0;
+    }
+
+    .bread-shapes {
+        img {
+            width: inherit;
+        }
+
+        .b-shape-1 {
+            position: absolute;
+            right: 8%;
+            top: 30%;
+            transform: rotate(-93deg);
+            width: 75px;
+
+            @include sm-divice {
+                display: none;
+            }
+        }
+
+        .b-shape-2 {
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: rotate(177deg);
+
+            @include sm-divice {
+                display: none;
+            }
+        }
+
+        .b-shape-3 {
+            position: absolute;
+            top: 20%;
+            left: 5%;
+
+
+            @include desktop {
+                display: none;
+            }
+
+            @include tablet {
+                display: none;
+            }
+
+            @include sm-divice {
+                display: none;
+            }
+        }
+
+        .b-shape-4 {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+        }
+
+        .b-shape-5 {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .b-shape-6 {
+            position: absolute;
+            top: 65%;
+            right: 22%;
+            transform: rotate(125deg);
+            width: 75px;
+
+            @include sm-divice {
+                display: none;
+            }
+        }
+    }
+
+    h2 {
+        color: $white-color;
+        text-align: center;
+    }
+
+    .breadcrumb {
+        background: none;
+        display: flex;
+        justify-content: center;
+
+        .breadcrumb-item {
+            color: $white-color;
+            text-transform: capitalize;
+
+            a {
+                color: $white-color;
+                text-transform: capitalize;
+                transition: .3s;
+
+                &:hover {
+                    color: $primary-color;
+                }
+            }
+        }
+
+    }
+}

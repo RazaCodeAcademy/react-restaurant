@@ -1,0 +1,17 @@
+.fk-qty {
+    display: flex;
+    align-items: center;
+    &__input {
+        width: 30px;
+        border: none;
+        font-size: 14px;
+        text-align: center;
+        color: $heading-text;
+    }
+    &__icon {
+        font-size: 14px;
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
