@@ -1551,12 +1551,12 @@ const AllItemList = () => {
                                                 >
                                                   <span
                                                     className={`badge bg-${
-                                                      item.is_enabled 
+                                                      item.is_enabled == 1
                                                         ? "success"
                                                         : "danger"
                                                     }`}
                                                   >
-                                                    {item.is_enabled
+                                                    {item.is_enabled == 1
                                                       ? "Yes"
                                                       : "No"}
                                                   </span>
@@ -1820,6 +1820,22 @@ const AllItemList = () => {
                                                       )}
                                                     </button>
                                                   )}
+                                                </td>
+
+                                                <td
+                                                  className={`xsm-text text-capitalize align-middle text-center`}
+                                                >
+                                                  <span
+                                                    className={`badge bg-${
+                                                      item.is_enabled == 1
+                                                        ? "success"
+                                                        : "danger"
+                                                    }`}
+                                                  >
+                                                    {item.is_enabled == 1
+                                                      ? "Yes"
+                                                      : "No"}
+                                                  </span>
                                                 </td>
 
                                                 <td className="xsm-text text-capitalize align-middle text-center">
