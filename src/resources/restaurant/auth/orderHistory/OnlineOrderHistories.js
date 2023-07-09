@@ -1261,6 +1261,19 @@ const OrderHistories = () => {
                                                       </span>
                                                       {_t(t("Delete Order"))}
                                                     </button>
+                                                    <button
+                                                      className="dropdown-item sm-text text-capitalize"
+                                                      onClick={() => {
+                                                        handleDeleteOrderConfirmation(
+                                                          item
+                                                        );
+                                                      }}
+                                                    >
+                                                      <span className="t-mr-8">
+                                                        <i className="fa fa-eye"></i>
+                                                      </span>
+                                                      {_t(t("View Order"))}
+                                                    </button>
                                                   </div>
                                                 </div>
                                               </td>
@@ -1422,6 +1435,19 @@ const OrderHistories = () => {
                                                       <i className="fa fa-trash"></i>
                                                     </span>
                                                     {_t(t("Delete Order"))}
+                                                  </button>
+                                                  <button
+                                                    className="dropdown-item sm-text text-capitalize"
+                                                    onClick={() => {
+                                                      handleDeleteOrderConfirmation(
+                                                        item
+                                                      );
+                                                    }}
+                                                  >
+                                                    <span className="t-mr-8">
+                                                      <i className="fa fa-eye"></i>
+                                                    </span>
+                                                    {_t(t("View Order"))}
                                                   </button>
                                                 </div>
                                               </div>

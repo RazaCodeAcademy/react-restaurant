@@ -350,38 +350,41 @@ const KitchenOnline = () => {
       });
   };
 
-  // console.log(kithcenNewOrdersOnline.length);
-
-  const [counter, setCounter] = useState([]);
   const refCounter = useRef(null);
 
-  function startCountdown(remainingTimeInMinutes, startTime, index) {
-    const endTime = startTime.getTime() + remainingTimeInMinutes * 60 * 1000;
-  
-    const intervalId = setInterval(() => {
-      const currentTime = new Date();
-      const remainingTime = endTime - currentTime.getTime();
-  
+  function startCountdown(serverDateTime, minutes, index) {
+    var futureDateTime = new Date(serverDateTime);
+    futureDateTime = new Date(futureDateTime);
+    futureDateTime.setMinutes(futureDateTime.getMinutes() + parseInt(minutes));
+
+    var countdown = setInterval(function () {
+      var currentDateTime = new Date();
+
+      var remainingTime = futureDateTime - currentDateTime;
+
+      // Check if the countdown has finished
       if (remainingTime <= 0) {
+        clearInterval(countdown);
         if (refCounter.current) {
-          refCounter.current.style.display = 'none';
+          refCounter.current.style.display = "none";
         }
-        clearInterval(intervalId);
-      } else {
-        const minutes = Math.floor((remainingTime / 1000 / 60) % 60);
-        const seconds = Math.floor((remainingTime / 1000) % 60);
-  
-        const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-        const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
-  
-        // setCounter(`${minutes} / ${seconds}`);
-        setCounter((prevItems) => {
-          const updatedItems = [...prevItems];
-          updatedItems[index] = `${minutes} / ${seconds}`;
-          return updatedItems;
-        });
-        console.log(`Time remaining: ${formattedMinutes}:${formattedSeconds}`);
+        return;
       }
+
+      var hours = Math.floor(
+        (remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
+      var minutes = Math.floor(
+        (remainingTime % (1000 * 60 * 60)) / (1000 * 60)
+      );
+      var seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+      var calculatedRemainingTime = ":"+hours.toString().padStart(2, '0') + ":" + minutes.toString().padStart(2, '0') + ":" + seconds.toString().padStart(2, '0');
+
+      const updatedData = [...kithcenNewOrdersOnline];
+      updatedData[index].remainingTime = calculatedRemainingTime; // Update the remaining time
+
+      setKithcenNewOrdersOnline(updatedData);
     }, 1000);
   }
 
@@ -492,19 +495,17 @@ const KitchenOnline = () => {
                             <div className="fk-order-token t-bg-white p-3 h-100">
                               <div className="fk-order-token__footer text-right">
                                 <button
-                                ref={refCounter}
+                                  ref={refCounter}
                                   id="refCounter"
                                   type="button"
                                   className="btn btn-danger xsm-text text-uppercase btn-lg mr-2"
                                 >
-                                  {_t(
-                                    t(counter[index])
-                                  )}
+                                  {_t(t(item.remainingTime))}
                                   {startCountdown(
-                                        item.time_to_deliver,
-                                        new Date(item.created_at),
-                                        index
-                                      )}
+                                    new Date(item.created_at),
+                                    item.time_to_deliver,
+                                    index
+                                  )}
                                 </button>
                                 <button
                                   type="button"
@@ -588,24 +589,24 @@ const KitchenOnline = () => {
                                             filterOrder.filterKey
                                           ) {
                                             return (
-                                              <div class="fk-addons-table__body-row">
-                                                <div class="row g-0">
-                                                  <div class="col-2 text-center border-right d-flex py-2">
-                                                    <span class="fk-addons-table__info-text text-capitalize m-auto">
+                                              <div className="fk-addons-table__body-row">
+                                                <div className="row g-0">
+                                                  <div className="col-2 text-center border-right d-flex py-2">
+                                                    <span className="fk-addons-table__info-text text-capitalize m-auto">
                                                       {indexThisItem + 1}
                                                     </span>
                                                   </div>
-                                                  <div class="col-3 text-center border-right d-flex py-2">
-                                                    <span class="fk-addons-table__info-text text-capitalize m-auto">
+                                                  <div className="col-3 text-center border-right d-flex py-2">
+                                                    <span className="fk-addons-table__info-text text-capitalize m-auto">
                                                       {thisItem.food_item} (
                                                       {thisItem.food_group})
                                                     </span>
                                                   </div>
-                                                  <div class="col-4 text-center border-right t-pl-10 t-pr-10 py-2">
+                                                  <div className="col-4 text-center border-right t-pl-10 t-pr-10 py-2">
                                                     {thisItem.variation !==
                                                       null && (
-                                                      <span class="fk-addons-table__info-text text-capitalize d-block text-left t-pt-5">
-                                                        <span class="font-weight-bold mr-1">
+                                                      <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pt-5">
+                                                        <span className="font-weight-bold mr-1">
                                                           {_t(t("variation"))}:
                                                         </span>
                                                         {thisItem.variation}
@@ -614,8 +615,8 @@ const KitchenOnline = () => {
 
                                                     {thisItem.properties !==
                                                       null && (
-                                                      <span class="fk-addons-table__info-text text-capitalize d-block text-left t-pb-5">
-                                                        <span class="font-weight-bold mr-1">
+                                                      <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pb-5">
+                                                        <span className="font-weight-bold mr-1">
                                                           {_t(t("properties"))}:
                                                         </span>
                                                         {JSON.parse(
@@ -644,8 +645,8 @@ const KitchenOnline = () => {
                                                       </span>
                                                     )}
                                                   </div>
-                                                  <div class="col-2 text-center border-right d-flex py-2">
-                                                    <span class="fk-addons-table__info-text text-capitalize m-auto">
+                                                  <div className="col-2 text-center border-right d-flex py-2">
+                                                    <span className="fk-addons-table__info-text text-capitalize m-auto">
                                                       {thisItem.quantity}
                                                     </span>
                                                   </div>
@@ -676,24 +677,24 @@ const KitchenOnline = () => {
                                           }
                                         } else {
                                           return (
-                                            <div class="fk-addons-table__body-row">
-                                              <div class="row g-0">
-                                                <div class="col-2 text-center border-right d-flex py-2">
-                                                  <span class="fk-addons-table__info-text text-capitalize m-auto">
+                                            <div className="fk-addons-table__body-row">
+                                              <div className="row g-0">
+                                                <div className="col-2 text-center border-right d-flex py-2">
+                                                  <span className="fk-addons-table__info-text text-capitalize m-auto">
                                                     {indexThisItem + 1}
                                                   </span>
                                                 </div>
-                                                <div class="col-3 text-center border-right d-flex py-2">
-                                                  <span class="fk-addons-table__info-text text-capitalize m-auto">
+                                                <div className="col-3 text-center border-right d-flex py-2">
+                                                  <span className="fk-addons-table__info-text text-capitalize m-auto">
                                                     {thisItem.food_item} (
                                                     {thisItem.food_group})
                                                   </span>
                                                 </div>
-                                                <div class="col-4 text-center border-right t-pl-10 t-pr-10 py-2">
+                                                <div className="col-4 text-center border-right t-pl-10 t-pr-10 py-2">
                                                   {thisItem.variation !==
                                                     null && (
-                                                    <span class="fk-addons-table__info-text text-capitalize d-block text-left t-pt-5">
-                                                      <span class="font-weight-bold mr-1">
+                                                    <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pt-5">
+                                                      <span className="font-weight-bold mr-1">
                                                         {_t(t("variation"))}:
                                                       </span>
                                                       {thisItem.variation}
@@ -702,8 +703,8 @@ const KitchenOnline = () => {
 
                                                   {thisItem.properties !==
                                                     null && (
-                                                    <span class="fk-addons-table__info-text text-capitalize d-block text-left t-pb-5">
-                                                      <span class="font-weight-bold mr-1">
+                                                    <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pb-5">
+                                                      <span className="font-weight-bold mr-1">
                                                         {_t(t("properties"))}:
                                                       </span>
                                                       {JSON.parse(
@@ -732,8 +733,8 @@ const KitchenOnline = () => {
                                                     </span>
                                                   )}
                                                 </div>
-                                                <div class="col-2 text-center border-right d-flex py-2">
-                                                  <span class="fk-addons-table__info-text text-capitalize m-auto">
+                                                <div className="col-2 text-center border-right d-flex py-2">
+                                                  <span className="fk-addons-table__info-text text-capitalize m-auto">
                                                     {thisItem.quantity}
                                                   </span>
                                                 </div>
@@ -888,24 +889,24 @@ const KitchenOnline = () => {
                                             filterOrder.filterKey
                                           ) {
                                             return (
-                                              <div class="fk-addons-table__body-row">
-                                                <div class="row g-0">
-                                                  <div class="col-2 text-center border-right d-flex py-2">
-                                                    <span class="fk-addons-table__info-text text-capitalize m-auto">
+                                              <div className="fk-addons-table__body-row">
+                                                <div className="row g-0">
+                                                  <div className="col-2 text-center border-right d-flex py-2">
+                                                    <span className="fk-addons-table__info-text text-capitalize m-auto">
                                                       {indexThisItem + 1}
                                                     </span>
                                                   </div>
-                                                  <div class="col-3 text-center border-right d-flex py-2">
-                                                    <span class="fk-addons-table__info-text text-capitalize m-auto">
+                                                  <div className="col-3 text-center border-right d-flex py-2">
+                                                    <span className="fk-addons-table__info-text text-capitalize m-auto">
                                                       {thisItem.food_item} (
                                                       {thisItem.food_group})
                                                     </span>
                                                   </div>
-                                                  <div class="col-4 text-center border-right t-pl-10 t-pr-10 py-2">
+                                                  <div className="col-4 text-center border-right t-pl-10 t-pr-10 py-2">
                                                     {thisItem.variation !==
                                                       null && (
-                                                      <span class="fk-addons-table__info-text text-capitalize d-block text-left t-pt-5">
-                                                        <span class="font-weight-bold mr-1">
+                                                      <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pt-5">
+                                                        <span className="font-weight-bold mr-1">
                                                           {_t(t("variation"))}:
                                                         </span>
                                                         {thisItem.variation}
@@ -914,8 +915,8 @@ const KitchenOnline = () => {
 
                                                     {thisItem.properties !==
                                                       null && (
-                                                      <span class="fk-addons-table__info-text text-capitalize d-block text-left t-pb-5">
-                                                        <span class="font-weight-bold mr-1">
+                                                      <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pb-5">
+                                                        <span className="font-weight-bold mr-1">
                                                           {_t(t("properties"))}:
                                                         </span>
                                                         {JSON.parse(
@@ -944,8 +945,8 @@ const KitchenOnline = () => {
                                                       </span>
                                                     )}
                                                   </div>
-                                                  <div class="col-2 text-center border-right d-flex py-2">
-                                                    <span class="fk-addons-table__info-text text-capitalize m-auto">
+                                                  <div className="col-2 text-center border-right d-flex py-2">
+                                                    <span className="fk-addons-table__info-text text-capitalize m-auto">
                                                       {thisItem.quantity}
                                                     </span>
                                                   </div>
@@ -976,24 +977,24 @@ const KitchenOnline = () => {
                                           }
                                         } else {
                                           return (
-                                            <div class="fk-addons-table__body-row">
-                                              <div class="row g-0">
-                                                <div class="col-2 text-center border-right d-flex py-2">
-                                                  <span class="fk-addons-table__info-text text-capitalize m-auto">
+                                            <div className="fk-addons-table__body-row">
+                                              <div className="row g-0">
+                                                <div className="col-2 text-center border-right d-flex py-2">
+                                                  <span className="fk-addons-table__info-text text-capitalize m-auto">
                                                     {indexThisItem + 1}
                                                   </span>
                                                 </div>
-                                                <div class="col-3 text-center border-right d-flex py-2">
-                                                  <span class="fk-addons-table__info-text text-capitalize m-auto">
+                                                <div className="col-3 text-center border-right d-flex py-2">
+                                                  <span className="fk-addons-table__info-text text-capitalize m-auto">
                                                     {thisItem.food_item} (
                                                     {thisItem.food_group})
                                                   </span>
                                                 </div>
-                                                <div class="col-4 text-center border-right t-pl-10 t-pr-10 py-2">
+                                                <div className="col-4 text-center border-right t-pl-10 t-pr-10 py-2">
                                                   {thisItem.variation !==
                                                     null && (
-                                                    <span class="fk-addons-table__info-text text-capitalize d-block text-left t-pt-5">
-                                                      <span class="font-weight-bold mr-1">
+                                                    <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pt-5">
+                                                      <span className="font-weight-bold mr-1">
                                                         {_t(t("variation"))}:
                                                       </span>
                                                       {thisItem.variation}
@@ -1002,8 +1003,8 @@ const KitchenOnline = () => {
 
                                                   {thisItem.properties !==
                                                     null && (
-                                                    <span class="fk-addons-table__info-text text-capitalize d-block text-left t-pb-5">
-                                                      <span class="font-weight-bold mr-1">
+                                                    <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pb-5">
+                                                      <span className="font-weight-bold mr-1">
                                                         {_t(t("properties"))}:
                                                       </span>
                                                       {JSON.parse(
@@ -1032,8 +1033,8 @@ const KitchenOnline = () => {
                                                     </span>
                                                   )}
                                                 </div>
-                                                <div class="col-2 text-center border-right d-flex py-2">
-                                                  <span class="fk-addons-table__info-text text-capitalize m-auto">
+                                                <div className="col-2 text-center border-right d-flex py-2">
+                                                  <span className="fk-addons-table__info-text text-capitalize m-auto">
                                                     {thisItem.quantity}
                                                   </span>
                                                 </div>
