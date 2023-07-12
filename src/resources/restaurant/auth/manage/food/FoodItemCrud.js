@@ -50,6 +50,7 @@ const FoodItemCrud = () => {
     itemGroup: null,
     name: "",
     price: "",
+    ingredients: "",
     image: null,
     hasProperty: false,
     properties: null,
@@ -177,6 +178,7 @@ const FoodItemCrud = () => {
     let formData = new FormData();
     formData.append("food_group_id", newItem.itemGroup.id);
     formData.append("name", newItem.name);
+    formData.append("ingredients", newItem.ingredients);
     formData.append("hasProperty", newItem.hasProperty === true ? 1 : 0);
     if (newItem.hasProperty === true) {
       formData.append("hasProperty", 1);
@@ -639,8 +641,37 @@ const FoodItemCrud = () => {
                                         required
                                       />
                                     </div>
+                                    
                                   </div>
                                 )}
+
+                                <div className="form-group mt-4">
+                                    <div className="mb-2">
+                                      <label
+                                        htmlFor="ingredients"
+                                        className="control-label"
+                                      >
+                                        {_t(t("Ingredients"))}
+                                        <span className="text-primary">* </span>
+                                        <small className="text-secondary">
+                                          ({_t(t("Seperated by comma"))})
+                                        </small>
+                                      </label>
+                                    </div>
+                                    <div className="mb-2">
+                                      <input
+                                        id="ingredients"
+                                        type="text"
+                                        className="form-control"
+                                        name="ingredients"
+                                        value={newItem.ingredients}
+                                        onChange={handleChange}
+                                        placeholder="Type ingredients"
+                                        required
+                                      />
+                                    </div>
+                                    
+                                  </div>
 
                                 <div className="form-check mt-4">
                                   <input

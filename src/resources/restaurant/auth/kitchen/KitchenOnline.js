@@ -105,17 +105,31 @@ const KitchenOnline = () => {
   };
 
   //accept or reject
-  const handleAcceptOrReject = (id) => {
+  const handleAcceptOrReject = (id, timeInMinutes, index) => {
     //front end accept-reject view update
     let newState = kithcenNewOrdersOnline.map((orderItem) =>
       orderItem.id === id
         ? {
             ...orderItem,
+            time_to_deliver: timeInMinutes,
             is_accepted_by_kitchen:
               parseInt(orderItem.is_accepted_by_kitchen) === 0 ? 1 : 0,
           }
         : orderItem
     );
+
+    if (kithcenNewOrdersOnline[index].is_accepted == 1) {
+      const updatedData = [...kithcenNewOrdersOnline];
+      updatedData[index].is_accepted_by_kitchen = 0;
+      updatedData[index].accepted_by_kitchen_time = null;
+      updatedData[index].time_to_deliver = 0;
+
+      setIsOpen(false);
+
+      setKithcenNewOrdersOnline(updatedData);
+      startCountdown(null, 0, index);
+    }
+
     setKithcenNewOrdersOnline(newState);
 
     //front end accept-reject view update for searched
@@ -124,6 +138,7 @@ const KitchenOnline = () => {
         orderItemSearched.id === id
           ? {
               ...orderItemSearched,
+              time_to_deliver: timeInMinutes,
               is_accepted_by_kitchen:
                 parseInt(orderItemSearched.is_accepted_by_kitchen) === 0
                   ? 1
@@ -141,6 +156,7 @@ const KitchenOnline = () => {
     const url = BASE_URL + "/settings/accept-new-order-online";
     let formData = {
       id,
+      time_to_deliver: timeInMinutes,
     };
     return axios
       .post(url, formData, {
@@ -229,10 +245,27 @@ const KitchenOnline = () => {
       })
       .then(() => {
         //remove ready item from order list
-        let newState = kithcenNewOrdersOnline.filter((orderItem) => {
+        let newState = kithcenNewOrdersOnline.filter((orderItem, index) => {
+          if (orderItem.id === id) {
+            kithcenNewOrdersOnline.splice(index, 1);
+            if (kithcenNewOrdersOnline[index].is_accepted == 1) {
+              const updatedData = [...kithcenNewOrdersOnline];
+              updatedData[index].is_accepted_by_kitchen = 0;
+              updatedData[index].accepted_by_kitchen_time = null;
+              updatedData[index].time_to_deliver = 0;
+
+              setIsOpen(false);
+
+              setKithcenNewOrdersOnline(updatedData);
+              startCountdown(null, 0, index);
+            }
+            setKithcenNewOrdersOnline(...kithcenNewOrdersOnline);
+          }
           return orderItem.id !== id;
         });
+
         setKithcenNewOrdersOnline(newState);
+        console.log(kithcenNewOrdersOnline);
 
         //remove ready item from search list
         if (searchedOrder.searched) {
@@ -354,20 +387,34 @@ const KitchenOnline = () => {
 
   function startCountdown(serverDateTime, minutes, index) {
     var futureDateTime = new Date(serverDateTime);
-    futureDateTime = new Date(futureDateTime);
     futureDateTime.setMinutes(futureDateTime.getMinutes() + parseInt(minutes));
 
-    var countdown = setInterval(function () {
-      var currentDateTime = new Date();
+    var currentDateTime = new Date();
 
-      var remainingTime = futureDateTime - currentDateTime;
+    var remainingTime = futureDateTime - currentDateTime;
+
+    // Check if the countdown has finished
+    // if (remainingTime <= 0) {
+
+    //   if (refCounter.current) {
+    //     refCounter.current.style.display = "none";
+    //   }
+    //   return;
+    // }
+
+    var countdown = setInterval(function () {
+      currentDateTime = new Date();
+
+      remainingTime = futureDateTime - currentDateTime;
 
       // Check if the countdown has finished
       if (remainingTime <= 0) {
-        clearInterval(countdown);
-        if (refCounter.current) {
-          refCounter.current.style.display = "none";
+        if (kithcenNewOrdersOnline[index] == undefined) {
+          clearInterval(countdown);
         }
+        // if (refCounter.current) {
+        //   refCounter.current.style.display = "none";
+        // }
         return;
       }
 
@@ -379,20 +426,103 @@ const KitchenOnline = () => {
       );
       var seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
 
-      var calculatedRemainingTime = ":"+hours.toString().padStart(2, '0') + ":" + minutes.toString().padStart(2, '0') + ":" + seconds.toString().padStart(2, '0');
+      var calculatedRemainingTime =
+        ":" +
+        hours.toString().padStart(2, "0") +
+        ":" +
+        minutes.toString().padStart(2, "0") +
+        ":" +
+        seconds.toString().padStart(2, "0");
 
       const updatedData = [...kithcenNewOrdersOnline];
       updatedData[index].remainingTime = calculatedRemainingTime; // Update the remaining time
+      updatedData[index].accepted_by_kitchen_time = serverDateTime; // Update the remaining time
 
       setKithcenNewOrdersOnline(updatedData);
     }, 1000);
   }
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [itemID, setItemID] = useState(0);
+  const [itemIndex, setItemIndex] = useState("");
+  const [inputValue, setInputValue] = useState("");
+
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      mountedRef.current = !mountedRef.current;
+    };
+  }, []);
+
+  const openModal = (item_id, index) => {
+    setItemID(item_id);
+    setItemIndex(index);
+    setIsOpen(false);
+    setTimeout(() => {
+      if (mountedRef.current) {
+        setIsOpen(true);
+      }
+    }, 100);
+  };
+
+  const saveAcceptOrder = () => {
+    handleAcceptOrReject(itemID, inputValue, itemIndex);
+    setIsOpen(false);
+
+    const updatedData = [...kithcenNewOrdersOnline];
+    updatedData[itemIndex].is_accepted_by_kitchen = 1;
+    updatedData[itemIndex].accepted_by_kitchen_time = new Date();
+    updatedData[itemIndex].time_to_deliver = inputValue;
+
+    setKithcenNewOrdersOnline(updatedData);
+
+    // Start the countdown after updating the necessary state variables
+    startCountdown(new Date(), inputValue, itemIndex);
+
+    // Note: Adjust the above startCountdown function call according to your implementation
+  };
+
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
 
   return (
     <>
       <Helmet>
         <title>{_t(t("Online Order's Kitchen"))}</title>
       </Helmet>
+      <div>
+        {isOpen && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h5>Order Ready Time</h5>
+              <div className="form-group">
+                <label>Enter Time In Minutes</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder="enter time"
+                  value={inputValue}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="my-2">
+                <button className="btn btn-success" onClick={saveAcceptOrder}>
+                  Accept
+                </button>
+                <button className="btn btn-dark ml-3" onClick={closeModal}>
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
       <main id="main" data-simplebar>
         <div className="fk-scroll--index t-mt-15 t-mb-15" data-simplebar>
           <div className="container-fluid">
@@ -490,23 +620,28 @@ const KitchenOnline = () => {
                         return (
                           <div
                             className="col-md-6 col-xl-4"
+                            key={item.id}
                             data-category={index + 1}
                           >
                             <div className="fk-order-token t-bg-white p-3 h-100">
                               <div className="fk-order-token__footer text-right">
-                                <button
-                                  ref={refCounter}
-                                  id="refCounter"
-                                  type="button"
-                                  className="btn btn-danger xsm-text text-uppercase btn-lg mr-2"
-                                >
-                                  {_t(t(item.remainingTime))}
-                                  {startCountdown(
-                                    new Date(item.created_at),
-                                    item.time_to_deliver,
-                                    index
+                                {item.is_accepted_by_kitchen == 1 &&
+                                  item.is_ready == 0 && (
+                                    <button
+                                      ref={refCounter}
+                                      id="refCounter"
+                                      type="button"
+                                      className="btn btn-danger xsm-text text-uppercase btn-lg mr-2"
+                                    >
+                                      {_t(t(item.remainingTime))}
+                                      {startCountdown(
+                                        new Date(item.accepted_by_kitchen_time),
+                                        item.time_to_deliver,
+                                        index
+                                      )}
+                                    </button>
                                   )}
-                                </button>
+
                                 <button
                                   type="button"
                                   className="btn btn-success xsm-text text-uppercase btn-lg mr-2"
@@ -520,9 +655,7 @@ const KitchenOnline = () => {
                                   <button
                                     type="button"
                                     className="btn btn-secondary xsm-text text-uppercase btn-lg"
-                                    onClick={() =>
-                                      handleAcceptOrReject(item.id)
-                                    }
+                                    onClick={() => openModal(item.id, index)}
                                   >
                                     {_t(t("Accept order"))}
                                   </button>
@@ -531,7 +664,7 @@ const KitchenOnline = () => {
                                     type="button"
                                     className="btn btn-primary xsm-text text-uppercase btn-lg"
                                     onClick={() =>
-                                      handleAcceptOrReject(item.id)
+                                      handleAcceptOrReject(item.id, 0, index)
                                     }
                                   >
                                     {_t(t("Make order pending"))}
@@ -677,7 +810,10 @@ const KitchenOnline = () => {
                                           }
                                         } else {
                                           return (
-                                            <div className="fk-addons-table__body-row">
+                                            <div
+                                              key={thisItem.id}
+                                              className="fk-addons-table__body-row"
+                                            >
                                               <div className="row g-0">
                                                 <div className="col-2 text-center border-right d-flex py-2">
                                                   <span className="fk-addons-table__info-text text-capitalize m-auto">
@@ -807,6 +943,22 @@ const KitchenOnline = () => {
                           >
                             <div className="fk-order-token t-bg-white p-3 h-100">
                               <div className="fk-order-token__footer text-right">
+                                {item.is_accepted_by_kitchen == 1 &&
+                                  item.is_ready == 0 && (
+                                    <button
+                                      ref={refCounter}
+                                      id="refCounter"
+                                      type="button"
+                                      className="btn btn-danger xsm-text text-uppercase btn-lg mr-2"
+                                    >
+                                      {_t(t(item.remainingTime))}
+                                      {startCountdown(
+                                        new Date(item.accepted_by_kitchen_time),
+                                        item.time_to_deliver,
+                                        index
+                                      )}
+                                    </button>
+                                  )}
                                 <button
                                   type="button"
                                   className="btn btn-success xsm-text text-uppercase btn-lg mr-2"
@@ -820,9 +972,7 @@ const KitchenOnline = () => {
                                   <button
                                     type="button"
                                     className="btn btn-secondary xsm-text text-uppercase btn-lg"
-                                    onClick={() =>
-                                      handleAcceptOrReject(item.id)
-                                    }
+                                    onClick={() => openModal(item.id, index)}
                                   >
                                     {_t(t("Accept order"))}
                                   </button>
@@ -831,7 +981,7 @@ const KitchenOnline = () => {
                                     type="button"
                                     className="btn btn-primary xsm-text text-uppercase btn-lg"
                                     onClick={() =>
-                                      handleAcceptOrReject(item.id)
+                                      handleAcceptOrReject(item.id, 0, index)
                                     }
                                   >
                                     {_t(t("Make order pending"))}

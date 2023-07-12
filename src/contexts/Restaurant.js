@@ -481,8 +481,6 @@ const RestaurantProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${getCookie()}` },
       })
       .then((res) => {
-        console.log(res.data);
-
         setKithcenNewOrdersOnline(res.data[0]);
         setLoading(false);
       });

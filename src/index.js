@@ -20,7 +20,7 @@ ReactDOM.render(
       <SettingsProvider>
         <RestaurantProvider>
           <FoodProvider>
-            <SaasApp />
+            <SaasApp key="saasAppKey" />
           </FoodProvider>
         </RestaurantProvider>
       </SettingsProvider>
