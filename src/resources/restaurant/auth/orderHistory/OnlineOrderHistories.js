@@ -40,6 +40,7 @@ import { SettingsContext } from "../../../../contexts/Settings";
 import { UserContext } from "../../../../contexts/User";
 import { RestaurantContext } from "../../../../contexts/Restaurant";
 import { FoodContext } from "../../../../contexts/Food";
+import { logDOM } from "@testing-library/react";
 
 const OrderHistories = () => {
   //getting context values here
@@ -189,6 +190,7 @@ const OrderHistories = () => {
 
   //search submitted orders here
   const handleSearch = (e) => {
+    // console.log(allOnlineOrdersForSearch);
     let searchInput = e.target.value.toLowerCase();
     if (searchInput.length === 0) {
       setSearchedOrders({ ...searchedOrders, searched: false });
@@ -208,6 +210,7 @@ const OrderHistories = () => {
           (lowerCaseItemBranch && lowerCaseItemBranch.includes(searchInput))
         );
       });
+
       setSearchedOrders({
         ...searchedOrders,
         list: searchedList,
@@ -1070,6 +1073,19 @@ const OrderHistories = () => {
                                 scope="col"
                                 className="sm-text text-capitalize align-middle text-center border-1 border"
                               >
+                                {_t(t("Phone"))}
+                              </th>
+                              <th
+                                scope="col"
+                                className="sm-text text-capitalize align-middle text-center border-1 border"
+                              >
+                                {_t(t("Reservation"))}
+                              </th>
+
+                              <th
+                                scope="col"
+                                className="sm-text text-capitalize align-middle text-center border-1 border"
+                              >
                                 {_t(t("Total bill"))}
                               </th>
 
@@ -1150,6 +1166,12 @@ const OrderHistories = () => {
 
                                               <td className="xsm-text align-middle text-center">
                                                 {item.user_name}
+                                              </td>
+                                              <td className="xsm-text align-middle text-center">
+                                                {item.user_phone}
+                                              </td>
+                                              <td className="xsm-text align-middle text-center">
+                                                {item.reservation_date_time}
                                               </td>
 
                                               <td className="xsm-text align-middle text-center">
@@ -1329,6 +1351,13 @@ const OrderHistories = () => {
                                             <td className="xsm-text align-middle text-center">
                                               {item.user_name}
                                             </td>
+
+                                            <td className="xsm-text align-middle text-center">
+                                                {item.user_phone}
+                                              </td>
+                                              <td className="xsm-text align-middle text-center">
+                                                {item.reservation_date_time ? item.reservation_date_time : 'Expired'}
+                                              </td>
 
                                             <td className="xsm-text align-middle text-center">
                                               {currencySymbolLeft()}

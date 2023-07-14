@@ -121,7 +121,7 @@ const Kitchen = () => {
       updatedData[index].is_accepted = 0;
       updatedData[index].accepted_time = null;
       updatedData[index].time_to_deliver = 0;
-      setIsOpen(false);
+      // setIsOpen(prev=>!prev);
 
       setKithcenNewOrders(updatedData);
       startOrderCountdown(null, 0, index);
@@ -424,29 +424,15 @@ const Kitchen = () => {
   const openModal = (item_id, index) => {
     setItemID(item_id);
     setItemIndex(index);
-    setIsOpen(false);
-    setTimeout(() => {
-      if (mountedRef.current) {
-        setIsOpen(true);
-      }
-    }, 100);
+    setIsOpen(prev=>!prev);
   };
 
   const saveAcceptOrder = () => {
     handleAcceptOrReject(itemID, inputValue, itemIndex);
-    setIsOpen(false);
-
-    const updatedData = [...kithcenNewOrders];
-    updatedData[itemIndex].is_accepted = 1;
-    updatedData[itemIndex].accepted_time = new Date();
-    updatedData[itemIndex].time_to_deliver = inputValue;
-
-    setKithcenNewOrders(updatedData);
-
-    // Start the countdown after updating the necessary state variables
-    startOrderCountdown(new Date(), inputValue, itemIndex);
-
-    // Note: Adjust the above startCountdown function call according to your implementation
+    setIsOpen(prev=>!prev);
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   };
 
   const handleInputChange = (event) => {
@@ -454,7 +440,7 @@ const Kitchen = () => {
   };
 
   const closeModal = () => {
-    setIsOpen(false);
+    setIsOpen(prev=>!prev);
   };
 
   return (

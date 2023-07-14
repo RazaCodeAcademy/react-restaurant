@@ -405,8 +405,7 @@ const OnlineOrders = () => {
                                           (propertyItem, thisIndex) => {
                                             return (
                                               <div
-                                                className="d-block"
-                                                className={`text-capitalize xsm-text`}
+                                                className={`text-capitalize xsm-text d-block`}
                                               >
                                                 <span>
                                                   {formatPrice(
@@ -545,6 +544,7 @@ const OnlineOrders = () => {
                                         {thisItem.variation !== null &&
                                           "(" + thisItem.variation + ")"}
                                         :-{thisItem.quantity}{" "}
+                                        | <span><b>Note:</b>{thisItem.note}</span>
                                       </span>
                                     </div>
 

@@ -1,14 +1,24 @@
 import React, { useEffect, useState, useContext } from "react";
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 
 //axios and base url
 import axios from "axios";
-import { BASE_URL, SAAS_APPLICATION, saas_apiUrl, saas_apiParams, saas_form_data } from "./BaseUrl";
+import {
+  BASE_URL,
+  SAAS_APPLICATION,
+  saas_apiUrl,
+  saas_apiParams,
+  saas_form_data,
+} from "./BaseUrl";
 
 //routes
 import RestaurantRoute from "./routes/RestaurantRoute";
 import CustomerRoute from "./routes/CustomerRoute";
-
 
 //functions
 import {
@@ -105,6 +115,7 @@ import {
   PosScreen,
   General,
   UpdateSystem,
+  StripePayment,
 
   //manage->stock
   FoodPurchase,
@@ -144,13 +155,13 @@ import { SettingsContext } from "./contexts/Settings";
 import { UserContext } from "./contexts/User";
 import Showdeliveryman from "./resources/restaurant/auth/manage/settings/ShowDeliveryman";
 import NotPermitted from "./saasHelper/NotPermitted";
-import { SaasContext } from './contexts/SaasHelper'
+import { SaasContext } from "./contexts/SaasHelper";
 import SaasProfile from "./resources/restaurant/auth/saasInfo/SaasProfile";
 import SaasApiFailure from "./saasHelper/saasApiFailure";
 import ShowManageStock from "./resources/restaurant/auth/manage/settings/ShowManageStock";
 import Blocked from "./saasHelper/Blocked";
 
-import OnlinePayment from './resources/restaurant/auth/manage/settings/OnlinePayment';
+import OnlinePayment from "./resources/restaurant/auth/manage/settings/OnlinePayment";
 
 function SaasApp() {
   // check saas subscruption expiry
@@ -168,34 +179,36 @@ function SaasApp() {
 
   // check expirary function
   const handleSassExpiry = () => {
-    const url = saas_apiUrl + '/api/check-expiry';
-    axios.post(url, saas_form_data).then((res) => {
-      if (res.data == 'YES') {
-        setExpiry(true);
-      }
-      else {
-        setExpiry(false);
-      }
-
-    }).catch(() => {
-      setApiFailed(true);
-    });
-  }
+    const url = saas_apiUrl + "/api/check-expiry";
+    axios
+      .post(url, saas_form_data)
+      .then((res) => {
+        if (res.data == "YES") {
+          setExpiry(true);
+        } else {
+          setExpiry(false);
+        }
+      })
+      .catch(() => {
+        setApiFailed(true);
+      });
+  };
 
   // check block function
   const checkSaasBlock = () => {
-    // check how many orders are left 
-    const url = saas_apiUrl + '/api/user-restriction?' + saas_apiParams;
-    axios.get(url, saas_form_data).then((res) => {
-
-      setSaasBlock(res.data);
-    }).catch(() => {
-      return 'No data found check api'
-    });
-  }
+    // check how many orders are left
+    const url = saas_apiUrl + "/api/user-restriction?" + saas_apiParams;
+    axios
+      .get(url, saas_form_data)
+      .then((res) => {
+        setSaasBlock(res.data);
+      })
+      .catch(() => {
+        return "No data found check api";
+      });
+  };
   //useEffect == componentDidMount()
   useEffect(() => {
-
     (async () => {
       setLoading(false);
       const url = BASE_URL + "/check-install";
@@ -209,7 +222,7 @@ function SaasApp() {
             });
           }
         })
-        .catch((error) => { });
+        .catch((error) => {});
     })();
 
     if (generalSettings) {
@@ -218,7 +231,7 @@ function SaasApp() {
     }
 
     // check expiry
-    if (SAAS_APPLICATION == 'YES') {
+    if (SAAS_APPLICATION == "YES") {
       const saasExpiryToken = setInterval(handleSassExpiry, 60000);
       handleSassExpiry();
 
@@ -226,276 +239,323 @@ function SaasApp() {
       checkSaasBlock();
       return () => {
         clearInterval(saasExpiryToken, saasBlockToken);
-
-      }
+      };
     }
   }, [authUserInfo, expiry]);
   return (
     <>
-
       <ToastContainer />
-      {
-        SAAS_APPLICATION == 'YES' ?
-          [
+      {SAAS_APPLICATION == "YES"
+        ? [
             // apiFailed ? [<SaasApiFailure />] : [
-            expiry ? [
-              saasBlock == false ? [<Router>
-                <Navbar />
-                <Switch>
+            expiry ? (
+              [
+                saasBlock == false ? (
+                  [
+                    <Router>
+                      <Navbar />
+                      <Switch>
+                        {/* installation */}
+                        {credentials.install_no && (
+                          <Route path="/installation" exact>
+                            <Welcome />
+                          </Route>
+                        )}
 
-                  {/* installation */}
-                  {credentials.install_no && (
-                    <Route path="/installation" exact>
-                      <Welcome />
-                    </Route>
-                  )}
+                        {credentials.install_no && (
+                          <Route path="/installation/permission-chcek" exact>
+                            <InstallPermission />
+                          </Route>
+                        )}
 
-                  {credentials.install_no && (
-                    <Route path="/installation/permission-chcek" exact>
-                      <InstallPermission />
-                    </Route>
-                  )}
+                        {credentials.install_no && (
+                          <Route path="/installation/database-setup" exact>
+                            <DbSetup />
+                          </Route>
+                        )}
 
-                  {credentials.install_no && (
-                    <Route path="/installation/database-setup" exact>
-                      <DbSetup />
-                    </Route>
-                  )}
+                        {credentials.install_no && (
+                          <Route path="/installation/import-database" exact>
+                            <ImportDb />
+                          </Route>
+                        )}
 
-                  {credentials.install_no && (
-                    <Route path="/installation/import-database" exact>
-                      <ImportDb />
-                    </Route>
-                  )}
+                        {credentials.install_no && (
+                          <Route path="/installation/add-admin-user" exact>
+                            <InstallationUser />
+                          </Route>
+                        )}
 
-                  {credentials.install_no && (
-                    <Route path="/installation/add-admin-user" exact>
-                      <InstallationUser />
-                    </Route>
-                  )}
+                        {credentials.install_no && (
+                          <Route path="/installation/congratulation" exact>
+                            <InstallationCongratulation />
+                          </Route>
+                        )}
 
-                  {credentials.install_no && (
-                    <Route path="/installation/congratulation" exact>
-                      <InstallationCongratulation />
-                    </Route>
-                  )}
+                        {/* common */}
+                        <Route path="/refresh" exact>
+                          <Refresh />
+                        </Route>
 
-                  {/* common */}
-                  <Route path="/refresh" exact>
-                    <Refresh />
-                  </Route>
+                        <Route path="/login" exact>
+                          <Login />
+                        </Route>
 
-                  <Route path="/login" exact>
-                    <Login />
-                  </Route>
+                        <Route path="/sign-up" exact>
+                          <SignUp />
+                        </Route>
 
-                  <Route path="/sign-up" exact>
-                    <SignUp />
-                  </Route>
+                        <Route path="/delivery-man-registration" exact>
+                          <BeDeliveryMan />
+                        </Route>
 
-                  <Route path="/delivery-man-registration" exact>
-                    <BeDeliveryMan />
-                  </Route>
+                        <Route path="/reset-password" exact>
+                          <ForgetPw />
+                        </Route>
 
-                  <Route path="/reset-password" exact>
-                    <ForgetPw />
-                  </Route>
+                        <Route path="/set-new-password/:token" exact>
+                          <SetNewPw />
+                        </Route>
 
-                  <Route path="/set-new-password/:token" exact>
-                    <SetNewPw />
-                  </Route>
+                        {credentials.install_no ? (
+                          <Route path="/" exact>
+                            <Login />
+                          </Route>
+                        ) : (
+                          <Route path="/" exact>
+                            <RestaurantLanding />
+                          </Route>
+                        )}
 
-                  {credentials.install_no ? (
-                    <Route path="/" exact>
-                      <Login />
-                    </Route>
-                  ) : (
-                    <Route path="/" exact>
-                      <RestaurantLanding />
-                    </Route>
-                  )}
+                        {/* Customer routes */}
+                        <CustomerRoute path="/profile" exact>
+                          <CustomerProfile />
+                        </CustomerRoute>
+                        <CustomerRoute path="/my-orders" exact>
+                          <MyOrders />
+                        </CustomerRoute>
 
+                        {/* restaurant dashboard pages */}
+                        <RestaurantRoute path="/dashboard" exact>
+                          <RestaurantHome />
+                        </RestaurantRoute>
 
+                        <RestaurantRoute path="/update-user-profile" exact>
+                          <UpdateProfile />
+                        </RestaurantRoute>
 
-                  {/* Customer routes */}
-                  <CustomerRoute path="/profile" exact>
-                    <CustomerProfile />
-                  </CustomerRoute>
-                  <CustomerRoute path="/my-orders" exact>
-                    <MyOrders />
-                  </CustomerRoute>
+                        <RestaurantRoute path="/dashboard/work-periods" exact>
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Work period"
+                          ) ? (
+                            <WorkPeriod />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  {/* restaurant dashboard pages */}
-                  <RestaurantRoute path="/dashboard" exact>
-                    <RestaurantHome />
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/closing-stock/:started_at"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Work period"
+                          ) ? (
+                            <OpeningClosingStock />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/update-user-profile" exact>
-                    <UpdateProfile />
-                  </RestaurantRoute>
+                        <RestaurantRoute path="/dashboard/pos" exact>
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(authUserInfo.permissions, "POS") ? (
+                            <Pos />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/work-periods" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Work period") ? (
-                      <WorkPeriod />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        {/* jtd */}
+                        <RestaurantRoute
+                          path="/dashboard/edit-submit-order/:editId"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(authUserInfo.permissions, "POS") ? (
+                            <EditSubmittedOrder />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/closing-stock/:started_at" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Work period") ? (
-                      <OpeningClosingStock />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute path="/dashboard/pos/submitted" exact>
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(authUserInfo.permissions, "POS") ? (
+                            <Submitted />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/pos" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "POS") ? (
-                      <Pos />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute path="/dashboard/pos/settled" exact>
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(authUserInfo.permissions, "POS") ? (
+                            <Settled />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  {/* jtd */}
-                  <RestaurantRoute path="/dashboard/edit-submit-order/:editId" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "POS") ? (
-                      <EditSubmittedOrder />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/pos/online-orders"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(authUserInfo.permissions, "POS") ? (
+                            <OnlineOrders />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/pos/submitted" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "POS") ? (
-                      <Submitted />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute path="/dashboard/orders" exact>
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Order history"
+                          ) ? (
+                            <OrderHistories />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/pos/settled" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "POS") ? (
-                      <Settled />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute path="/dashboard/online-orders" exact>
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Order history"
+                          ) ? (
+                            <OnlineOrderHistories />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/pos/online-orders" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "POS") ? (
-                      <OnlineOrders />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute path="/dashboard/customers" exact>
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Customer"
+                          ) ? (
+                            <Customers />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/orders" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Order history") ? (
-                      <OrderHistories />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/online-customers"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Customer"
+                          ) ? (
+                            <OnlineCustomerList />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/online-orders" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Order history") ? (
-                      <OnlineOrderHistories />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute path="/dashboard/kitchen" exact>
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Kitchen"
+                          ) ? (
+                            <Kitchen />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/customers" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Customer") ? (
-                      <Customers />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute path="/dashboard/kitchen/online" exact>
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Kitchen"
+                          ) ? (
+                            <KitchenOnline />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/online-customers" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Customer") ? (
-                      <OnlineCustomerList />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute path="/dashboard/reports" exact>
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Report"
+                          ) ? (
+                            <Dashboard />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/kitchen" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Kitchen") ? (
-                      <Kitchen />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute path="/dashboard/saas-profile" exact>
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Saas profile"
+                          ) ? (
+                            <SaasProfile />
+                          ) : (
+                            // <Valoto />
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/kitchen/online" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Kitchen") ? (
-                      <KitchenOnline />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
-
-                  <RestaurantRoute path="/dashboard/reports" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Report") ? (
-                      <Dashboard />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
-
-                  <RestaurantRoute path="/dashboard/saas-profile" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Saas profile") ? (
-                      <SaasProfile />
-                      // <Valoto />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
-
-                  {/* test purpose */}
-                  {/* <Route path='/valoto' exact>
+                        {/* test purpose */}
+                        {/* <Route path='/valoto' exact>
                       <Valoto />
                     </Route> */}
 
+                        <RestaurantRoute path="/dashboard/daily-reports" exact>
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Report"
+                          ) ? (
+                            <Daily />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/daily-reports" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Report") ? (
-                      <Daily />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/monthly-reports"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Report"
+                          ) ? (
+                            <Monthly />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/monthly-reports" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Report") ? (
-                      <Monthly />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
-
-                  {/* <RestaurantRoute path="/dashboard/yearly-reports" exact>
+                        {/* <RestaurantRoute path="/dashboard/yearly-reports" exact>
   {authUserInfo.permissions !== null &&
   checkPermission(authUserInfo.permissions, "Report") ? (
   <Yearly />
@@ -504,126 +564,195 @@ function SaasApp() {
   )}
   </RestaurantRoute> */}
 
-                  <RestaurantRoute path="/dashboard/food-items-reports" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Report") ? (
-                      <ItemWise />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/food-items-reports"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Report"
+                          ) ? (
+                            <ItemWise />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/food-group-reports" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Report") ? (
-                      <GroupWise />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/food-group-reports"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Report"
+                          ) ? (
+                            <GroupWise />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/branch-reports" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Report") ? (
-                      <BranchWise />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute path="/dashboard/branch-reports" exact>
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Report"
+                          ) ? (
+                            <BranchWise />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/pos-user-reports" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Report") ? (
-                      <UserWise />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/pos-user-reports"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Report"
+                          ) ? (
+                            <UserWise />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/dept-tag-reports" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Report") ? (
-                      <DeptWise />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/dept-tag-reports"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Report"
+                          ) ? (
+                            <DeptWise />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/service-charge-reports" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Report") ? (
-                      <ServiceChargeWise />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/service-charge-reports"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Report"
+                          ) ? (
+                            <ServiceChargeWise />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/discount-reports" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Report") ? (
-                      <DiscountWise />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/discount-reports"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Report"
+                          ) ? (
+                            <DiscountWise />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/stock" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Report") ? (
-                      <StockDashboard />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute path="/dashboard/stock" exact>
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Report"
+                          ) ? (
+                            <StockDashboard />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/food-stock" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Report") ? (
-                      <FoodStockReport />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute path="/dashboard/food-stock" exact>
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Report"
+                          ) ? (
+                            <FoodStockReport />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/ingredient-stock" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Report") ? (
-                      <IngredientStockReport />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/ingredient-stock"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Report"
+                          ) ? (
+                            <IngredientStockReport />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/food-stock/:started_at" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Report") ? (
-                      <OpeningClosingStockFoodReport />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/food-stock/:started_at"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Report"
+                          ) ? (
+                            <OpeningClosingStockFoodReport />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/ingredient-stock/:started_at" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Report") ? (
-                      <OpeningClosingStockIngredientReport />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/ingredient-stock/:started_at"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Report"
+                          ) ? (
+                            <OpeningClosingStockIngredientReport />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  {/* Manage routes */}
-                  {/* food */}
-                  <RestaurantRoute path="/dashboard/manage/food/groups" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <GroupCrud />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        {/* Manage routes */}
+                        {/* food */}
+                        <RestaurantRoute
+                          path="/dashboard/manage/food/groups"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <GroupCrud />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  {/* <RestaurantRoute path="/dashboard/manage/food/units" exact>
+                        {/* <RestaurantRoute path="/dashboard/manage/food/units" exact>
   {authUserInfo.permissions !== null &&
   checkPermission(authUserInfo.permissions, "Manage") ? (
   <UnitCrud />
@@ -632,474 +761,703 @@ function SaasApp() {
   )}
   </RestaurantRoute> */}
 
-                  <RestaurantRoute path="/dashboard/manage/food/variations" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <VariationCrud />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/food/variations"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <VariationCrud />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/manage/food/properties" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <PropertyCrud />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/food/properties"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <PropertyCrud />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/manage/food/properties/:slug" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <PropertyItemCrud />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/food/properties/:slug"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <PropertyItemCrud />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/manage/food/add-new" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <FoodItemCrud />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/food/add-new"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <FoodItemCrud />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/manage/food/all-items" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <AllItemList />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/stripe/payment"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <StripePayment />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  {/* Stock */}
-                  <RestaurantRoute path="/dashboard/manage/stock/food-purchase" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <FoodPurchase />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/food/all-items"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <AllItemList />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute
-                    path="/dashboard/manage/stock/purchase-history-food"
-                    exact
-                  >
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <FoodPurchaseHistory />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        {/* Stock */}
+                        <RestaurantRoute
+                          path="/dashboard/manage/stock/food-purchase"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <FoodPurchase />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute
-                    path="/dashboard/manage/stock/purchase-history-food-edit/:id"
-                    exact
-                  >
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <FoodPurchaseEdit />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/stock/purchase-history-food"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <FoodPurchaseHistory />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/manage/stock/food-return" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <FoodReturn />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/stock/purchase-history-food-edit/:id"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <FoodPurchaseEdit />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute
-                    path="/dashboard/manage/stock/ingredient-group"
-                    exact
-                  >
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <IngredientGroup />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/stock/food-return"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <FoodReturn />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/manage/stock/ingredient-item" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <IngredientItem />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/stock/ingredient-group"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <IngredientGroup />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute
-                    path="/dashboard/manage/stock/ingredient-purchase"
-                    exact
-                  >
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <IngredientPurchase />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/stock/ingredient-item"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <IngredientItem />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute
-                    path="/dashboard/manage/stock/purchase-history-ingredient"
-                    exact
-                  >
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <IngredientPurchaseHistory />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/stock/ingredient-purchase"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <IngredientPurchase />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute
-                    path="/dashboard/manage/stock/purchase-history-ingredient-edit/:id"
-                    exact
-                  >
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <IngredientPurchaseEdit />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/stock/purchase-history-ingredient"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <IngredientPurchaseHistory />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute
-                    path="/dashboard/manage/stock/ingredient-return"
-                    exact
-                  >
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <IngredientReturn />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/stock/purchase-history-ingredient-edit/:id"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <IngredientPurchaseEdit />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute
-                    path="/dashboard/manage/stock/ingredient-usage"
-                    exact
-                  >
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <IngredientUsage />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/stock/ingredient-return"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <IngredientReturn />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/manage/stock/manage-supplier" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <ManageSupplier />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/stock/ingredient-usage"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <IngredientUsage />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute
-                    path="/dashboard/manage/stock/supplier-history"
-                    exact
-                  >
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <SupplierHistory />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/stock/manage-supplier"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <ManageSupplier />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/manage/stock/stock-out-food" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <StockOutFood />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/stock/supplier-history"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <SupplierHistory />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute
-                    path="/dashboard/manage/stock/stock-out-ingredient"
-                    exact
-                  >
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <StockOutIngredient />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/stock/stock-out-food"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <StockOutFood />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  {/* Users */}
-                  <RestaurantRoute path="/dashboard/manage/user/customers" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <CustomerCrud />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/stock/stock-out-ingredient"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <StockOutIngredient />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/manage/user/admin-staff" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <AdminStaffCrud />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        {/* Users */}
+                        <RestaurantRoute
+                          path="/dashboard/manage/user/customers"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <CustomerCrud />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/manage/user/delivery-men" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <DeliveryMen />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/user/admin-staff"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <AdminStaffCrud />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/manage/user/delivery-request" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <NewDeliveryMen />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/user/delivery-men"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <DeliveryMen />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/manage/user/waiters" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <Waiter />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/user/delivery-request"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <NewDeliveryMen />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/manage/roles-and-permissions" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <Permissions />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/user/waiters"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <Waiter />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  {/* Restaurant */}
-                  <RestaurantRoute path="/dashboard/manage/restaurant/branches" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <BranchCrud />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/roles-and-permissions"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <Permissions />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/manage/restaurant/tables" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <TableCrud />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        {/* Restaurant */}
+                        <RestaurantRoute
+                          path="/dashboard/manage/restaurant/branches"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <BranchCrud />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/manage/restaurant/dept-tags" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <DeptTagCrud />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/restaurant/tables"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <TableCrud />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute
-                    path="/dashboard/manage/restaurant/payment-type"
-                    exact
-                  >
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <PaymentTypeCrud />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/restaurant/dept-tags"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <DeptTagCrud />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  {/* Website */}
-                  <RestaurantRoute path="/dashboard/manage/website/hero-section" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <HeroSection />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/restaurant/payment-type"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <PaymentTypeCrud />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/manage/website/promotions" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <Promotions />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        {/* Website */}
+                        <RestaurantRoute
+                          path="/dashboard/manage/website/hero-section"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <HeroSection />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  {/* Settings */}
-                  <RestaurantRoute path="/dashboard/manage/settings/currencies" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <Currency />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/website/promotions"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <Promotions />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/manage/settings/languages" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <Lang />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        {/* Settings */}
+                        <RestaurantRoute
+                          path="/dashboard/manage/settings/currencies"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <Currency />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute
-                    path="/dashboard/manage/settings/languages/:code"
-                    exact
-                  >
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <Translation />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/settings/languages"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <Lang />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute
-                    path="/dashboard/manage/settings/smtp-settings"
-                    exact
-                  >
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <Smtp />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/settings/languages/:code"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <Translation />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/manage/settings/pos-screen" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <PosScreen />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/settings/smtp-settings"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <Smtp />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute
-                    path="/dashboard/manage/settings/general-settings"
-                    exact
-                  >
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <General />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/settings/pos-screen"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <PosScreen />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute
-                    path="/dashboard/manage/settings/show-delivery-menu"
-                    exact
-                  >
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <Showdeliveryman />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/settings/general-settings"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <General />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute
-                    path="/hellno"
-                    exact
-                  >
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <OnlinePayment />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/settings/show-delivery-menu"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <Showdeliveryman />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute
-                    path="/dashboard/manage/settings/show-manage-stock-menu"
-                    exact
-                  >
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <ShowManageStock />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute path="/hellno" exact>
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <OnlinePayment />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute
-                    path="/dashboard/manage/settings/update-system"
-                    exact
-                  >
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Manage") ? (
-                      <UpdateSystem />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/settings/show-manage-stock-menu"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <ShowManageStock />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/delivery/assigned-orders" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Delivery") ? (
-                      <AssignedOrders />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/settings/update-system"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <UpdateSystem />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  <RestaurantRoute path="/dashboard/delivery/delivered-orders" exact>
-                    {authUserInfo.permissions !== null &&
-                      checkPermission(authUserInfo.permissions, "Delivery") ? (
-                      <DeliveredOrders />
-                    ) : (
-                      <NoPermission />
-                    )}
-                  </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/delivery/assigned-orders"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Delivery"
+                          ) ? (
+                            <AssignedOrders />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
 
-                  {/* Error Routing */}
-                  <Route component={NotFound} />
-                  {/* Error Routing */}
-                </Switch>
-                <Footer />
-              </Router>] : <Blocked />
-            ] : <NotPermitted />
+                        <RestaurantRoute
+                          path="/dashboard/delivery/delivered-orders"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Delivery"
+                          ) ? (
+                            <DeliveredOrders />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
+
+                        {/* Error Routing */}
+                        <Route component={NotFound} />
+                        {/* Error Routing */}
+                      </Switch>
+                      <Footer />
+                    </Router>,
+                  ]
+                ) : (
+                  <Blocked />
+                ),
+              ]
+            ) : (
+              <NotPermitted />
+            ),
             // ]
-          ] : [
+          ]
+        : [
             <Router>
               <Navbar />
               <Switch>
-
                 {/* installation */}
                 {credentials.install_no && (
                   <Route path="/installation" exact>
@@ -1172,8 +1530,6 @@ function SaasApp() {
                   </Route>
                 )}
 
-
-
                 {/* Customer routes */}
                 <CustomerRoute path="/profile" exact>
                   <CustomerProfile />
@@ -1193,16 +1549,19 @@ function SaasApp() {
 
                 <RestaurantRoute path="/dashboard/work-periods" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Work period") ? (
+                  checkPermission(authUserInfo.permissions, "Work period") ? (
                     <WorkPeriod />
                   ) : (
                     <NoPermission />
                   )}
                 </RestaurantRoute>
 
-                <RestaurantRoute path="/dashboard/closing-stock/:started_at" exact>
+                <RestaurantRoute
+                  path="/dashboard/closing-stock/:started_at"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Work period") ? (
+                  checkPermission(authUserInfo.permissions, "Work period") ? (
                     <OpeningClosingStock />
                   ) : (
                     <NoPermission />
@@ -1211,7 +1570,7 @@ function SaasApp() {
 
                 <RestaurantRoute path="/dashboard/pos" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "POS") ? (
+                  checkPermission(authUserInfo.permissions, "POS") ? (
                     <Pos />
                   ) : (
                     <NoPermission />
@@ -1219,9 +1578,12 @@ function SaasApp() {
                 </RestaurantRoute>
 
                 {/* jtd */}
-                <RestaurantRoute path="/dashboard/edit-submit-order/:editId" exact>
+                <RestaurantRoute
+                  path="/dashboard/edit-submit-order/:editId"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "POS") ? (
+                  checkPermission(authUserInfo.permissions, "POS") ? (
                     <EditSubmittedOrder />
                   ) : (
                     <NoPermission />
@@ -1230,7 +1592,7 @@ function SaasApp() {
 
                 <RestaurantRoute path="/dashboard/pos/submitted" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "POS") ? (
+                  checkPermission(authUserInfo.permissions, "POS") ? (
                     <Submitted />
                   ) : (
                     <NoPermission />
@@ -1239,7 +1601,7 @@ function SaasApp() {
 
                 <RestaurantRoute path="/dashboard/pos/settled" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "POS") ? (
+                  checkPermission(authUserInfo.permissions, "POS") ? (
                     <Settled />
                   ) : (
                     <NoPermission />
@@ -1248,7 +1610,7 @@ function SaasApp() {
 
                 <RestaurantRoute path="/dashboard/pos/online-orders" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "POS") ? (
+                  checkPermission(authUserInfo.permissions, "POS") ? (
                     <OnlineOrders />
                   ) : (
                     <NoPermission />
@@ -1257,7 +1619,7 @@ function SaasApp() {
 
                 <RestaurantRoute path="/dashboard/orders" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Order history") ? (
+                  checkPermission(authUserInfo.permissions, "Order history") ? (
                     <OrderHistories />
                   ) : (
                     <NoPermission />
@@ -1266,7 +1628,7 @@ function SaasApp() {
 
                 <RestaurantRoute path="/dashboard/online-orders" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Order history") ? (
+                  checkPermission(authUserInfo.permissions, "Order history") ? (
                     <OnlineOrderHistories />
                   ) : (
                     <NoPermission />
@@ -1275,7 +1637,7 @@ function SaasApp() {
 
                 <RestaurantRoute path="/dashboard/customers" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Customer") ? (
+                  checkPermission(authUserInfo.permissions, "Customer") ? (
                     <Customers />
                   ) : (
                     <NoPermission />
@@ -1284,7 +1646,7 @@ function SaasApp() {
 
                 <RestaurantRoute path="/dashboard/online-customers" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Customer") ? (
+                  checkPermission(authUserInfo.permissions, "Customer") ? (
                     <OnlineCustomerList />
                   ) : (
                     <NoPermission />
@@ -1293,7 +1655,7 @@ function SaasApp() {
 
                 <RestaurantRoute path="/dashboard/kitchen" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Kitchen") ? (
+                  checkPermission(authUserInfo.permissions, "Kitchen") ? (
                     <Kitchen />
                   ) : (
                     <NoPermission />
@@ -1302,7 +1664,7 @@ function SaasApp() {
 
                 <RestaurantRoute path="/dashboard/kitchen/online" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Kitchen") ? (
+                  checkPermission(authUserInfo.permissions, "Kitchen") ? (
                     <KitchenOnline />
                   ) : (
                     <NoPermission />
@@ -1311,7 +1673,7 @@ function SaasApp() {
 
                 <RestaurantRoute path="/dashboard/reports" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Report") ? (
+                  checkPermission(authUserInfo.permissions, "Report") ? (
                     <Dashboard />
                   ) : (
                     <NoPermission />
@@ -1320,7 +1682,7 @@ function SaasApp() {
 
                 <RestaurantRoute path="/dashboard/daily-reports" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Report") ? (
+                  checkPermission(authUserInfo.permissions, "Report") ? (
                     <Daily />
                   ) : (
                     <NoPermission />
@@ -1329,7 +1691,7 @@ function SaasApp() {
 
                 <RestaurantRoute path="/dashboard/monthly-reports" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Report") ? (
+                  checkPermission(authUserInfo.permissions, "Report") ? (
                     <Monthly />
                   ) : (
                     <NoPermission />
@@ -1347,7 +1709,7 @@ checkPermission(authUserInfo.permissions, "Report") ? (
 
                 <RestaurantRoute path="/dashboard/food-items-reports" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Report") ? (
+                  checkPermission(authUserInfo.permissions, "Report") ? (
                     <ItemWise />
                   ) : (
                     <NoPermission />
@@ -1356,7 +1718,7 @@ checkPermission(authUserInfo.permissions, "Report") ? (
 
                 <RestaurantRoute path="/dashboard/food-group-reports" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Report") ? (
+                  checkPermission(authUserInfo.permissions, "Report") ? (
                     <GroupWise />
                   ) : (
                     <NoPermission />
@@ -1365,7 +1727,7 @@ checkPermission(authUserInfo.permissions, "Report") ? (
 
                 <RestaurantRoute path="/dashboard/branch-reports" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Report") ? (
+                  checkPermission(authUserInfo.permissions, "Report") ? (
                     <BranchWise />
                   ) : (
                     <NoPermission />
@@ -1374,7 +1736,7 @@ checkPermission(authUserInfo.permissions, "Report") ? (
 
                 <RestaurantRoute path="/dashboard/pos-user-reports" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Report") ? (
+                  checkPermission(authUserInfo.permissions, "Report") ? (
                     <UserWise />
                   ) : (
                     <NoPermission />
@@ -1383,7 +1745,7 @@ checkPermission(authUserInfo.permissions, "Report") ? (
 
                 <RestaurantRoute path="/dashboard/dept-tag-reports" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Report") ? (
+                  checkPermission(authUserInfo.permissions, "Report") ? (
                     <DeptWise />
                   ) : (
                     <NoPermission />
@@ -1392,7 +1754,7 @@ checkPermission(authUserInfo.permissions, "Report") ? (
 
                 <RestaurantRoute path="/dashboard/service-charge-reports" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Report") ? (
+                  checkPermission(authUserInfo.permissions, "Report") ? (
                     <ServiceChargeWise />
                   ) : (
                     <NoPermission />
@@ -1401,7 +1763,7 @@ checkPermission(authUserInfo.permissions, "Report") ? (
 
                 <RestaurantRoute path="/dashboard/discount-reports" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Report") ? (
+                  checkPermission(authUserInfo.permissions, "Report") ? (
                     <DiscountWise />
                   ) : (
                     <NoPermission />
@@ -1410,7 +1772,7 @@ checkPermission(authUserInfo.permissions, "Report") ? (
 
                 <RestaurantRoute path="/dashboard/stock" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Report") ? (
+                  checkPermission(authUserInfo.permissions, "Report") ? (
                     <StockDashboard />
                   ) : (
                     <NoPermission />
@@ -1419,7 +1781,7 @@ checkPermission(authUserInfo.permissions, "Report") ? (
 
                 <RestaurantRoute path="/dashboard/food-stock" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Report") ? (
+                  checkPermission(authUserInfo.permissions, "Report") ? (
                     <FoodStockReport />
                   ) : (
                     <NoPermission />
@@ -1428,7 +1790,7 @@ checkPermission(authUserInfo.permissions, "Report") ? (
 
                 <RestaurantRoute path="/dashboard/ingredient-stock" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Report") ? (
+                  checkPermission(authUserInfo.permissions, "Report") ? (
                     <IngredientStockReport />
                   ) : (
                     <NoPermission />
@@ -1437,16 +1799,19 @@ checkPermission(authUserInfo.permissions, "Report") ? (
 
                 <RestaurantRoute path="/dashboard/food-stock/:started_at" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Report") ? (
+                  checkPermission(authUserInfo.permissions, "Report") ? (
                     <OpeningClosingStockFoodReport />
                   ) : (
                     <NoPermission />
                   )}
                 </RestaurantRoute>
 
-                <RestaurantRoute path="/dashboard/ingredient-stock/:started_at" exact>
+                <RestaurantRoute
+                  path="/dashboard/ingredient-stock/:started_at"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Report") ? (
+                  checkPermission(authUserInfo.permissions, "Report") ? (
                     <OpeningClosingStockIngredientReport />
                   ) : (
                     <NoPermission />
@@ -1457,7 +1822,7 @@ checkPermission(authUserInfo.permissions, "Report") ? (
                 {/* food */}
                 <RestaurantRoute path="/dashboard/manage/food/groups" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <GroupCrud />
                   ) : (
                     <NoPermission />
@@ -1475,7 +1840,7 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
 
                 <RestaurantRoute path="/dashboard/manage/food/variations" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <VariationCrud />
                   ) : (
                     <NoPermission />
@@ -1484,16 +1849,19 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
 
                 <RestaurantRoute path="/dashboard/manage/food/properties" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <PropertyCrud />
                   ) : (
                     <NoPermission />
                   )}
                 </RestaurantRoute>
 
-                <RestaurantRoute path="/dashboard/manage/food/properties/:slug" exact>
+                <RestaurantRoute
+                  path="/dashboard/manage/food/properties/:slug"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <PropertyItemCrud />
                   ) : (
                     <NoPermission />
@@ -1502,8 +1870,17 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
 
                 <RestaurantRoute path="/dashboard/manage/food/add-new" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <FoodItemCrud />
+                  ) : (
+                    <NoPermission />
+                  )}
+                </RestaurantRoute>
+
+                <RestaurantRoute path="/dashboard/manage/stripe/payment" exact>
+                  {authUserInfo.permissions !== null &&
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
+                    <StripePayment />
                   ) : (
                     <NoPermission />
                   )}
@@ -1511,7 +1888,7 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
 
                 <RestaurantRoute path="/dashboard/manage/food/all-items" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <AllItemList />
                   ) : (
                     <NoPermission />
@@ -1519,9 +1896,12 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                 </RestaurantRoute>
 
                 {/* Stock */}
-                <RestaurantRoute path="/dashboard/manage/stock/food-purchase" exact>
+                <RestaurantRoute
+                  path="/dashboard/manage/stock/food-purchase"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <FoodPurchase />
                   ) : (
                     <NoPermission />
@@ -1533,7 +1913,7 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                   exact
                 >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <FoodPurchaseHistory />
                   ) : (
                     <NoPermission />
@@ -1545,16 +1925,19 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                   exact
                 >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <FoodPurchaseEdit />
                   ) : (
                     <NoPermission />
                   )}
                 </RestaurantRoute>
 
-                <RestaurantRoute path="/dashboard/manage/stock/food-return" exact>
+                <RestaurantRoute
+                  path="/dashboard/manage/stock/food-return"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <FoodReturn />
                   ) : (
                     <NoPermission />
@@ -1566,16 +1949,19 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                   exact
                 >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <IngredientGroup />
                   ) : (
                     <NoPermission />
                   )}
                 </RestaurantRoute>
 
-                <RestaurantRoute path="/dashboard/manage/stock/ingredient-item" exact>
+                <RestaurantRoute
+                  path="/dashboard/manage/stock/ingredient-item"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <IngredientItem />
                   ) : (
                     <NoPermission />
@@ -1587,7 +1973,7 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                   exact
                 >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <IngredientPurchase />
                   ) : (
                     <NoPermission />
@@ -1599,7 +1985,7 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                   exact
                 >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <IngredientPurchaseHistory />
                   ) : (
                     <NoPermission />
@@ -1611,7 +1997,7 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                   exact
                 >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <IngredientPurchaseEdit />
                   ) : (
                     <NoPermission />
@@ -1623,7 +2009,7 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                   exact
                 >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <IngredientReturn />
                   ) : (
                     <NoPermission />
@@ -1635,16 +2021,19 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                   exact
                 >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <IngredientUsage />
                   ) : (
                     <NoPermission />
                   )}
                 </RestaurantRoute>
 
-                <RestaurantRoute path="/dashboard/manage/stock/manage-supplier" exact>
+                <RestaurantRoute
+                  path="/dashboard/manage/stock/manage-supplier"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <ManageSupplier />
                   ) : (
                     <NoPermission />
@@ -1656,16 +2045,19 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                   exact
                 >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <SupplierHistory />
                   ) : (
                     <NoPermission />
                   )}
                 </RestaurantRoute>
 
-                <RestaurantRoute path="/dashboard/manage/stock/stock-out-food" exact>
+                <RestaurantRoute
+                  path="/dashboard/manage/stock/stock-out-food"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <StockOutFood />
                   ) : (
                     <NoPermission />
@@ -1677,7 +2069,7 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                   exact
                 >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <StockOutIngredient />
                   ) : (
                     <NoPermission />
@@ -1687,34 +2079,43 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                 {/* Users */}
                 <RestaurantRoute path="/dashboard/manage/user/customers" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <CustomerCrud />
                   ) : (
                     <NoPermission />
                   )}
                 </RestaurantRoute>
 
-                <RestaurantRoute path="/dashboard/manage/user/admin-staff" exact>
+                <RestaurantRoute
+                  path="/dashboard/manage/user/admin-staff"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <AdminStaffCrud />
                   ) : (
                     <NoPermission />
                   )}
                 </RestaurantRoute>
 
-                <RestaurantRoute path="/dashboard/manage/user/delivery-men" exact>
+                <RestaurantRoute
+                  path="/dashboard/manage/user/delivery-men"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <DeliveryMen />
                   ) : (
                     <NoPermission />
                   )}
                 </RestaurantRoute>
 
-                <RestaurantRoute path="/dashboard/manage/user/delivery-request" exact>
+                <RestaurantRoute
+                  path="/dashboard/manage/user/delivery-request"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <NewDeliveryMen />
                   ) : (
                     <NoPermission />
@@ -1723,16 +2124,19 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
 
                 <RestaurantRoute path="/dashboard/manage/user/waiters" exact>
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <Waiter />
                   ) : (
                     <NoPermission />
                   )}
                 </RestaurantRoute>
 
-                <RestaurantRoute path="/dashboard/manage/roles-and-permissions" exact>
+                <RestaurantRoute
+                  path="/dashboard/manage/roles-and-permissions"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <Permissions />
                   ) : (
                     <NoPermission />
@@ -1740,27 +2144,36 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                 </RestaurantRoute>
 
                 {/* Restaurant */}
-                <RestaurantRoute path="/dashboard/manage/restaurant/branches" exact>
+                <RestaurantRoute
+                  path="/dashboard/manage/restaurant/branches"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <BranchCrud />
                   ) : (
                     <NoPermission />
                   )}
                 </RestaurantRoute>
 
-                <RestaurantRoute path="/dashboard/manage/restaurant/tables" exact>
+                <RestaurantRoute
+                  path="/dashboard/manage/restaurant/tables"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <TableCrud />
                   ) : (
                     <NoPermission />
                   )}
                 </RestaurantRoute>
 
-                <RestaurantRoute path="/dashboard/manage/restaurant/dept-tags" exact>
+                <RestaurantRoute
+                  path="/dashboard/manage/restaurant/dept-tags"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <DeptTagCrud />
                   ) : (
                     <NoPermission />
@@ -1772,7 +2185,7 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                   exact
                 >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <PaymentTypeCrud />
                   ) : (
                     <NoPermission />
@@ -1780,18 +2193,24 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                 </RestaurantRoute>
 
                 {/* Website */}
-                <RestaurantRoute path="/dashboard/manage/website/hero-section" exact>
+                <RestaurantRoute
+                  path="/dashboard/manage/website/hero-section"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <HeroSection />
                   ) : (
                     <NoPermission />
                   )}
                 </RestaurantRoute>
 
-                <RestaurantRoute path="/dashboard/manage/website/promotions" exact>
+                <RestaurantRoute
+                  path="/dashboard/manage/website/promotions"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <Promotions />
                   ) : (
                     <NoPermission />
@@ -1799,18 +2218,24 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                 </RestaurantRoute>
 
                 {/* Settings */}
-                <RestaurantRoute path="/dashboard/manage/settings/currencies" exact>
+                <RestaurantRoute
+                  path="/dashboard/manage/settings/currencies"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <Currency />
                   ) : (
                     <NoPermission />
                   )}
                 </RestaurantRoute>
 
-                <RestaurantRoute path="/dashboard/manage/settings/languages" exact>
+                <RestaurantRoute
+                  path="/dashboard/manage/settings/languages"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <Lang />
                   ) : (
                     <NoPermission />
@@ -1822,7 +2247,7 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                   exact
                 >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <Translation />
                   ) : (
                     <NoPermission />
@@ -1834,16 +2259,19 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                   exact
                 >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <Smtp />
                   ) : (
                     <NoPermission />
                   )}
                 </RestaurantRoute>
 
-                <RestaurantRoute path="/dashboard/manage/settings/pos-screen" exact>
+                <RestaurantRoute
+                  path="/dashboard/manage/settings/pos-screen"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <PosScreen />
                   ) : (
                     <NoPermission />
@@ -1855,7 +2283,7 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                   exact
                 >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <General />
                   ) : (
                     <NoPermission />
@@ -1867,7 +2295,7 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                   exact
                 >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <Showdeliveryman />
                   ) : (
                     <NoPermission />
@@ -1879,7 +2307,7 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                   exact
                 >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <OnlinePayment />
                   ) : (
                     <NoPermission />
@@ -1891,7 +2319,7 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                   exact
                 >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <ShowManageStock />
                   ) : (
                     <NoPermission />
@@ -1903,25 +2331,31 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                   exact
                 >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Manage") ? (
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
                     <UpdateSystem />
                   ) : (
                     <NoPermission />
                   )}
                 </RestaurantRoute>
 
-                <RestaurantRoute path="/dashboard/delivery/assigned-orders" exact>
+                <RestaurantRoute
+                  path="/dashboard/delivery/assigned-orders"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Delivery") ? (
+                  checkPermission(authUserInfo.permissions, "Delivery") ? (
                     <AssignedOrders />
                   ) : (
                     <NoPermission />
                   )}
                 </RestaurantRoute>
 
-                <RestaurantRoute path="/dashboard/delivery/delivered-orders" exact>
+                <RestaurantRoute
+                  path="/dashboard/delivery/delivered-orders"
+                  exact
+                >
                   {authUserInfo.permissions !== null &&
-                    checkPermission(authUserInfo.permissions, "Delivery") ? (
+                  checkPermission(authUserInfo.permissions, "Delivery") ? (
                     <DeliveredOrders />
                   ) : (
                     <NoPermission />
@@ -1933,9 +2367,8 @@ checkPermission(authUserInfo.permissions, "Manage") ? (
                 {/* Error Routing */}
               </Switch>
               <Footer />
-            </Router>
-          ]
-      }
+            </Router>,
+          ]}
     </>
   );
 }

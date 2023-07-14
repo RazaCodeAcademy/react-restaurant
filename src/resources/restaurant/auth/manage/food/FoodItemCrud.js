@@ -44,6 +44,13 @@ const FoodItemCrud = () => {
     variationForSearch,
   } = useContext(FoodContext);
 
+  let [allergies, setAllergies] = useState([
+    {id: 1, name: 'Fever'},
+    {id: 2, name: 'Scratch'},
+    {id: 3, name: 'Poision'},
+    {id: 4, name: 'Vometing'},
+  ]);
+
   // States hook here
   //new item
   let [newItem, setNewItem] = useState({
@@ -51,6 +58,7 @@ const FoodItemCrud = () => {
     name: "",
     price: "",
     ingredients: "",
+    allergies: null,
     image: null,
     hasProperty: false,
     properties: null,
@@ -109,6 +117,10 @@ const FoodItemCrud = () => {
       ...newItem,
       [e.target.name]: e.target.files[0],
     });
+  };
+
+  const handleSetAllergies = (allergies) => {
+    setNewItem({ ...newItem, allergies:allergies });
   };
 
   //set properties hook
@@ -180,6 +192,7 @@ const FoodItemCrud = () => {
     formData.append("name", newItem.name);
     formData.append("ingredients", newItem.ingredients);
     formData.append("hasProperty", newItem.hasProperty === true ? 1 : 0);
+
     if (newItem.hasProperty === true) {
       formData.append("hasProperty", 1);
       let tempArray = [];
@@ -187,6 +200,14 @@ const FoodItemCrud = () => {
         tempArray.push(pItem.id);
       });
       formData.append("properties", tempArray);
+    }
+
+    if(newItem.allergies != null){
+      let tempArray = [];
+      newItem.allergies.map((pItem) => {
+        tempArray.push(pItem.name);
+      });
+      formData.append("allergies", tempArray.join(','));
     }
 
     formData.append("hasVariation", newItem.hasVariation === true ? 1 : 0);
@@ -645,6 +666,30 @@ const FoodItemCrud = () => {
                                   </div>
                                 )}
 
+                                
+                                    <div className="form-group mt-2">
+                                      <div className="mb-2">
+                                        <label className="control-label">
+                                          {_t(t("Add Allergies"))}
+                                        </label>
+                                      </div>
+                                      <Select
+                                        options={allergies}
+                                        components={makeAnimated()}
+                                        getOptionLabel={(option) => option.name}
+                                        getOptionValue={(option) => option.name}
+                                        className="basic-multi-select"
+                                        classNamePrefix="select"
+                                        isMulti
+                                        maxMenuHeight="200px"
+                                        onChange={handleSetAllergies}
+                                        placeholder={
+                                          _t(t("Please select allergies")) +
+                                          ".."
+                                        }
+                                      />
+                                    </div>
+
                                 <div className="form-group mt-4">
                                     <div className="mb-2">
                                       <label
@@ -695,7 +740,7 @@ const FoodItemCrud = () => {
                                       className="control-label"
                                     >
                                       {_t(t("Image"))}
-                                      <span className="text-danger">*</span>{" "}
+                                      {/* <span className="text-danger">*</span>{" "} */}
                                       <small className="text-secondary">
                                         ({_t(t("300 x 300 Preferable"))})
                                       </small>
@@ -708,7 +753,7 @@ const FoodItemCrud = () => {
                                       id="image"
                                       name="image"
                                       onChange={handleItemImage}
-                                      required
+                                      
                                     />
                                   </div>
                                 </div>

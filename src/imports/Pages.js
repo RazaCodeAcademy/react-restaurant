@@ -20,6 +20,7 @@ import NoPermission from "../resources/common/NoPermission";
 import RestaurantLanding from "../resources/restaurant/public/RestaurantLanding";
 import CustomerProfile from "../resources/restaurant/onlineCustomer/CustomerProfile";
 import MyOrders from "../resources/restaurant/onlineCustomer/MyOrders";
+import StripePayment from "../resources/restaurant/payment/StripePayment";
 
 //private pages
 import RestaurantHome from "../resources/restaurant/auth/RestaurantHome";
@@ -160,6 +161,7 @@ export {
   EditSubmittedOrder,
   //customers
   Customers,
+  StripePayment,
   OnlineCustomerList,
   //
   OnlineOrderHistories,

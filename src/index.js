@@ -15,7 +15,7 @@ import { FoodProvider } from "./contexts/Food";
 
 
 ReactDOM.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <UserProvider>
       <SettingsProvider>
         <RestaurantProvider>
@@ -24,8 +24,8 @@ ReactDOM.render(
           </FoodProvider>
         </RestaurantProvider>
       </SettingsProvider>
-    </UserProvider>
-  </React.StrictMode>,
+    </UserProvider>,
+  // </React.StrictMode>,
   document.getElementById("khadyo")
 );
 

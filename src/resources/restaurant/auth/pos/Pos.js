@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 
 //axios and base url
 import axios from "axios";
@@ -33,8 +33,11 @@ import { SettingsContext } from "../../../../contexts/Settings";
 import { RestaurantContext } from "../../../../contexts/Restaurant";
 import { FoodContext } from "../../../../contexts/Food";
 import Calculator from "./calc/Calculator";
+import { logDOM } from "@testing-library/react";
 
 const Pos = () => {
+const history = useHistory();
+
   //getting context values here
   const {
     //common
@@ -177,6 +180,7 @@ const Pos = () => {
     payment_type: null,
     payment_amount: null,
     total_guest: 1,
+    reservation_date_time: null,
     newCustomer: false,
     newCustomerInfo: {
       name: "",
@@ -313,8 +317,22 @@ const Pos = () => {
     return temp;
   };
 
+  const [inputValue, setInputValue] = useState('');
+
+  const handleKitchenNote = (event) =>{
+    setInputValue(event.target.value)
+    // console.log(currentValue, activeItemInOrder);
+    if(activeItemInOrder != null){
+      let updated = [...newOrder];
+      updated[activeItemInOrder].item.note = event.target.value;
+      setNewOrder(updated);
+      console.log(newOrder);
+    }
+  }
+
   //add new item to order list
   const handleOrderItem = (tempFoodItem) => {
+    setInputValue('')
     // if manage is stock is enable
     if (showManageStock) {
       if (
@@ -854,6 +872,7 @@ const Pos = () => {
       payment_type: null,
       payment_amount: null,
       total_guest: 1,
+      reservation_date_time: null,
       newCustomer: false,
       newCustomerInfo: {
         name: "",
@@ -1338,6 +1357,7 @@ const Pos = () => {
       payment_type: null,
       payment_amount: null,
       total_guest: 1,
+      reservation_date_time: null,
       newCustomer: false,
       newCustomerInfo: {
         name: "",
@@ -1430,6 +1450,12 @@ const Pos = () => {
 
   // department tag
   const handleSetDeptTag = (dept_tag) => {
+    console.log(dept_tag);
+    if(dept_tag.id == 9){
+      setIsReservation(true);
+    }else{
+      setIsReservation(false);
+    }
     setOrderDetails({
       ...orderDetails,
       dept_tag,
@@ -1501,6 +1527,7 @@ const Pos = () => {
 
   //payment type
   const handleSetpaymentType = (payment_type) => {
+    console.log(payment_type);
     setOrderDetails({
       ...orderDetails,
       payment_type,
@@ -1510,8 +1537,12 @@ const Pos = () => {
     handleCalculatePaid(orderDetails.payment_amount, payment_type);
   };
 
+  const [paymentType, setPaymentType] = useState(0);
+  const [paymentAmount, setPaymentAmount] = useState(0);
+
   //payment type pos 2
   const handleSetpaymentTypeSingle = (payment_type) => {
+    setPaymentType(payment_type.id);
     let localCurrency = JSON.parse(localStorage.getItem("currency"));
     let theUsdPaid = paidMoney / localCurrency.rate;
     if (theUsdPaid < totalPayable) {
@@ -1561,6 +1592,15 @@ const Pos = () => {
     setOrderDetails({
       ...orderDetails,
       total_guest: e.target.value,
+    });
+  };
+  const [isReservation, setIsReservation] = useState(false);
+
+  //guest
+  const handleReservationDateTime = (e) => {
+    setOrderDetails({
+      ...orderDetails,
+      reservation_date_time: e.target.value,
     });
   };
 
@@ -1645,6 +1685,7 @@ const Pos = () => {
       newCustomerInfo: orderDetails.newCustomerInfo,
       token: orderDetails.token,
       total_guest: orderDetails.total_guest,
+      reservation_date_time: orderDetails.reservation_date_time,
       orderItems: newOrder,
       serviceCharge: orderDetails.serviceCharge,
       discount: orderDetails.discount,
@@ -1763,6 +1804,7 @@ const Pos = () => {
 
   //handle settle order
   const handleSettleOrder = (e) => {
+
     e.preventDefault();
     if (newOrder && newOrder.length > 0) {
       if (paidMoney < totalPayable) {
@@ -1812,6 +1854,7 @@ const Pos = () => {
       newCustomerInfo: orderDetails.newCustomerInfo,
       token: orderDetails.token,
       total_guest: orderDetails.total_guest,
+      reservation_date_time: orderDetails.reservation_date_time,
       orderItems: newOrder,
       serviceCharge: orderDetails.serviceCharge,
       discount: orderDetails.discount,
@@ -1829,6 +1872,7 @@ const Pos = () => {
         headers: { Authorization: `Bearer ${getCookie()}` },
       })
       .then((res) => {
+        console.log(res);
         if (res.data !== "ended") {
           if (res.data !== "paymentIssue") {
             getFoodGroup();
@@ -1984,6 +2028,7 @@ const Pos = () => {
       payment_type: null,
       payment_amount: null,
       total_guest: 1,
+      reservation_date_time: null,
       newCustomer: false,
       newCustomerInfo: {
         name: "",
@@ -2006,6 +2051,10 @@ const Pos = () => {
     setShowSettle(false);
 
     setLoading(false);
+    if(paymentType == 2){
+      history.push(`/dashboard/manage/stripe/payment?payment_amount=${totalPayable}`)
+    }
+
     //sound
     if (getSystemSettings(generalSettings, "play_sound") === "1") {
       let beep = document.getElementById("myAudio");
@@ -2565,6 +2614,7 @@ const Pos = () => {
                                                   </span>
                                                 )}
                                               :-{printItem.quantity}
+                                               | <span><b>Note:</b>{printItem.item.note}</span>
                                             </div>
 
                                             {/* properties */}
@@ -4453,6 +4503,8 @@ const Pos = () => {
                                             <div className="fk-addons-table__body">
                                               <div className="fk-addons-table__body-row">
                                                 <input
+                                                  value={inputValue}
+                                                  onChange={handleKitchenNote}
                                                   className="form-control my-2"
                                                   placeholder="Type kitchen note..."
                                                 />
@@ -4467,16 +4519,8 @@ const Pos = () => {
                                             </div>
                                             <div className="fk-addons-table__body">
                                               <div className="fk-addons-table__body-row">
-                                                <ol>
                                                   {foodItem.selectedItem &&
-                                                    foodItem.selectedItem.ingredients.map(
-                                                      (ingredient) => {
-                                                        return (
-                                                          <li>{ingredient}</li>
-                                                        );
-                                                      }
-                                                    )}
-                                                </ol>
+                                                    (foodItem.selectedItem.ingredients)}
                                               </div>
                                             </div>
                                           </div>
@@ -4487,87 +4531,9 @@ const Pos = () => {
                                               {_t(t("Items Allergies"))}
                                             </div>
                                             <div className="fk-addons-table__body">
-                                              <div className="fk-addons-table__body-row p-2">
-                                                <div className="col">
-                                                  <label className="mx-checkbox flex-grow-1">
-                                                    <input
-                                                      type="checkbox"
-                                                      className="mx-checkbox__input mx-checkbox__input-solid mx-checkbox__input-solid--danger mx-checkbox__input-sm mt-0-kitchen"
-                                                      name="variation"
-                                                      onChange={() => {
-                                                        handleOrderItemVariation(
-                                                          // variationItem
-                                                        );
-                                                      }}
-                                                      // checked={checkChecked(
-                                                      //   // variationItem
-                                                      // )}
-                                                    />
-                                                    <span className="mx-checkbox__text text-capitalize t-text-heading t-ml-8">
-                                                      Fever
-                                                    </span>
-                                                  </label>
-                                                </div>
-                                                <div className="col">
-                                                  <label className="mx-checkbox flex-grow-1">
-                                                    <input
-                                                      type="checkbox"
-                                                      className="mx-checkbox__input mx-checkbox__input-solid mx-checkbox__input-solid--danger mx-checkbox__input-sm mt-0-kitchen"
-                                                      name="variation"
-                                                      onChange={() => {
-                                                        handleOrderItemVariation(
-                                                          // variationItem
-                                                        );
-                                                      }}
-                                                      // checked={checkChecked(
-                                                      //   // variationItem
-                                                      // )}
-                                                    />
-                                                    <span className="mx-checkbox__text text-capitalize t-text-heading t-ml-8">
-                                                    Scratch
-                                                    </span>
-                                                  </label>
-                                                </div>
-                                                <div className="col">
-                                                  <label className="mx-checkbox flex-grow-1">
-                                                    <input
-                                                      type="checkbox"
-                                                      className="mx-checkbox__input mx-checkbox__input-solid mx-checkbox__input-solid--danger mx-checkbox__input-sm mt-0-kitchen"
-                                                      name="variation"
-                                                      onChange={() => {
-                                                        handleOrderItemVariation(
-                                                          // variationItem
-                                                        );
-                                                      }}
-                                                      // checked={checkChecked(
-                                                      //   // variationItem
-                                                      // )}
-                                                    />
-                                                    <span className="mx-checkbox__text text-capitalize t-text-heading t-ml-8">
-                                                    Poision
-                                                    </span>
-                                                  </label>
-                                                </div>
-                                                <div className="col">
-                                                  <label className="mx-checkbox flex-grow-1">
-                                                    <input
-                                                      type="checkbox"
-                                                      className="mx-checkbox__input mx-checkbox__input-solid mx-checkbox__input-solid--danger mx-checkbox__input-sm mt-0-kitchen"
-                                                      name="variation"
-                                                      onChange={() => {
-                                                        handleOrderItemVariation(
-                                                          // variationItem
-                                                        );
-                                                      }}
-                                                      // checked={checkChecked(
-                                                      //   variationItem
-                                                      // )}
-                                                    />
-                                                    <span className="mx-checkbox__text text-capitalize t-text-heading t-ml-8">
-                                                    Vometing
-                                                    </span>
-                                                  </label>
-                                                </div>
+                                              <div className="fk-addons-table__body-row">
+                                                  {foodItem.selectedItem &&
+                                                    (foodItem.selectedItem.allergies)}
                                               </div>
                                             </div>
                                           </div>
@@ -4971,6 +4937,7 @@ const Pos = () => {
                                                 null &&
                                               orderDetailUsers.theCustomers
                                             }
+                                            required
                                             components={makeAnimated()}
                                             getOptionLabel={(option) =>
                                               option.name +
@@ -5210,7 +5177,7 @@ const Pos = () => {
 
                                         <li
                                           className="addons-list__item mx-1"
-                                          style={{ paddingBottom: "100px" }}
+                                          style={{ paddingBottom: "10px" }}
                                         >
                                           <input
                                             type="number"
@@ -5222,6 +5189,23 @@ const Pos = () => {
                                             }
                                           />
                                         </li>
+                                        {
+                                          isReservation && (
+                                          <li
+                                            className="addons-list__item mx-1"
+                                            style={{ paddingBottom: "10px" }}
+                                          >
+                                            <input
+                                              type="datetime-local"
+                                              className="form-control xsm-text py-2 pl-2"
+                                              onChange={handleReservationDateTime}
+                                              placeholder={
+                                                _t(t("reservation time")) + ".."
+                                              }
+                                            />
+                                          </li>
+                                          )
+                                        }
                                       </>
                                     )}
                                   </>
@@ -6477,7 +6461,7 @@ const Pos = () => {
                                               : _t(t("Please wait"))}
                                           </button>
                                         </div>
-                                        <div>
+                                        {/* <div>
                                           <button
                                             type="button"
                                             className="btn btn-success sm-text text-uppercase font-weight-bold"
@@ -6489,7 +6473,7 @@ const Pos = () => {
                                               ? _t(t("submit"))
                                               : _t(t("Please wait"))}
                                           </button>
-                                        </div>
+                                        </div> */}
                                       </div>
                                     </div>
                                   )}

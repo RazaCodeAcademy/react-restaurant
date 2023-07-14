@@ -1382,6 +1382,12 @@ const OrderHistories = () => {
                               >
                                 {_t(t("Phone"))}
                               </th>
+                              <th
+                                scope="col"
+                                className="sm-text text-capitalize align-middle text-center border-1 border"
+                              >
+                                {_t(t("Reservation"))}
+                              </th>
 
                               <th
                                 scope="col"
@@ -1473,6 +1479,9 @@ const OrderHistories = () => {
                                             </td>
                                             <td className="xsm-text align-middle text-center">
                                               {item.customer_phone}
+                                            </td>
+                                            <td className="xsm-text align-middle text-center">
+                                              {item.reservation_date_time}
                                             </td>
 
                                             <td className="xsm-text align-middle text-center">
@@ -1653,6 +1662,9 @@ const OrderHistories = () => {
                                             </td>
                                             <td className="xsm-text align-middle text-center">
                                               {item.customer_phone}
+                                            </td>
+                                            <td className="xsm-text align-middle text-center">
+                                              {item.reservation_date_time}
                                             </td>
 
                                             <td className="xsm-text align-middle text-center">

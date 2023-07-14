@@ -441,7 +441,7 @@ const Navbar = (props) => {
           props.location.pathname !== "/profile" &&
           props.location.pathname !== "/my-orders" &&
           props.location.pathname !== "/delivery-man-registration" && (
-            <header id="header" className="sticky-top">
+            <header id="header" key="header" className="sticky-top">
               <div className="container-fluid">
                 <div className="row align-items-center">
                   <div className="col-6 col-lg-2">
@@ -655,7 +655,7 @@ const Navbar = (props) => {
                                       </Link>
                                     </li>
                                   ) : (
-                                    <li key="homepage">
+                                    <li key="homepage1">
                                       <Link
                                         to="/dashboard"
                                         className="dropdown-item sm-text text-capitalize"
@@ -664,7 +664,7 @@ const Navbar = (props) => {
                                       </Link>
                                     </li>
                                   )}
-                                  <li key="homepage">
+                                  <li key="homepage2">
                                     <Link
                                       to="/update-user-profile"
                                       className="dropdown-item sm-text"

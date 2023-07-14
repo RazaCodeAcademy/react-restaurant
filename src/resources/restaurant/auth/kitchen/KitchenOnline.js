@@ -22,6 +22,7 @@ import { confirmAlert } from "react-confirm-alert";
 //importing context consumer here
 import { RestaurantContext } from "../../../../contexts/Restaurant";
 import { FoodContext } from "../../../../contexts/Food";
+import { invalid } from "moment";
 
 const KitchenOnline = () => {
   const { t } = useTranslation();
@@ -118,19 +119,25 @@ const KitchenOnline = () => {
         : orderItem
     );
 
+    
+
+    setKithcenNewOrdersOnline(newState);
+
     if (kithcenNewOrdersOnline[index].is_accepted == 1) {
       const updatedData = [...kithcenNewOrdersOnline];
       updatedData[index].is_accepted_by_kitchen = 0;
       updatedData[index].accepted_by_kitchen_time = null;
       updatedData[index].time_to_deliver = 0;
+      updatedData[index].remainingTime = "00:00:00";
 
-      setIsOpen(false);
+      // setIsOpen();
 
       setKithcenNewOrdersOnline(updatedData);
-      startCountdown(null, 0, index);
-    }
+      console.log(kithcenNewOrdersOnline[index]);
+      startCountdown(null, 0, index, true);
 
-    setKithcenNewOrdersOnline(newState);
+      
+    }
 
     //front end accept-reject view update for searched
     if (searchedOrder.searched) {
@@ -254,7 +261,7 @@ const KitchenOnline = () => {
               updatedData[index].accepted_by_kitchen_time = null;
               updatedData[index].time_to_deliver = 0;
 
-              setIsOpen(false);
+              setIsOpen(prev=>!prev);
 
               setKithcenNewOrdersOnline(updatedData);
               startCountdown(null, 0, index);
@@ -385,102 +392,136 @@ const KitchenOnline = () => {
 
   const refCounter = useRef(null);
 
-  function startCountdown(serverDateTime, minutes, index) {
-    var futureDateTime = new Date(serverDateTime);
+  const startCountdown = (serverDateTime, minutes, index,counterRemove) => {
+    let futureDateTime = new Date(serverDateTime);
     futureDateTime.setMinutes(futureDateTime.getMinutes() + parseInt(minutes));
-
-    var currentDateTime = new Date();
-
-    var remainingTime = futureDateTime - currentDateTime;
-
-    // Check if the countdown has finished
-    // if (remainingTime <= 0) {
-
-    //   if (refCounter.current) {
-    //     refCounter.current.style.display = "none";
-    //   }
-    //   return;
-    // }
-
-    var countdown = setInterval(function () {
+  
+    let currentDateTime = new Date();
+  
+    let remainingTime = futureDateTime - currentDateTime;
+  
+    let countdown = setInterval(function () {
       currentDateTime = new Date();
-
+  
       remainingTime = futureDateTime - currentDateTime;
-
-      // Check if the countdown has finished
-      if (remainingTime <= 0) {
-        if (kithcenNewOrdersOnline[index] == undefined) {
+  
+     if (remainingTime <= 0) {
+        if (kithcenNewOrdersOnline[index] === undefined || counterRemove) {
           clearInterval(countdown);
         }
-        // if (refCounter.current) {
-        //   refCounter.current.style.display = "none";
-        // }
         return;
       }
-
-      var hours = Math.floor(
+  
+      let hours = Math.floor(
         (remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
       );
-      var minutes = Math.floor(
-        (remainingTime % (1000 * 60 * 60)) / (1000 * 60)
-      );
-      var seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-
-      var calculatedRemainingTime =
+      let minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+      let seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+  
+      let calculatedRemainingTime =
         ":" +
         hours.toString().padStart(2, "0") +
         ":" +
         minutes.toString().padStart(2, "0") +
         ":" +
         seconds.toString().padStart(2, "0");
-
+  
       const updatedData = [...kithcenNewOrdersOnline];
-      updatedData[index].remainingTime = calculatedRemainingTime; // Update the remaining time
-      updatedData[index].accepted_by_kitchen_time = serverDateTime; // Update the remaining time
-
-      setKithcenNewOrdersOnline(updatedData);
+      updatedData[index].remainingTime = calculatedRemainingTime;
+      updatedData[index].accepted_by_kitchen_time = serverDateTime;
+  
+      setKithcenNewOrdersOnline(updatedData); // Assuming this function is defined elsewhere
     }, 1000);
   }
+  
+
+  // function startCountdown(serverDateTime, minutes, index) {
+  //   var futureDateTime = new Date(serverDateTime);
+  //   futureDateTime.setMinutes(futureDateTime.getMinutes() + parseInt(minutes));
+
+  //   var currentDateTime = new Date();
+
+  //   var remainingTime = futureDateTime - currentDateTime;
+
+  //   // Check if the countdown has finished
+  //   // if (remainingTime <= 0) {
+
+  //   //   if (refCounter.current) {
+  //   //     refCounter.current.style.display = "none";
+  //   //   }
+  //   //   return;
+  //   // }
+
+  //   var countdown = setInterval(function () {
+  //     currentDateTime = new Date();
+
+  //     remainingTime = futureDateTime - currentDateTime;
+
+  //     // Check if the countdown has finished
+  //     if (remainingTime <= 0) {
+  //       // if (kithcenNewOrdersOnline[index] == undefined) {
+  //         clearInterval(countdown);
+  //       // }
+  //       // if (refCounter.current) {
+  //       //   refCounter.current.style.display = "none";
+  //       // }
+  //       return;
+  //     }
+
+  //     var hours = Math.floor(
+  //       (remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  //     );
+  //     var minutes = Math.floor(
+  //       (remainingTime % (1000 * 60 * 60)) / (1000 * 60)
+  //     );
+  //     var seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+  //     var calculatedRemainingTime =
+  //       ":" +
+  //       hours.toString().padStart(2, "0") +
+  //       ":" +
+  //       minutes.toString().padStart(2, "0") +
+  //       ":" +
+  //       seconds.toString().padStart(2, "0");
+
+  //     const updatedData = [...kithcenNewOrdersOnline];
+  //     updatedData[index].remainingTime = calculatedRemainingTime; // Update the remaining time
+  //     updatedData[index].accepted_by_kitchen_time = serverDateTime; // Update the remaining time
+
+  //     setKithcenNewOrdersOnline(updatedData);
+  //   }, 1000);
+  // }
 
   const [isOpen, setIsOpen] = useState(false);
   const [itemID, setItemID] = useState(0);
   const [itemIndex, setItemIndex] = useState("");
   const [inputValue, setInputValue] = useState("");
 
-  const mountedRef = useRef(true);
+  // const mountedRef = useRef(true);
 
-  useEffect(() => {
-    return () => {
-      mountedRef.current = !mountedRef.current;
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     mountedRef.current = !mountedRef.current;
+  //   };
+  // }, []);
 
   const openModal = (item_id, index) => {
     setItemID(item_id);
     setItemIndex(index);
-    setIsOpen(false);
-    setTimeout(() => {
-      if (mountedRef.current) {
-        setIsOpen(true);
-      }
-    }, 100);
+    setIsOpen(prev=>!prev);
+    // setTimeout(() => {
+    //   if (mountedRef.current) {
+    //     setIsOpen(true);
+    //   }
+    // }, 100);
   };
 
   const saveAcceptOrder = () => {
     handleAcceptOrReject(itemID, inputValue, itemIndex);
-    setIsOpen(false);
-
-    const updatedData = [...kithcenNewOrdersOnline];
-    updatedData[itemIndex].is_accepted_by_kitchen = 1;
-    updatedData[itemIndex].accepted_by_kitchen_time = new Date();
-    updatedData[itemIndex].time_to_deliver = inputValue;
-
-    setKithcenNewOrdersOnline(updatedData);
-
-    // Start the countdown after updating the necessary state variables
-    startCountdown(new Date(), inputValue, itemIndex);
-
-    // Note: Adjust the above startCountdown function call according to your implementation
+    setIsOpen(prev=>!prev);
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   };
 
   const handleInputChange = (event) => {
@@ -488,7 +529,7 @@ const KitchenOnline = () => {
   };
 
   const closeModal = () => {
-    setIsOpen(false);
+    setIsOpen(prev=>!prev);
   };
 
   return (
@@ -506,7 +547,7 @@ const KitchenOnline = () => {
                 <input
                   type="number"
                   className="form-control"
-                  placeholder="enter time"
+                  placeholder="Enter time"
                   value={inputValue}
                   onChange={handleInputChange}
                 />
@@ -635,9 +676,10 @@ const KitchenOnline = () => {
                                     >
                                       {_t(t(item.remainingTime))}
                                       {startCountdown(
-                                        new Date(item.accepted_by_kitchen_time),
+                                        item.accepted_by_kitchen_time,
                                         item.time_to_deliver,
-                                        index
+                                        index,
+                                        true
                                       )}
                                     </button>
                                   )}
@@ -953,9 +995,10 @@ const KitchenOnline = () => {
                                     >
                                       {_t(t(item.remainingTime))}
                                       {startCountdown(
-                                        new Date(item.accepted_by_kitchen_time),
+                                        item.accepted_by_kitchen_time,
                                         item.time_to_deliver,
-                                        index
+                                        index,
+                                        true
                                       )}
                                     </button>
                                   )}

@@ -122,16 +122,44 @@ const AllItemList = () => {
     list: null,
     searched: false,
   });
-
-  //useEffect == componentDidMount
-  useEffect(() => {}, []);
-
   //edit food item
   const handleSetItemGroup = (foodGroup) => {
     setFoodItemEdit({
       ...foodItemEdit,
       newFoodGroup: foodGroup,
     });
+  };
+
+  let [allergies, setAllergies] = useState([
+    {name: 'Fever'},
+    {name: 'Scratch'},
+    {name: 'Poision'},
+    {name: 'Vometing'},
+  ]);
+
+
+
+  const [selectedAllergies, setSelectedAllergies] = useState([]);
+
+   //useEffect == componentDidMount
+   useEffect(() => {}, []);
+
+  const setSelectedOption = (item) =>{
+    let allergiesArray = [];
+    if(item.allergies){
+      allergiesArray = item.allergies.split(",").map((item) => ({ name: item }));
+    }
+    setSelectedAllergies(allergiesArray)
+  }
+
+  const handleSetAllergies = (allergies) => {
+    setSelectedAllergies(allergies);
+
+    setFoodItemEdit({
+      ...foodItemEdit,
+      item: { ...foodItemEdit.item, allergies:allergies },
+    });
+
   };
 
   //on change input fields
@@ -162,6 +190,15 @@ const AllItemList = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setVariations({ ...variations, uploading: true });
+    
+    let updatedAllergies = [];
+    if (foodItemEdit.editItem.allergies) {
+      selectedAllergies.map((pItem) => {
+        updatedAllergies.push(pItem.name);
+      });
+      updatedAllergies = updatedAllergies.join(",");
+    }
+    
     let formData = {
       //item id
       itemId: foodItemEdit.editItem.id,
@@ -170,6 +207,13 @@ const AllItemList = () => {
         foodItemEdit.newFoodGroup !== null ? foodItemEdit.newFoodGroup : null,
       //new name
       name: foodItemEdit.item.name,
+
+      // ingredients
+      ingredients: foodItemEdit.item.ingredients,
+
+      // allergies
+      allergies: updatedAllergies,
+
       //new price
       price: foodItemEdit.editItem.price ? foodItemEdit.item.price : null,
       //to delete all property, boolean
@@ -331,7 +375,6 @@ const AllItemList = () => {
   };
 
   const handleEnableDisable = (slug, index) => {
-    console.log(slug);
     let formData = {
       slug: slug
     };
@@ -694,7 +737,7 @@ const AllItemList = () => {
                             id="name"
                             name="name"
                             onChange={handleChange}
-                            value={foodItemEdit.item && foodItemEdit.item.name}
+                            value={foodItemEdit.item && foodItemEdit.item.name ? foodItemEdit.item.name : ''}
                             placeholder="e.g. Spicy chicken burger"
                             required
                           />
@@ -728,6 +771,58 @@ const AllItemList = () => {
                           </div>
                         </div>
                       )}
+
+                      <div className="form-group mt-2">
+                                      <div className="mb-2">
+                                        <label className="control-label">
+                                          {_t(t("Add Allergies"))}
+                                        </label>
+                                      </div>
+                                      <Select
+                                        options={allergies}
+                                        components={makeAnimated()}
+                                        getOptionLabel={(option) => option.name}
+                                        getOptionValue={(option) => option.name}
+                                        className="basic-multi-select"
+                                        classNamePrefix="select"
+                                        isMulti
+                                        maxMenuHeight="200px"
+                                        onChange={handleSetAllergies}
+                                        value={selectedAllergies}
+                                        placeholder={
+                                          _t(t("Please select allergies")) +
+                                          ".."
+                                        }
+                                      />
+                                    </div>
+
+                                <div className="form-group mt-4">
+                                    <div className="mb-2">
+                                      <label
+                                        htmlFor="ingredients"
+                                        className="control-label"
+                                      >
+                                        {_t(t("Ingredients"))}
+                                        <span className="text-primary">* </span>
+                                        <small className="text-secondary">
+                                          ({_t(t("Seperated by comma"))})
+                                        </small>
+                                      </label>
+                                    </div>
+                                    <div className="mb-2">
+                                      <input
+                                        id="ingredients"
+                                        type="text"
+                                        className="form-control"
+                                        name="ingredients"
+                                        value={foodItemEdit.item && foodItemEdit.item.ingredients ? foodItemEdit.item.ingredients : ''}
+                                        onChange={handleChange}
+                                        placeholder="Type ingredients"
+                                        required
+                                      />
+                                    </div>
+                                    
+                                  </div>
 
                       <div className="form-group mt-3">
                         <div className="mb-2">
@@ -768,7 +863,7 @@ const AllItemList = () => {
                           <ul className="list-group list-group-horizontal-sm row col-12 mb-2 ml-md-1">
                             {foodItemEdit.propertyGroup.map((selectedItem) => {
                               return (
-                                <li className="list-group-item col-12 col-md-3 bg-success rounded-sm py-1 px-2 mx-2 my-1 text-center">
+                                <li key={selectedItem.id} className="list-group-item col-12 col-md-3 bg-success rounded-sm py-1 px-2 mx-2 my-1 text-center">
                                   {selectedItem.name}
                                 </li>
                               );
@@ -1647,6 +1742,7 @@ const AllItemList = () => {
                                                           imageUpdate: false,
                                                           newImage: null,
                                                         });
+                                                        setSelectedOption(item);
                                                         setTimeout(() => {
                                                           setVariations({
                                                             ...variations,
@@ -1919,6 +2015,7 @@ const AllItemList = () => {
                                                             imageUpdate: false,
                                                             newImage: null,
                                                           });
+                                                          setSelectedOption(item);
                                                           setTimeout(() => {
                                                             setVariations({
                                                               ...variations,

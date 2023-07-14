@@ -61,6 +61,7 @@ import {
   OnlineOrders,
   EditSubmittedOrder,
   //customers
+  StripePayment,
   Customers,
   OnlineCustomerList,
   //
@@ -596,6 +597,15 @@ function App() {
             {authUserInfo.permissions !== null &&
               checkPermission(authUserInfo.permissions, "Manage") ? (
               <FoodItemCrud />
+            ) : (
+              <NoPermission />
+            )}
+          </RestaurantRoute>
+
+          <RestaurantRoute path="/dashboard/manage/stripe/payment" exact>
+            {authUserInfo.permissions !== null &&
+              checkPermission(authUserInfo.permissions, "Manage") ? (
+              <StripePayment />
             ) : (
               <NoPermission />
             )}
