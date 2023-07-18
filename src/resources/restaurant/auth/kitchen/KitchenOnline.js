@@ -18,6 +18,7 @@ import makeAnimated from "react-select/animated";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { confirmAlert } from "react-confirm-alert";
+import Countdown from "react-countdown-now";
 
 //importing context consumer here
 import { RestaurantContext } from "../../../../contexts/Restaurant";
@@ -119,25 +120,7 @@ const KitchenOnline = () => {
         : orderItem
     );
 
-    
-
     setKithcenNewOrdersOnline(newState);
-
-    // if (kithcenNewOrdersOnline[index].is_accepted == 1) {
-    //   const updatedData = [...kithcenNewOrdersOnline];
-    //   updatedData[index].is_accepted_by_kitchen = 0;
-    //   updatedData[index].accepted_by_kitchen_time = null;
-    //   updatedData[index].time_to_deliver = 0;
-    //   updatedData[index].remainingTime = "00:00:00";
-
-    //   // setIsOpen();
-
-    //   setKithcenNewOrdersOnline(updatedData);
-    //   console.log(kithcenNewOrdersOnline[index]);
-    //   startCountdown(null, 0, index, true);
-
-      
-    // }
 
     //front end accept-reject view update for searched
     if (searchedOrder.searched) {
@@ -255,17 +238,6 @@ const KitchenOnline = () => {
         let newState = kithcenNewOrdersOnline.filter((orderItem, index) => {
           if (orderItem.id === id) {
             kithcenNewOrdersOnline.splice(index, 1);
-            if (kithcenNewOrdersOnline[index].is_accepted == 1) {
-              const updatedData = [...kithcenNewOrdersOnline];
-              updatedData[index].is_accepted_by_kitchen = 0;
-              updatedData[index].accepted_by_kitchen_time = null;
-              updatedData[index].time_to_deliver = 0;
-
-              setIsOpen(prev=>!prev);
-
-              setKithcenNewOrdersOnline(updatedData);
-              // startCountdown(null, 0, index);
-            }
             setKithcenNewOrdersOnline(...kithcenNewOrdersOnline);
           }
           return orderItem.id !== id;
@@ -390,139 +362,31 @@ const KitchenOnline = () => {
       });
   };
 
-  const refCounter = useRef(null);
-
-  const startCountdown = (serverDateTime, minutes, index,counterRemove) => {
-    let futureDateTime = new Date(serverDateTime);
-    futureDateTime.setMinutes(futureDateTime.getMinutes() + parseInt(minutes));
-  
-    let currentDateTime = new Date();
-  
-    let remainingTime = futureDateTime - currentDateTime;
-  
-    let countdown = setInterval(function () {
-      currentDateTime = new Date();
-  
-      remainingTime = futureDateTime - currentDateTime;
-  
-     if (remainingTime <= 0) {
-        if (kithcenNewOrdersOnline[index] === undefined || counterRemove) {
-          clearInterval(countdown);
-        }
-        return;
-      }
-  
-      let hours = Math.floor(
-        (remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-      );
-      let minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-      let seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-  
-      let calculatedRemainingTime =
-        ":" +
-        hours.toString().padStart(2, "0") +
-        ":" +
-        minutes.toString().padStart(2, "0") +
-        ":" +
-        seconds.toString().padStart(2, "0");
-  
-      const updatedData = [...kithcenNewOrdersOnline];
-      updatedData[index].remainingTime = calculatedRemainingTime;
-      updatedData[index].accepted_by_kitchen_time = serverDateTime;
-  
-      setKithcenNewOrdersOnline(updatedData); // Assuming this function is defined elsewhere
-    }, 1000);
-  }
-  
-
-  // function startCountdown(serverDateTime, minutes, index) {
-  //   var futureDateTime = new Date(serverDateTime);
-  //   futureDateTime.setMinutes(futureDateTime.getMinutes() + parseInt(minutes));
-
-  //   var currentDateTime = new Date();
-
-  //   var remainingTime = futureDateTime - currentDateTime;
-
-  //   // Check if the countdown has finished
-  //   // if (remainingTime <= 0) {
-
-  //   //   if (refCounter.current) {
-  //   //     refCounter.current.style.display = "none";
-  //   //   }
-  //   //   return;
-  //   // }
-
-  //   var countdown = setInterval(function () {
-  //     currentDateTime = new Date();
-
-  //     remainingTime = futureDateTime - currentDateTime;
-
-  //     // Check if the countdown has finished
-  //     if (remainingTime <= 0) {
-  //       // if (kithcenNewOrdersOnline[index] == undefined) {
-  //         clearInterval(countdown);
-  //       // }
-  //       // if (refCounter.current) {
-  //       //   refCounter.current.style.display = "none";
-  //       // }
-  //       return;
-  //     }
-
-  //     var hours = Math.floor(
-  //       (remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-  //     );
-  //     var minutes = Math.floor(
-  //       (remainingTime % (1000 * 60 * 60)) / (1000 * 60)
-  //     );
-  //     var seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-
-  //     var calculatedRemainingTime =
-  //       ":" +
-  //       hours.toString().padStart(2, "0") +
-  //       ":" +
-  //       minutes.toString().padStart(2, "0") +
-  //       ":" +
-  //       seconds.toString().padStart(2, "0");
-
-  //     const updatedData = [...kithcenNewOrdersOnline];
-  //     updatedData[index].remainingTime = calculatedRemainingTime; // Update the remaining time
-  //     updatedData[index].accepted_by_kitchen_time = serverDateTime; // Update the remaining time
-
-  //     setKithcenNewOrdersOnline(updatedData);
-  //   }, 1000);
-  // }
-
   const [isOpen, setIsOpen] = useState(false);
   const [itemID, setItemID] = useState(0);
   const [itemIndex, setItemIndex] = useState("");
   const [inputValue, setInputValue] = useState("");
 
-  // const mountedRef = useRef(true);
-
-  // useEffect(() => {
-  //   return () => {
-  //     mountedRef.current = !mountedRef.current;
-  //   };
-  // }, []);
-
   const openModal = (item_id, index) => {
     setItemID(item_id);
     setItemIndex(index);
     setIsOpen(prev=>!prev);
-    // setTimeout(() => {
-    //   if (mountedRef.current) {
-    //     setIsOpen(true);
-    //   }
-    // }, 100);
   };
 
   const saveAcceptOrder = () => {
+    createCounter(new Date(), inputValue, itemIndex)
     handleAcceptOrReject(itemID, inputValue, itemIndex);
     setIsOpen(prev=>!prev);
-    // setTimeout(() => {
-    //   window.location.reload();
-    // }, 500);
   };
+
+  const createCounter = (serverDateTime, minutes, index) => {
+    var futureDateTime = serverDateTime;
+    futureDateTime.setMinutes(futureDateTime.getMinutes() + parseInt(minutes));
+
+    const updatedData = [...kithcenNewOrdersOnline];
+    updatedData[index].accepted_by_kitchen_time = futureDateTime; // Update the remaining time
+    setKithcenNewOrdersOnline(updatedData);
+  }
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
@@ -547,7 +411,7 @@ const KitchenOnline = () => {
                 <input
                   type="number"
                   className="form-control"
-                  placeholder="Enter time"
+                  placeholder="Enter minutes"
                   value={inputValue}
                   onChange={handleInputChange}
                 />
@@ -666,23 +530,15 @@ const KitchenOnline = () => {
                           >
                             <div className="fk-order-token t-bg-white p-3 h-100">
                               <div className="fk-order-token__footer text-right">
-                                {/* {item.is_accepted_by_kitchen == 1 &&
+                                {item.is_accepted_by_kitchen == 1 &&
                                   item.is_ready == 0 && (
                                     <button
-                                      ref={refCounter}
-                                      id="refCounter"
                                       type="button"
                                       className="btn btn-danger xsm-text text-uppercase btn-lg mr-2"
                                     >
-                                      {_t(t(item.remainingTime))}
-                                      {startCountdown(
-                                        item.accepted_by_kitchen_time,
-                                        item.time_to_deliver,
-                                        index,
-                                        true
-                                      )}
+                                      <Countdown date={new Date(item.accepted_by_kitchen_time)} />
                                     </button>
-                                  )} */}
+                                  )}
 
                                 <button
                                   type="button"
@@ -985,23 +841,15 @@ const KitchenOnline = () => {
                           >
                             <div className="fk-order-token t-bg-white p-3 h-100">
                               <div className="fk-order-token__footer text-right">
-                                {/* {item.is_accepted_by_kitchen == 1 &&
+                                {item.is_accepted_by_kitchen == 1 &&
                                   item.is_ready == 0 && (
                                     <button
-                                      ref={refCounter}
-                                      id="refCounter"
                                       type="button"
                                       className="btn btn-danger xsm-text text-uppercase btn-lg mr-2"
                                     >
-                                      {_t(t(item.remainingTime))}
-                                      {startCountdown(
-                                        item.accepted_by_kitchen_time,
-                                        item.time_to_deliver,
-                                        index,
-                                        true
-                                      )}
+                                      <Countdown date={new Date(item.accepted_by_kitchen_time)} />
                                     </button>
-                                  )} */}
+                                  )}
                                 <button
                                   type="button"
                                   className="btn btn-success xsm-text text-uppercase btn-lg mr-2"

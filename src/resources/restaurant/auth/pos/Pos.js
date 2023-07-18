@@ -1777,7 +1777,7 @@ const history = useHistory();
   //settle button
   const handleSettleOrderButton = (e) => {
     if (newOrder && newOrder.length > 0) {
-      if(orderDetails && orderDetails.customer == null){
+      if(orderDetails && orderDetails.customer == null && orderDetails.newCustomerInfo.name == ''){
         toast.error(`${_t(t("Please select a customer first"))}`, {
           position: "bottom-center",
           autoClose: 10000,
