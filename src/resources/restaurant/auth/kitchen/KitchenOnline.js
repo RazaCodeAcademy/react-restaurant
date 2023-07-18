@@ -123,21 +123,21 @@ const KitchenOnline = () => {
 
     setKithcenNewOrdersOnline(newState);
 
-    if (kithcenNewOrdersOnline[index].is_accepted == 1) {
-      const updatedData = [...kithcenNewOrdersOnline];
-      updatedData[index].is_accepted_by_kitchen = 0;
-      updatedData[index].accepted_by_kitchen_time = null;
-      updatedData[index].time_to_deliver = 0;
-      updatedData[index].remainingTime = "00:00:00";
+    // if (kithcenNewOrdersOnline[index].is_accepted == 1) {
+    //   const updatedData = [...kithcenNewOrdersOnline];
+    //   updatedData[index].is_accepted_by_kitchen = 0;
+    //   updatedData[index].accepted_by_kitchen_time = null;
+    //   updatedData[index].time_to_deliver = 0;
+    //   updatedData[index].remainingTime = "00:00:00";
 
-      // setIsOpen();
+    //   // setIsOpen();
 
-      setKithcenNewOrdersOnline(updatedData);
-      console.log(kithcenNewOrdersOnline[index]);
-      startCountdown(null, 0, index, true);
+    //   setKithcenNewOrdersOnline(updatedData);
+    //   console.log(kithcenNewOrdersOnline[index]);
+    //   startCountdown(null, 0, index, true);
 
       
-    }
+    // }
 
     //front end accept-reject view update for searched
     if (searchedOrder.searched) {
@@ -264,7 +264,7 @@ const KitchenOnline = () => {
               setIsOpen(prev=>!prev);
 
               setKithcenNewOrdersOnline(updatedData);
-              startCountdown(null, 0, index);
+              // startCountdown(null, 0, index);
             }
             setKithcenNewOrdersOnline(...kithcenNewOrdersOnline);
           }
@@ -519,9 +519,9 @@ const KitchenOnline = () => {
   const saveAcceptOrder = () => {
     handleAcceptOrReject(itemID, inputValue, itemIndex);
     setIsOpen(prev=>!prev);
-    setTimeout(() => {
-      window.location.reload();
-    }, 500);
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 500);
   };
 
   const handleInputChange = (event) => {
@@ -666,7 +666,7 @@ const KitchenOnline = () => {
                           >
                             <div className="fk-order-token t-bg-white p-3 h-100">
                               <div className="fk-order-token__footer text-right">
-                                {item.is_accepted_by_kitchen == 1 &&
+                                {/* {item.is_accepted_by_kitchen == 1 &&
                                   item.is_ready == 0 && (
                                     <button
                                       ref={refCounter}
@@ -682,7 +682,7 @@ const KitchenOnline = () => {
                                         true
                                       )}
                                     </button>
-                                  )}
+                                  )} */}
 
                                 <button
                                   type="button"
@@ -985,7 +985,7 @@ const KitchenOnline = () => {
                           >
                             <div className="fk-order-token t-bg-white p-3 h-100">
                               <div className="fk-order-token__footer text-right">
-                                {item.is_accepted_by_kitchen == 1 &&
+                                {/* {item.is_accepted_by_kitchen == 1 &&
                                   item.is_ready == 0 && (
                                     <button
                                       ref={refCounter}
@@ -1001,7 +1001,7 @@ const KitchenOnline = () => {
                                         true
                                       )}
                                     </button>
-                                  )}
+                                  )} */}
                                 <button
                                   type="button"
                                   className="btn btn-success xsm-text text-uppercase btn-lg mr-2"

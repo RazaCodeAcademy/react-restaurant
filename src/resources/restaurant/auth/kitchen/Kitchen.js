@@ -116,16 +116,16 @@ const Kitchen = () => {
           }
         : orderItem
     );
-    if (kithcenNewOrders[index].is_accepted == 1) {
-      const updatedData = [...kithcenNewOrders];
-      updatedData[index].is_accepted = 0;
-      updatedData[index].accepted_time = null;
-      updatedData[index].time_to_deliver = 0;
-      // setIsOpen(prev=>!prev);
+    // if (kithcenNewOrders[index].is_accepted == 1) {
+    //   const updatedData = [...kithcenNewOrders];
+    //   updatedData[index].is_accepted = 0;
+    //   updatedData[index].accepted_time = null;
+    //   updatedData[index].time_to_deliver = 0;
+    //   // setIsOpen(prev=>!prev);
 
-      setKithcenNewOrders(updatedData);
-      startOrderCountdown(null, 0, index);
-    }
+    //   setKithcenNewOrders(updatedData);
+    //   // startOrderCountdown(null, 0, index);
+    // }
     setKithcenNewOrders(newState);
 
     //front end accept-reject view update for searched
@@ -430,9 +430,9 @@ const Kitchen = () => {
   const saveAcceptOrder = () => {
     handleAcceptOrReject(itemID, inputValue, itemIndex);
     setIsOpen(prev=>!prev);
-    setTimeout(() => {
-      window.location.reload();
-    }, 500);
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 500);
   };
 
   const handleInputChange = (event) => {
@@ -576,7 +576,7 @@ const Kitchen = () => {
                           >
                             <div className="fk-order-token t-bg-white p-3 h-100">
                               <div className="fk-order-token__footer text-right">
-                                {item.is_accepted == 1 && (
+                                {/* {item.is_accepted == 1 && (
                                   <button
                                     ref={refCounter}
                                     id="refCounter"
@@ -590,7 +590,7 @@ const Kitchen = () => {
                                       index
                                     )}
                                   </button>
-                                )}
+                                )} */}
                                 <button
                                   type="button"
                                   className="btn btn-success xsm-text text-uppercase btn-lg mr-2"
@@ -895,7 +895,7 @@ const Kitchen = () => {
                           >
                             <div className="fk-order-token t-bg-white p-3 h-100">
                               <div className="fk-order-token__footer text-right">
-                                {item.is_accepted == 1 && (
+                                {/* {item.is_accepted == 1 && (
                                   <button
                                     ref={refCounter}
                                     id="refCounter"
@@ -909,7 +909,7 @@ const Kitchen = () => {
                                       index
                                     )}
                                   </button>
-                                )}
+                                )} */}
                                 <button
                                   type="button"
                                   className="btn btn-success xsm-text text-uppercase btn-lg mr-2"

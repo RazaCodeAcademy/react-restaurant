@@ -54,6 +54,7 @@ const AllItemList = () => {
 
     //food
     getFood,
+    foodAllergyList,
     foodList,
     setFoodList,
     setPaginatedFood,
@@ -130,12 +131,11 @@ const AllItemList = () => {
     });
   };
 
-  let [allergies, setAllergies] = useState([
-    {name: 'Fever'},
-    {name: 'Scratch'},
-    {name: 'Poision'},
-    {name: 'Vometing'},
-  ]);
+  let [allergies, setAllergies] = useState([]);
+
+  useEffect(()=>{
+    setAllergies(foodAllergyList.data)
+  }, [])
 
 
 

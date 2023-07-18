@@ -261,7 +261,7 @@ function App() {
             </Route>
           ) : (
             <Route path="/" exact>
-              <RestaurantLanding />
+              <RestaurantHome />
             </Route>
           )}
 

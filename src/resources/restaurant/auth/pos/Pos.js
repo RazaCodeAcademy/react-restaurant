@@ -185,6 +185,7 @@ const history = useHistory();
     newCustomerInfo: {
       name: "",
       number: "",
+      address: "",
     },
     token: null,
     serviceCharge: 0,
@@ -321,12 +322,10 @@ const history = useHistory();
 
   const handleKitchenNote = (event) =>{
     setInputValue(event.target.value)
-    // console.log(currentValue, activeItemInOrder);
     if(activeItemInOrder != null){
       let updated = [...newOrder];
       updated[activeItemInOrder].item.note = event.target.value;
       setNewOrder(updated);
-      console.log(newOrder);
     }
   }
 
@@ -877,6 +876,7 @@ const history = useHistory();
       newCustomerInfo: {
         name: "",
         number: "",
+        address: ""
       },
       token: null,
       serviceCharge: 0,
@@ -1362,6 +1362,7 @@ const history = useHistory();
       newCustomerInfo: {
         name: "",
         number: "",
+        address: ""
       },
       token: null,
       serviceCharge: 0,
@@ -1450,7 +1451,6 @@ const history = useHistory();
 
   // department tag
   const handleSetDeptTag = (dept_tag) => {
-    console.log(dept_tag);
     if(dept_tag.id == 9){
       setIsReservation(true);
     }else{
@@ -1527,7 +1527,6 @@ const history = useHistory();
 
   //payment type
   const handleSetpaymentType = (payment_type) => {
-    console.log(payment_type);
     setOrderDetails({
       ...orderDetails,
       payment_type,
@@ -1658,7 +1657,7 @@ const history = useHistory();
         axiosRequest();
       }
     } else {
-      toast.error(`${_t(t("Please add items in order list"))}`, {
+      toast.error(`${_t(t("Please add items in order list asffsfasf"))}`, {
         position: "bottom-center",
         autoClose: 10000,
         hideProgressBar: false,
@@ -1705,7 +1704,7 @@ const history = useHistory();
       .then((res) => {
         if (res.data !== "ended") {
           getFoodGroup();
-          handlePrint();
+          handlePrint2();
           setCustomerForSearch(res.data[0][1]);
           setWorkPeriodListForSearch(res.data[1][1]);
           let tempCustomers =
@@ -1778,7 +1777,16 @@ const history = useHistory();
   //settle button
   const handleSettleOrderButton = (e) => {
     if (newOrder && newOrder.length > 0) {
-      if (orderDetails && orderDetails.dept_tag !== null) {
+      if(orderDetails && orderDetails.customer == null){
+        toast.error(`${_t(t("Please select a customer first"))}`, {
+          position: "bottom-center",
+          autoClose: 10000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          className: "text-center toast-notification",
+        });
+      }else if (orderDetails && orderDetails.dept_tag !== null) {
         setShowSettle(true);
       } else {
         toast.error(`${_t(t("Please select a department tag"))}`, {
@@ -1804,7 +1812,6 @@ const history = useHistory();
 
   //handle settle order
   const handleSettleOrder = (e) => {
-
     e.preventDefault();
     if (newOrder && newOrder.length > 0) {
       if (paidMoney < totalPayable) {
@@ -1822,7 +1829,7 @@ const history = useHistory();
             className: "text-center toast-notification",
           }
         );
-      } else {
+      }else {
         axiosRequestForSettle();
       }
     } else {
@@ -1872,11 +1879,10 @@ const history = useHistory();
         headers: { Authorization: `Bearer ${getCookie()}` },
       })
       .then((res) => {
-        console.log(res);
         if (res.data !== "ended") {
           if (res.data !== "paymentIssue") {
             getFoodGroup();
-            handlePrint();
+            handlePrint2();
             setCustomerForSearch(res.data[0][1]);
             setWorkPeriodListForSearch(res.data[1][1]);
             let tempCustomers =
@@ -2033,6 +2039,7 @@ const history = useHistory();
       newCustomerInfo: {
         name: "",
         number: "",
+        address: ""
       },
       token: null,
       serviceCharge: 0,
@@ -2052,7 +2059,13 @@ const history = useHistory();
 
     setLoading(false);
     if(paymentType == 2){
-      history.push(`/dashboard/manage/stripe/payment?payment_amount=${totalPayable}`)
+      localStorage.setItem('payment_amount', totalPayable.toString());
+      localStorage.setItem('newOrder', JSON.stringify(newOrder));
+      localStorage.setItem('orderDetails', JSON.stringify(orderDetails));
+      localStorage.setItem('newSettings', JSON.stringify(newSettings));
+      localStorage.setItem('theSubTotal', theSubTotal.toString());
+      localStorage.setItem('theVat', theVat.toString());
+      history.push(`/dashboard/manage/stripe/payment`)
     }
 
     //sound
@@ -3800,6 +3813,17 @@ const history = useHistory();
                                   onChange={handleNewCustomer}
                                 />
                               </li>
+                              <li className="pb-2">
+                                <input
+                                  type="text"
+                                  name="address"
+                                  className="form-control font-10px mt-2 rounded-lg"
+                                  autoComplete="off"
+                                  placeholder="Address"
+                                  value={orderDetails.newCustomerInfo.address}
+                                  onChange={handleNewCustomer}
+                                />
+                              </li>
                               <li className="pb-1 text-right">
                                 <button
                                   className="btn t-bg-white text-dark xsm-text text-uppercase btn-sm py-0 px-2 mr-1"
@@ -3810,6 +3834,7 @@ const history = useHistory();
                                       newCustomerInfo: {
                                         name: "",
                                         number: "",
+                                        address: "",
                                       },
                                     });
                                   }}
@@ -3953,7 +3978,7 @@ const history = useHistory();
           {/* Mobile Screen Only   */}
           <div className="d-md-none t-mb-15">
             {/* Show start work period options here */}
-            {newSettings && newSettings.workPeriod === null && (
+            {/* {newSettings && newSettings.workPeriod === null && (
               <div className="fk-left-overlay">
                 <div className="fk-left-overlay__content text-center m-auto">
                   <h5
@@ -3993,7 +4018,7 @@ const history = useHistory();
                   </NavLink>
                 </div>
               </div>
-            )}
+            )} */}
             {/* Show start work period options here */}
             {foodGroupForSearch &&
               foodGroupForSearch.map((mobileGroup, mobileGroupIndex) => {
@@ -4177,7 +4202,7 @@ const history = useHistory();
                 <div className="col-md-7">
                   <div className="fk-left-over">
                     {/* Show start work period options here */}
-                    {newSettings && newSettings.workPeriod === null && (
+                    {/* {newSettings && newSettings.workPeriod === "null" && (
                       <div className="fk-left-overlay">
                         <div className="fk-left-overlay__content text-center m-auto">
                           <h5
@@ -4219,7 +4244,7 @@ const history = useHistory();
                           </NavLink>
                         </div>
                       </div>
-                    )}
+                    )} */}
                     {/* Show start work period options here */}
 
                     <div className="row gx-2 align-items-center">
@@ -4301,7 +4326,7 @@ const history = useHistory();
                                         >
                                           <style></style>
                                           <button
-                                            class={`button arrow text-uppercase ${
+                                            className={`button arrow text-uppercase ${
                                               orderDetails &&
                                               orderDetails.dept_tag &&
                                               orderDetails.dept_tag.id ===
@@ -4416,84 +4441,6 @@ const history = useHistory();
                                         className="fk-addons-variation"
                                         data-simplebar
                                       >
-                                        {/* Variations */}
-                                        <div className="fk-addons-table">
-                                          <div className="fk-addons-table__head text-center">
-                                            {_t(t("variations"))}
-                                          </div>
-                                          {foodItem.variations ? (
-                                            <>
-                                              <div className="fk-addons-table__info">
-                                                <div className="row g-0">
-                                                  <div className="col-8 pl-3 border-right">
-                                                    <span className="fk-addons-table__info-text text-capitalize">
-                                                      {_t(t("name"))}
-                                                    </span>
-                                                  </div>
-                                                  <div className="col-4 text-center">
-                                                    <span className="fk-addons-table__info-text text-capitalize">
-                                                      {_t(t("price"))}
-                                                    </span>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                              <div className="fk-addons-table__body">
-                                                {foodItem.variations.map(
-                                                  (variationItem) => {
-                                                    return (
-                                                      <div className="fk-addons-table__body-row">
-                                                        <div className="row g-0">
-                                                          <div className="col-8 border-right t-pl-10 t-pr-10">
-                                                            <label className="mx-checkbox">
-                                                              <input
-                                                                type="radio"
-                                                                className="mx-checkbox__input mx-checkbox__input-solid mx-checkbox__input-solid--danger mx-checkbox__input-sm"
-                                                                name="variation"
-                                                                onChange={() => {
-                                                                  handleOrderItemVariation(
-                                                                    variationItem
-                                                                  );
-                                                                }}
-                                                                checked={checkChecked(
-                                                                  variationItem
-                                                                )}
-                                                              />
-                                                              <span className="mx-checkbox__text text-capitalize t-text-heading t-ml-8 fk-addons-table__body-text">
-                                                                {
-                                                                  variationItem.variation_name
-                                                                }
-                                                              </span>
-                                                            </label>
-                                                          </div>
-                                                          <div className="col-4 text-center">
-                                                            <span className="fk-addons-table__body-text sm-text">
-                                                              {currencySymbolLeft()}
-                                                              {formatPrice(
-                                                                variationItem.food_with_variation_price
-                                                              )}
-                                                              {currencySymbolRight()}
-                                                            </span>
-                                                          </div>
-                                                        </div>
-                                                      </div>
-                                                    );
-                                                  }
-                                                )}
-                                              </div>
-                                            </>
-                                          ) : (
-                                            <div className="fk-addons-table__info py-4">
-                                              <div className="row g-0">
-                                                <div className="col-12 text-center border-right">
-                                                  <span className="fk-addons-table__info-text text-capitalize text-primary">
-                                                    {_t(t("No variations"))}
-                                                  </span>
-                                                </div>
-                                              </div>
-                                            </div>
-                                          )}
-                                        </div>
-                                        {/* Variations end*/}
                                         <div>
                                           {/* Kitchen Note */}
                                           <div className="fk-addons-table">
@@ -4758,6 +4705,84 @@ const history = useHistory();
                                           )}
                                         </div>
                                         {/* Property group and items */}
+                                        {/* Variations */}
+                                        <div className="fk-addons-table">
+                                          <div className="fk-addons-table__head text-center">
+                                            {_t(t("variations"))}
+                                          </div>
+                                          {foodItem.variations ? (
+                                            <>
+                                              <div className="fk-addons-table__info">
+                                                <div className="row g-0">
+                                                  <div className="col-8 pl-3 border-right">
+                                                    <span className="fk-addons-table__info-text text-capitalize">
+                                                      {_t(t("name"))}
+                                                    </span>
+                                                  </div>
+                                                  <div className="col-4 text-center">
+                                                    <span className="fk-addons-table__info-text text-capitalize">
+                                                      {_t(t("price"))}
+                                                    </span>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div className="fk-addons-table__body">
+                                                {foodItem.variations.map(
+                                                  (variationItem) => {
+                                                    return (
+                                                      <div className="fk-addons-table__body-row">
+                                                        <div className="row g-0">
+                                                          <div className="col-8 border-right t-pl-10 t-pr-10">
+                                                            <label className="mx-checkbox">
+                                                              <input
+                                                                type="radio"
+                                                                className="mx-checkbox__input mx-checkbox__input-solid mx-checkbox__input-solid--danger mx-checkbox__input-sm"
+                                                                name="variation"
+                                                                onChange={() => {
+                                                                  handleOrderItemVariation(
+                                                                    variationItem
+                                                                  );
+                                                                }}
+                                                                checked={checkChecked(
+                                                                  variationItem
+                                                                )}
+                                                              />
+                                                              <span className="mx-checkbox__text text-capitalize t-text-heading t-ml-8 fk-addons-table__body-text">
+                                                                {
+                                                                  variationItem.variation_name
+                                                                }
+                                                              </span>
+                                                            </label>
+                                                          </div>
+                                                          <div className="col-4 text-center">
+                                                            <span className="fk-addons-table__body-text sm-text">
+                                                              {currencySymbolLeft()}
+                                                              {formatPrice(
+                                                                variationItem.food_with_variation_price
+                                                              )}
+                                                              {currencySymbolRight()}
+                                                            </span>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                    );
+                                                  }
+                                                )}
+                                              </div>
+                                            </>
+                                          ) : (
+                                            <div className="fk-addons-table__info py-4">
+                                              <div className="row g-0">
+                                                <div className="col-12 text-center border-right">
+                                                  <span className="fk-addons-table__info-text text-capitalize text-primary">
+                                                    {_t(t("No variations"))}
+                                                  </span>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          )}
+                                        </div>
+                                        {/* Variations end*/}
                                       </div>
                                     </div>
                                   </div>
@@ -4996,6 +5021,20 @@ const history = useHistory();
                                                   onChange={handleNewCustomer}
                                                 />
                                               </li>
+                                              <li className="pb-2">
+                                                <input
+                                                  type="text"
+                                                  name="address"
+                                                  className="form-control font-10px mt-2 rounded-lg"
+                                                  autoComplete="off"
+                                                  placeholder="Address"
+                                                  value={
+                                                    orderDetails.newCustomerInfo
+                                                      .address
+                                                  }
+                                                  onChange={handleNewCustomer}
+                                                />
+                                              </li>
                                               <li className="pb-1 text-right">
                                                 <button
                                                   className="btn t-bg-white text-dark xsm-text text-uppercase btn-sm py-0 px-2 mr-1"
@@ -5006,6 +5045,7 @@ const history = useHistory();
                                                       newCustomerInfo: {
                                                         name: "",
                                                         number: "",
+                                                        address: ""
                                                       },
                                                     });
                                                   }}

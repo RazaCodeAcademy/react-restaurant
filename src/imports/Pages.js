@@ -73,6 +73,7 @@ import OpeningClosingStockFoodReport from "../resources/restaurant/auth/reports/
 //from restaurant-auth-manage
 //-food
 import GroupCrud from "../resources/restaurant/auth/manage/food/GroupCrud";
+import AllergiesCrud from "../resources/restaurant/auth/manage/food/AllergiesCrud";
 import UnitCrud from "../resources/restaurant/auth/manage/food/UnitCrud";
 import VariationCrud from "../resources/restaurant/auth/manage/food/VariationCrud";
 import PropertyCrud from "../resources/restaurant/auth/manage/food/PropertyCrud";
@@ -187,6 +188,7 @@ export {
   OpeningClosingStockFoodReport,
   //manage->food
   GroupCrud,
+  AllergiesCrud,
   UnitCrud,
   VariationCrud,
   PropertyCrud,

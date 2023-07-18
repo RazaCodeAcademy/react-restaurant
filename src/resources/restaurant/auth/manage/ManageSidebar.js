@@ -64,6 +64,10 @@ const ManageSidebar = () => {
                   "/dashboard/manage/food/groups",
                   _t(t("Groups"))
                 )}
+                {managePageHrefLinkMobile(
+                  "/dashboard/manage/food/allergies",
+                  _t(t("Allergies"))
+                )}
 
                 {managePageHrefLinkMobile(
                   "/dashboard/manage/food/properties",
@@ -199,6 +203,10 @@ const ManageSidebar = () => {
                 {managePageHrefLink(
                   "/dashboard/manage/food/groups",
                   _t(t("Groups"))
+                )}
+                {managePageHrefLink(
+                  "/dashboard/manage/food/allergies",
+                  _t(t("Allergies"))
                 )}
 
                 {/* {managePageHrefLink(

@@ -99,6 +99,7 @@ import {
   //manage->food
   GroupCrud,
   UnitCrud,
+  AllergiesCrud,
   VariationCrud,
   PropertyCrud,
   PropertyItemCrud,
@@ -316,14 +317,14 @@ function SaasApp() {
                         <Route path="/set-new-password/:token" exact>
                           <SetNewPw />
                         </Route>
-
-                        {credentials.install_no ? (
+                          {console.log(credentials, 'asfasf')}
+                        {credentials.install_no == false ? (
                           <Route path="/" exact>
                             <Login />
                           </Route>
                         ) : (
                           <Route path="/" exact>
-                            <RestaurantLanding />
+                            <RestaurantHome />
                           </Route>
                         )}
 
@@ -747,6 +748,20 @@ function SaasApp() {
                             "Manage"
                           ) ? (
                             <GroupCrud />
+                          ) : (
+                            <NoPermission />
+                          )}
+                        </RestaurantRoute>
+                        <RestaurantRoute
+                          path="/dashboard/manage/food/allergies"
+                          exact
+                        >
+                          {authUserInfo.permissions !== null &&
+                          checkPermission(
+                            authUserInfo.permissions,
+                            "Manage"
+                          ) ? (
+                            <AllergiesCrud />
                           ) : (
                             <NoPermission />
                           )}
@@ -1455,7 +1470,7 @@ function SaasApp() {
             // ]
           ]
         : [
-            <Router>
+            <Router key="router">
               <Navbar />
               <Switch>
                 {/* installation */}
@@ -1520,13 +1535,13 @@ function SaasApp() {
                   <SetNewPw />
                 </Route>
 
-                {credentials.install_no ? (
+                {credentials.install_no == false ? (
                   <Route path="/" exact>
                     <Login />
                   </Route>
                 ) : (
                   <Route path="/" exact>
-                    <RestaurantLanding />
+                    <RestaurantHome />
                   </Route>
                 )}
 
@@ -1824,6 +1839,14 @@ checkPermission(authUserInfo.permissions, "Report") ? (
                   {authUserInfo.permissions !== null &&
                   checkPermission(authUserInfo.permissions, "Manage") ? (
                     <GroupCrud />
+                  ) : (
+                    <NoPermission />
+                  )}
+                </RestaurantRoute>
+                <RestaurantRoute path="/dashboard/manage/food/allergies" exact>
+                  {authUserInfo.permissions !== null &&
+                  checkPermission(authUserInfo.permissions, "Manage") ? (
+                    <AllergiesCrud />
                   ) : (
                     <NoPermission />
                   )}

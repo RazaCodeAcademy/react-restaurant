@@ -38,18 +38,18 @@ const FoodItemCrud = () => {
   let [apiFailed, setApiFailed] = useState(false);
 
   let {
+    foodAllergyList,
     setFoodForSearch,
     foodGroupForSearch,
     propertyGroupForSearch,
     variationForSearch,
   } = useContext(FoodContext);
 
-  let [allergies, setAllergies] = useState([
-    {id: 1, name: 'Fever'},
-    {id: 2, name: 'Scratch'},
-    {id: 3, name: 'Poision'},
-    {id: 4, name: 'Vometing'},
-  ]);
+  let [allergies, setAllergies] = useState([]);
+  useEffect(()=>{
+    setAllergies(foodAllergyList.data)
+  }, [])
+
 
   // States hook here
   //new item

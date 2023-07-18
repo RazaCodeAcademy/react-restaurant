@@ -44,6 +44,10 @@ const FoodProvider = ({ children }) => {
   //food group
   const [foodGroupList, setFoodGroupList] = useState(null);
   const [foodGroupForSearch, setFoodGroupforSearch] = useState(null);
+  
+  // food allergies
+  const [foodAllergyList, setFoodAllergyList] = useState(null);
+  const [foodAllergyForSearch, setFoodAllergyforSearch] = useState(null);
 
   //food unit
   const [foodUnitList, setFoodUnitList] = useState(null);
@@ -76,6 +80,7 @@ const FoodProvider = ({ children }) => {
     if (getCookie() !== undefined) {
       getFood();
       getFoodGroup();
+      getFoodAllergy();
       getFoodUnit();
       getVariation();
       getPropertyGroup();
@@ -227,6 +232,26 @@ const FoodProvider = ({ children }) => {
       });
   };
 
+  //get food allergies
+  const getFoodAllergy = () => {
+    setLoading(true);
+    const currentUrl = window.location.href;
+    // var manage = currentUrl.includes("manage/food/groups") ? true : false;
+    const foodGroupUrl = BASE_URL + "/settings/get-food-allergy";
+    return axios
+      .get(foodGroupUrl, {
+        headers: { Authorization: `Bearer ${getCookie()}` },
+      })
+      .then((res) => {
+        setFoodAllergyList(res.data[0]);
+        setFoodAllergyforSearch(res.data[1]);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
+
   // get paginated food groups
   const setPaginatedFoodGroup = (pageNo) => {
     setDataPaginating(true);
@@ -242,6 +267,25 @@ const FoodProvider = ({ children }) => {
         setFoodGroupList(res.data[0]);
         setFoodGroupforSearch(res.data[1]);
         setFoodItemStock(res.data[2]);
+        setDataPaginating(false);
+      })
+      .catch(() => {});
+  };
+  // get paginated food allergies
+  const setPaginatedFoodAllergy = (pageNo) => {
+    setDataPaginating(true);
+    const currentUrl = window.location.href;
+    // var manage = currentUrl.includes("manage/food/groups") ? true : false;
+    const url = BASE_URL + "/settings/get-food-allergy?page=" + pageNo;
+    // const url = BASE_URL + "/settings/get-food-group?page=" + pageNo;
+    return axios
+      .get(url, {
+        headers: { Authorization: `Bearer ${getCookie()}` },
+      })
+      .then((res) => {
+        console.log(res.data[0]);
+        setFoodAllergyList(res.data[0]);
+        setFoodAllergyforSearch(res.data[1]);
         setDataPaginating(false);
       })
       .catch(() => {});
@@ -444,11 +488,17 @@ const FoodProvider = ({ children }) => {
         foodItemStock,
         //food group
         getFoodGroup,
+        getFoodAllergy,
         foodGroupList,
+        foodAllergyList,
         setFoodGroupList,
+        setFoodAllergyList,
         setPaginatedFoodGroup,
+        setPaginatedFoodAllergy,
         foodGroupForSearch,
         setFoodGroupforSearch,
+        foodAllergyForSearch,
+        setFoodAllergyforSearch,
 
         //food units
         getFoodUnit,
