@@ -385,6 +385,33 @@ const CustomerCrud = () => {
       });
   };
 
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  const handleFileUpload = () => {
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append('csv_file', selectedFile);
+      const customerUrl = BASE_URL + `/settings/upload-csv-to-create-new-customer`;
+      axios.post(customerUrl, formData, {
+        headers: { Authorization: `Bearer ${getCookie()}` },
+      })
+        .then(response => {
+          if(response.data.success){
+            window.location.reload();
+          }else{
+            console.log(response.data.message)
+          }
+        })
+        .catch(error => {
+          console.error(error); // Handle error
+        });
+      }
+  };
+
   return (
     <>
       <Helmet>
@@ -619,7 +646,37 @@ const CustomerCrud = () => {
                             </ul>
                           </div>
                           <div className="col-md-6 col-lg-7">
-                            <div className="row gx-3 align-items-center">
+                          <div className="row gx-3 align-items-center">
+                              {/* import customer csv file */}
+                              <div className="col-md-9 t-mb-15 mb-md-0">
+                                <div className="input-group">
+                                  <div className="form-file">
+                                    <input
+                                      type="file"
+                                      className="form-control border-0 form-control--light-1 rounded-0"
+                                      placeholder={_t(t("Search")) + ".."}
+                                      onChange={handleFileChange}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Add customer modal trigger button */}
+                              <div className="col-md-3 text-md-right mt-2">
+                                <button
+                                  type="button"
+                                  className="btn btn-primary xsm-text text-uppercase btn-lg btn-block"
+                                  data-toggle="modal"
+                                  data-target="#addCustomer"
+                                  onClick={() => {
+                                    handleFileUpload()
+                                  }}
+                                >
+                                  {_t(t("Upload CSV"))}
+                                </button>
+                              </div>
+                            </div>
+                            <div className="row gx-3 align-items-center mt-1">
                               {/* Search customer */}
                               <div className="col-md-9 t-mb-15 mb-md-0">
                                 <div className="input-group">

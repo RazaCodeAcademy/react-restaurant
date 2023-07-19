@@ -513,7 +513,7 @@ const Kitchen = () => {
                           >
                             <div className="fk-order-token t-bg-white p-3 h-100">
                               <div className="fk-order-token__footer text-right">
-                                {item.is_accepted == 1 && item.remainingTime > 0 && (
+                                {item.is_accepted == 1 && (
                                   <button
                                     type="button"
                                     className="btn btn-danger xsm-text text-uppercase btn-lg mr-2"
@@ -825,7 +825,7 @@ const Kitchen = () => {
                           >
                             <div className="fk-order-token t-bg-white p-3 h-100">
                               <div className="fk-order-token__footer text-right">
-                                {item.is_accepted == 1 && item.remainingTime > 0 && (
+                                {item.is_accepted == 1 && (
                                   <button
                                     type="button"
                                     className="btn btn-danger xsm-text text-uppercase btn-lg mr-2"

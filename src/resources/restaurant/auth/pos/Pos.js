@@ -150,7 +150,7 @@ const history = useHistory();
   //total payable
   const [totalPayable, setTotalPaybale] = useState(0);
   // paidMoney
-  const [paidMoney, setPaidMoney] = useState(0);
+  const [paidMoney, setPaidMoney] = useState("");
   //return
   const [returnMoneyUsd, setReturnMoneyUsd] = useState(0);
 
@@ -286,6 +286,13 @@ const history = useHistory();
         })
         .catch((err) => {});
     }, 30000);
+
+    if (branchForSearch && branchForSearch.length > 0) {
+      setTimeout(() => {
+        handleSetBranch(branchForSearch[0], customerForSearch, newSettings); // Pass customerForSearch as an argument
+      }, 300);
+    }
+
   }, [authUserInfo, generalSettings, foodForSearch, foodGroupForSearch]);
 
   //stock
@@ -861,7 +868,7 @@ const history = useHistory();
     setTheVat(0);
     setTotalPaybale(0);
     setReturnMoneyUsd(0);
-    setPaidMoney(0);
+    setPaidMoney("");
     setOrderDetails({
       branch: orderDetails.branch,
       customer: null,
@@ -1315,11 +1322,13 @@ const history = useHistory();
 
   //set order detals additional info here
   //set branch
-  const handleSetBranch = (branch) => {
+  const handleSetBranch = (branch, customerData, newSettings) => {
     setLoading(true);
+  
+    // Check if customerData is available before filtering
     let tempCustomers =
-      customerForSearch !== null &&
-      customerForSearch.filter((eachCustomer) => {
+      customerData !== null &&
+      customerData.filter((eachCustomer) => {
         return parseInt(eachCustomer.branch_id) === branch.id;
       });
     let tempTables =
@@ -1347,7 +1356,7 @@ const history = useHistory();
     setTheVat(0);
     setTotalPaybale(0);
     setReturnMoneyUsd(0);
-    setPaidMoney(0);
+    setPaidMoney("");
     setOrderDetails({
       branch: branch,
       customer: null,
@@ -1379,11 +1388,11 @@ const history = useHistory();
     theWorkPeriod = theWorkPeriod.find((endAtNullItem) => {
       return endAtNullItem.ended_at === null;
     });
-    setNewSettings({
-      ...newSettings,
+    setNewSettings((prevSettings) => ({
+      ...prevSettings,
       workPeriod: theWorkPeriod !== undefined ? theWorkPeriod : null,
-      vat: newSettings.vat,
-    });
+      vat: prevSettings && prevSettings.vat,
+    }));
 
     setTimeout(() => {
       setLoading(false);
@@ -2024,7 +2033,7 @@ const history = useHistory();
     setTheVat(0);
     setTotalPaybale(0);
     setReturnMoneyUsd(0);
-    setPaidMoney(0);
+    setPaidMoney("");
     setOrderDetails({
       branch: orderDetails.branch,
       customer: null,
@@ -2089,7 +2098,6 @@ const history = useHistory();
       <audio id="myAudioOrder">
         <source src="/assets/beep/order.mp3" type="audio/mpeg" />
       </audio>
-
       {/* Print bill */}
       <div className="d-none">
         <div ref={componentRef}>
@@ -2177,6 +2185,7 @@ const history = useHistory();
                           </th>
                         </tr>
                       </thead>
+
                       <tbody>
                         {newOrder.map((printItem, printItemIndex) => {
                           return (
@@ -3739,7 +3748,7 @@ const history = useHistory();
                 {authUserInfo.details &&
                   authUserInfo.details.user_type !== "staff" && (
                     <li className="addons-list__item mt-1 mx-1">
-                      <Select
+                      {/* <Select
                         options={branchForSearch && branchForSearch}
                         components={makeAnimated()}
                         getOptionLabel={(option) => option.name}
@@ -3749,7 +3758,8 @@ const history = useHistory();
                         onChange={handleSetBranch}
                         maxMenuHeight="200px"
                         placeholder={_t(t("Branch")) + ".."}
-                      />
+                      /> */}
+                      {branchForSearch[0].name}
                     </li>
                   )}
                 {!loading && (
@@ -4248,7 +4258,7 @@ const history = useHistory();
                     {/* Show start work period options here */}
 
                     <div className="row gx-2 align-items-center">
-                      <div className="col-md-4 col-lg-5 col-xl-6 col-xxl-7">
+                      {/* <div className="col-md-4 col-lg-5 col-xl-6 col-xxl-7">
                         <NavLink
                           to="/dashboard/pos/online-orders"
                           className="t-link t-pt-8 t-pb-8 t-pl-12 t-pr-12 btn btn-outline-danger xsm-text text-uppercase text-center w-100"
@@ -4260,8 +4270,8 @@ const history = useHistory();
                             </span>
                           )}
                         </NavLink>
-                      </div>
-                      <div className="col-md-8 col-lg-7 col-xl-6 col-xxl-5">
+                      </div> */}
+                      <div className="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
                         <div className="row align-items-center gx-2">
                           <div className="col">
                             {window.location.pathname ===
@@ -4929,7 +4939,7 @@ const history = useHistory();
                                   authUserInfo.details.user_type !==
                                     "staff" && (
                                     <li className="addons-list__item mt-1 mx-1">
-                                      <Select
+                                      {/* <Select
                                         options={
                                           branchForSearch && branchForSearch
                                         }
@@ -4938,10 +4948,12 @@ const history = useHistory();
                                         getOptionValue={(option) => option.name}
                                         classNamePrefix="select"
                                         className="xsm-text"
-                                        onChange={handleSetBranch}
+                                        onChange={() => handleSetBranch(branchForSearch && branchForSearch[0])}
                                         maxMenuHeight="200px"
                                         placeholder={_t(t("Branch")) + ".."}
-                                      />
+                                        defaultValue={branchForSearch && branchForSearch[0]}
+                                      /> */}
+                                      {branchForSearch[0].name}
                                     </li>
                                   )}
                                 {!loading && (
@@ -6873,7 +6885,7 @@ const history = useHistory();
                             id="settle-total"
                             className="w-50 fk-settle-group__input text-right pr-2 font-weight-bold"
                           >
-                            {paidMoney}
+                            {paidMoney == "0" ? setPaidMoney("") : paidMoney}
                           </div>
                         </div>
                       </>
@@ -6887,7 +6899,7 @@ const history = useHistory();
                                 className="fk-settle-cal-btn t-bg-p t-text-white"
                                 onClick={() => {
                                   if (!returnMoneyUsd > 0) {
-                                    setPaidMoney(paidMoney + 10);
+                                    setPaidMoney(paidMoney +""+ 10);
                                   }
                                 }}
                               >
@@ -6899,7 +6911,7 @@ const history = useHistory();
                                 className="fk-settle-cal-btn t-bg-p t-text-white"
                                 onClick={() => {
                                   if (!returnMoneyUsd > 0) {
-                                    setPaidMoney(paidMoney + 20);
+                                    setPaidMoney(paidMoney +""+ 20);
                                   }
                                 }}
                               >
@@ -6911,7 +6923,7 @@ const history = useHistory();
                                 className="fk-settle-cal-btn t-bg-p t-text-white"
                                 onClick={() => {
                                   if (!returnMoneyUsd > 0) {
-                                    setPaidMoney(paidMoney + 50);
+                                    setPaidMoney(paidMoney +""+ 50);
                                   }
                                 }}
                               >
@@ -6923,7 +6935,7 @@ const history = useHistory();
                                 className="fk-settle-cal-btn t-bg-p t-text-white"
                                 onClick={() => {
                                   if (!returnMoneyUsd > 0) {
-                                    setPaidMoney(paidMoney + 100);
+                                    setPaidMoney(paidMoney +""+ 100);
                                   }
                                 }}
                               >
@@ -6941,7 +6953,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 1);
+                                        setPaidMoney(paidMoney +""+ 1);
                                       }
                                     }}
                                   >
@@ -6953,7 +6965,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 4);
+                                        setPaidMoney(paidMoney +""+ 4);
                                       }
                                     }}
                                   >
@@ -6965,7 +6977,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 7);
+                                        setPaidMoney(paidMoney +""+ 7);
                                       }
                                     }}
                                   >
@@ -6977,7 +6989,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-p t-text-white"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 500);
+                                        setPaidMoney(paidMoney +""+ 500);
                                       }
                                     }}
                                   >
@@ -6993,7 +7005,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 2);
+                                        setPaidMoney(paidMoney +""+ 2);
                                       }
                                     }}
                                   >
@@ -7005,7 +7017,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 5);
+                                        setPaidMoney(paidMoney +""+ 5);
                                       }
                                     }}
                                   >
@@ -7017,7 +7029,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 8);
+                                        setPaidMoney(paidMoney +""+ 8);
                                       }
                                     }}
                                   >
@@ -7029,7 +7041,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-p t-text-white"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 1000);
+                                        setPaidMoney(paidMoney +""+ 1000);
                                       }
                                     }}
                                   >
@@ -7045,7 +7057,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 3);
+                                        setPaidMoney(paidMoney +""+ 3);
                                       }
                                     }}
                                   >
@@ -7057,7 +7069,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 6);
+                                        setPaidMoney(paidMoney +""+ 6);
                                       }
                                     }}
                                   >
@@ -7069,7 +7081,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 9);
+                                        setPaidMoney(paidMoney +""+ 9);
                                       }
                                     }}
                                   >
@@ -7080,7 +7092,7 @@ const history = useHistory();
                                   <button
                                     className="fk-settle-cal-btn  t-bg-d t-text-white"
                                     onClick={() => {
-                                      setPaidMoney(0);
+                                      setPaidMoney("");
                                       setReturnMoneyUsd(0);
                                       setOrderDetails({
                                         ...orderDetails,

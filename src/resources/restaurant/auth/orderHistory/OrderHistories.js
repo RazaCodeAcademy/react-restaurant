@@ -1197,14 +1197,14 @@ const OrderHistories = () => {
                     {/* large screen  */}
                     <div className="col-md-8 col-lg-9 t-mb-15 mb-md-0 d-none d-md-block">
                       <ul className="t-list fk-sort align-items-center justify-content-end">
-                        <li class="fk-sort__list">
+                        {/* <li class="fk-sort__list">
                           <NavLink
                             to="/dashboard/online-orders"
                             class="btn btn-transparent btn-secondary xsm-text text-uppercase py-2"
                           >
                             {_t(t("Online Orders"))}
                           </NavLink>
-                        </li>
+                        </li> */}
                         {authUserInfo.details !== null &&
                           authUserInfo.details.user_type !== "staff" && (
                             <li

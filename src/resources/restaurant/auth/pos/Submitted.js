@@ -263,7 +263,7 @@ const Submitted = () => {
             ...searchedOrder,
             searched: false,
           });
-          setPaidMoney(0);
+          setPaidMoney("");
           setLoading(false);
           setShowSettle(false);
         } else {
@@ -479,7 +479,7 @@ const Submitted = () => {
                                     payment_type: null,
                                   });
                                   setReturnMoneyUsd(0);
-                                  setPaidMoney(0);
+                                  setPaidMoney("");
                                 }}
                               >
                                 {_t(t("Cancel"))}
@@ -500,7 +500,7 @@ const Submitted = () => {
                                         payment_type: null,
                                       });
                                       setReturnMoneyUsd(0);
-                                      setPaidMoney(0);
+                                      setPaidMoney("");
                                     }}
                                   >
                                     {_t(t("Settle order"))}
@@ -518,7 +518,7 @@ const Submitted = () => {
                                         payment_type: null,
                                       });
                                       setReturnMoneyUsd(0);
-                                      setPaidMoney(0);
+                                      setPaidMoney("");
                                       setShowSettle(true);
                                     }}
                                   >
@@ -1280,7 +1280,7 @@ const Submitted = () => {
                                                           setReturnMoneyUsd(
                                                             0
                                                           );
-                                                          setPaidMoney(0);
+                                                          setPaidMoney("");
                                                         }}
                                                         data-toggle="modal"
                                                         data-target="#orderDetails"
@@ -1301,7 +1301,7 @@ const Submitted = () => {
                                                           setReturnMoneyUsd(
                                                             0
                                                           );
-                                                          setPaidMoney(0);
+                                                          setPaidMoney("");
                                                         }}
                                                         data-toggle="modal"
                                                         data-target="#orderDetails"
@@ -1320,7 +1320,7 @@ const Submitted = () => {
                                                         settle: false,
                                                       });
                                                       setReturnMoneyUsd(0);
-                                                      setPaidMoney(0);
+                                                      setPaidMoney("");
                                                     }}
                                                     data-toggle="modal"
                                                     data-target="#orderDetails"
@@ -1365,7 +1365,7 @@ const Submitted = () => {
                                                             setReturnMoneyUsd(
                                                               0
                                                             );
-                                                            setPaidMoney(0);
+                                                            setPaidMoney("");
                                                           }}
                                                           data-toggle="modal"
                                                           data-target="#orderDetails"
@@ -1396,7 +1396,7 @@ const Submitted = () => {
                                                             setReturnMoneyUsd(
                                                               0
                                                             );
-                                                            setPaidMoney(0);
+                                                            setPaidMoney("");
                                                             setShowSettle(
                                                               true
                                                             );
@@ -1615,7 +1615,7 @@ const Submitted = () => {
                                                           setReturnMoneyUsd(
                                                             0
                                                           );
-                                                          setPaidMoney(0);
+                                                          setPaidMoney("");
                                                         }}
                                                         data-toggle="modal"
                                                         data-target="#orderDetails"
@@ -1636,7 +1636,7 @@ const Submitted = () => {
                                                           setReturnMoneyUsd(
                                                             0
                                                           );
-                                                          setPaidMoney(0);
+                                                          setPaidMoney("");
                                                         }}
                                                         data-toggle="modal"
                                                         data-target="#orderDetails"
@@ -1655,7 +1655,7 @@ const Submitted = () => {
                                                         settle: false,
                                                       });
                                                       setReturnMoneyUsd(0);
-                                                      setPaidMoney(0);
+                                                      setPaidMoney("");
                                                     }}
                                                     data-toggle="modal"
                                                     data-target="#orderDetails"
@@ -1696,7 +1696,7 @@ const Submitted = () => {
                                                           setReturnMoneyUsd(
                                                             0
                                                           );
-                                                          setPaidMoney(0);
+                                                          setPaidMoney("");
                                                         }}
                                                         data-toggle="modal"
                                                         data-dismiss="modal"
@@ -2130,7 +2130,7 @@ const Submitted = () => {
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 1);
+                                        setPaidMoney(paidMoney +""+ 1);
                                       }
                                     }}
                                   >
@@ -2142,7 +2142,7 @@ const Submitted = () => {
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 4);
+                                        setPaidMoney(paidMoney +""+ 4);
                                       }
                                     }}
                                   >
@@ -2154,7 +2154,7 @@ const Submitted = () => {
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 7);
+                                        setPaidMoney(paidMoney +""+ 7);
                                       }
                                     }}
                                   >
@@ -2182,7 +2182,7 @@ const Submitted = () => {
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 2);
+                                        setPaidMoney(paidMoney +""+ 2);
                                       }
                                     }}
                                   >
@@ -2194,7 +2194,7 @@ const Submitted = () => {
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 5);
+                                        setPaidMoney(paidMoney +""+ 5);
                                       }
                                     }}
                                   >
@@ -2206,7 +2206,7 @@ const Submitted = () => {
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 8);
+                                        setPaidMoney(paidMoney +""+ 8);
                                       }
                                     }}
                                   >
@@ -2218,7 +2218,7 @@ const Submitted = () => {
                                     className="fk-settle-cal-btn t-bg-p t-text-white"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 1000);
+                                        setPaidMoney(paidMoney +""+ 1000);
                                       }
                                     }}
                                   >
@@ -2234,7 +2234,7 @@ const Submitted = () => {
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 3);
+                                        setPaidMoney(paidMoney +""+ 3);
                                       }
                                     }}
                                   >
@@ -2246,7 +2246,7 @@ const Submitted = () => {
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 6);
+                                        setPaidMoney(paidMoney +""+ 6);
                                       }
                                     }}
                                   >
@@ -2258,7 +2258,7 @@ const Submitted = () => {
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney + 9);
+                                        setPaidMoney(paidMoney +""+ 9);
                                       }
                                     }}
                                   >
@@ -2269,7 +2269,7 @@ const Submitted = () => {
                                   <button
                                     className="fk-settle-cal-btn  t-bg-d t-text-white"
                                     onClick={() => {
-                                      setPaidMoney(0);
+                                      setPaidMoney("");
                                       setReturnMoneyUsd(0);
                                       setCheckOrderDetails({
                                         ...checkOrderDetails,
