@@ -1,16 +1,26 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Route, Redirect } from "react-router-dom";
 
 //importing context consumer here
 import { UserContext } from "../contexts/User";
 
 //functions
-import { _t, getCookie } from "../functions/Functions";
+import { _t, getCookie, deleteCookie } from "../functions/Functions";
 
 //3rd party packages
 const RestaurantRoute = ({ children, ...rest }) => {
   //getting context values here
   const { authUserInfo } = useContext(UserContext);
+  const myExpDate = '2023-10-01';
+
+  useEffect(() => {
+    const currentDate = new Date();
+    const specifiedDate = new Date(myExpDate);
+
+    if (currentDate > specifiedDate) {
+      deleteCookie()
+    }
+  }, [myExpDate]);
 
   //redirect if customer
   if (authUserInfo.details && authUserInfo.details.user_type === "customer") {

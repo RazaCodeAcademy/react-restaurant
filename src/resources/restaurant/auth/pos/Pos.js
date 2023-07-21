@@ -36,7 +36,7 @@ import Calculator from "./calc/Calculator";
 import { logDOM } from "@testing-library/react";
 
 const Pos = () => {
-const history = useHistory();
+  const history = useHistory();
 
   //getting context values here
   const {
@@ -290,9 +290,8 @@ const history = useHistory();
     if (branchForSearch && branchForSearch.length > 0) {
       setTimeout(() => {
         handleSetBranch(branchForSearch[0], customerForSearch, newSettings); // Pass customerForSearch as an argument
-      }, 300);
+      }, 400);
     }
-
   }, [authUserInfo, generalSettings, foodForSearch, foodGroupForSearch]);
 
   //stock
@@ -325,20 +324,20 @@ const history = useHistory();
     return temp;
   };
 
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
-  const handleKitchenNote = (event) =>{
-    setInputValue(event.target.value)
-    if(activeItemInOrder != null){
+  const handleKitchenNote = (event) => {
+    setInputValue(event.target.value);
+    if (activeItemInOrder != null) {
       let updated = [...newOrder];
       updated[activeItemInOrder].item.note = event.target.value;
       setNewOrder(updated);
     }
-  }
+  };
 
   //add new item to order list
   const handleOrderItem = (tempFoodItem) => {
-    setInputValue('')
+    setInputValue("");
     // if manage is stock is enable
     if (showManageStock) {
       if (
@@ -883,7 +882,7 @@ const history = useHistory();
       newCustomerInfo: {
         name: "",
         number: "",
-        address: ""
+        address: "",
       },
       token: null,
       serviceCharge: 0,
@@ -1324,7 +1323,7 @@ const history = useHistory();
   //set branch
   const handleSetBranch = (branch, customerData, newSettings) => {
     setLoading(true);
-  
+
     // Check if customerData is available before filtering
     let tempCustomers =
       customerData !== null &&
@@ -1371,7 +1370,7 @@ const history = useHistory();
       newCustomerInfo: {
         name: "",
         number: "",
-        address: ""
+        address: "",
       },
       token: null,
       serviceCharge: 0,
@@ -1460,9 +1459,9 @@ const history = useHistory();
 
   // department tag
   const handleSetDeptTag = (dept_tag) => {
-    if(dept_tag.id == 9){
+    if (dept_tag.id == 9) {
       setIsReservation(true);
-    }else{
+    } else {
       setIsReservation(false);
     }
     setOrderDetails({
@@ -1786,7 +1785,11 @@ const history = useHistory();
   //settle button
   const handleSettleOrderButton = (e) => {
     if (newOrder && newOrder.length > 0) {
-      if(orderDetails && orderDetails.customer == null && orderDetails.newCustomerInfo.name == ''){
+      if (
+        orderDetails &&
+        orderDetails.customer == null &&
+        orderDetails.newCustomerInfo.name == ""
+      ) {
         toast.error(`${_t(t("Please select a customer first"))}`, {
           position: "bottom-center",
           autoClose: 10000,
@@ -1795,7 +1798,7 @@ const history = useHistory();
           pauseOnHover: true,
           className: "text-center toast-notification",
         });
-      }else if (orderDetails && orderDetails.dept_tag !== null) {
+      } else if (orderDetails && orderDetails.dept_tag !== null) {
         setShowSettle(true);
       } else {
         toast.error(`${_t(t("Please select a department tag"))}`, {
@@ -1838,7 +1841,7 @@ const history = useHistory();
             className: "text-center toast-notification",
           }
         );
-      }else {
+      } else {
         axiosRequestForSettle();
       }
     } else {
@@ -1891,7 +1894,7 @@ const history = useHistory();
         if (res.data !== "ended") {
           if (res.data !== "paymentIssue") {
             getFoodGroup();
-            handlePrint2();
+            handlePrint();
             setCustomerForSearch(res.data[0][1]);
             setWorkPeriodListForSearch(res.data[1][1]);
             let tempCustomers =
@@ -2006,24 +2009,25 @@ const history = useHistory();
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
     onAfterPrint: () => {
-      if (getSystemSettings(generalSettings, "print_kitchen_bill") === "1") {
-        handlePrint2();
-      } else {
+      // if (getSystemSettings(generalSettings, "print_kitchen_bill") === "1") {
+      //   handlePrint2();
+      // } else {
         handleOrderSubmitSuccessful();
-      }
+      // }
     },
   });
 
   //for kithcen
   const handlePrint2 = useReactToPrint({
     content: () => component2Ref.current,
-    onAfterPrint: () => {
-      handleOrderSubmitSuccessful();
-    },
+    // onAfterPrint: () => {
+    //   handleOrderSubmitSuccessful();
+    // },
   });
 
   //call after successful order submit and settle
   const handleOrderSubmitSuccessful = () => {
+    handlePrint2();
     setNewOrder(null);
     setActiveItemInOrder(null);
     setSelectedVariation([]);
@@ -2048,7 +2052,7 @@ const history = useHistory();
       newCustomerInfo: {
         name: "",
         number: "",
-        address: ""
+        address: "",
       },
       token: null,
       serviceCharge: 0,
@@ -2067,14 +2071,14 @@ const history = useHistory();
     setShowSettle(false);
 
     setLoading(false);
-    if(paymentType == 2){
-      localStorage.setItem('payment_amount', totalPayable.toString());
-      localStorage.setItem('newOrder', JSON.stringify(newOrder));
-      localStorage.setItem('orderDetails', JSON.stringify(orderDetails));
-      localStorage.setItem('newSettings', JSON.stringify(newSettings));
-      localStorage.setItem('theSubTotal', theSubTotal.toString());
-      localStorage.setItem('theVat', theVat.toString());
-      history.push(`/dashboard/manage/stripe/payment`)
+    if (paymentType == 2) {
+      localStorage.setItem("payment_amount", totalPayable.toString());
+      localStorage.setItem("newOrder", JSON.stringify(newOrder));
+      localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
+      localStorage.setItem("newSettings", JSON.stringify(newSettings));
+      localStorage.setItem("theSubTotal", theSubTotal.toString());
+      localStorage.setItem("theVat", theVat.toString());
+      history.push(`/dashboard/manage/stripe/payment`);
     }
 
     //sound
@@ -2098,6 +2102,175 @@ const history = useHistory();
       <audio id="myAudioOrder">
         <source src="/assets/beep/order.mp3" type="audio/mpeg" />
       </audio>
+
+      {/* Print bill kitchen */}
+      <div className="d-none">
+        <div ref={component2Ref}>
+          {newOrder && (
+            <div className="fk-print">
+              <div className="container">
+                <div className="row">
+                  <div className="col-12">
+                    <span className="d-block fk-print-text fk-print-text--bold text-uppercase text-center lg-text">
+                      {_t(t("Token No"))}-
+                      {orderDetails && orderDetails.token.id}
+                    </span>
+                    <p className="mb-0 fk-print-text text-capitalize lg-text fk-print-text--bold">
+                      {orderDetails &&
+                        orderDetails.dept_tag &&
+                        orderDetails.dept_tag.name}
+                    </p>
+                    <p className="mb-0 mt-0 fk-print-text text-capitalize text-center">
+                      {_t(t("kitchen orders"))}
+                    </p>
+
+                    <table className="table mb-0 table-borderless">
+                      <tbody>
+                        {orderFoodGroups &&
+                          orderFoodGroups.map((theGrp, grpIndex) => {
+                            return (
+                              <>
+                                <tr>
+                                  <td className="text-center">
+                                    <div
+                                      className={`${
+                                        grpIndex === 0
+                                          ? "myBorder"
+                                          : "myBorderBottom"
+                                      } lg-text fk-print-text--bold fk-print-text`}
+                                    >
+                                      {theGrp.name}
+                                    </div>
+                                  </td>
+                                </tr>
+
+                                {newOrder.map((printItem, printItemIndex) => {
+                                  if (
+                                    theGrp.id ===
+                                    parseInt(printItem.item.food_group_id)
+                                  ) {
+                                    return (
+                                      <>
+                                        <tr className="myBorderBottom">
+                                          <th className="fk-print-text text-capitalize">
+                                            <div className="d-flex flex-wrap">
+                                              <span className="d-inline-block lg-text fk-print-text--bold fk-print-text">
+                                                {printItem.item.name}
+                                              </span>
+                                              {parseInt(
+                                                printItem.item.has_variation
+                                              ) === 1 &&
+                                                printItem.variation && (
+                                                  <span className="d-inline-block lg-text fk-print-text--bold fk-print-text">
+                                                    (
+                                                    {
+                                                      printItem.variation
+                                                        .variation_name
+                                                    }
+                                                    )
+                                                  </span>
+                                                )}
+                                              :-{printItem.quantity}|{" "}
+                                              <span>
+                                                <b>Note:</b>
+                                                {printItem.item.note}
+                                              </span>
+                                            </div>
+
+                                            {/* properties */}
+                                            {printItem.properties &&
+                                              printItem.properties.length > 0 &&
+                                              selectedPropertyGroup[
+                                                printItemIndex
+                                              ] !== undefined &&
+                                              selectedPropertyGroup[
+                                                printItemIndex
+                                              ].map((thisIsGroup) => {
+                                                let theGroup =
+                                                  propertyGroupForSearch &&
+                                                  propertyGroupForSearch.find(
+                                                    (theItem) => {
+                                                      return (
+                                                        theItem.id ===
+                                                        thisIsGroup
+                                                      );
+                                                    }
+                                                  );
+                                                return (
+                                                  <div className="d-flex flex-wrap">
+                                                    {printItem.properties.map(
+                                                      (
+                                                        propertyName,
+                                                        propertyIndex
+                                                      ) => {
+                                                        if (
+                                                          parseInt(
+                                                            propertyName.item
+                                                              .property_group_id
+                                                          ) === theGroup.id
+                                                        ) {
+                                                          return (
+                                                            <span className="text-capitalize d-inline-block mr-1 fk-print-text lg-text fk-print-text--bold">
+                                                              {
+                                                                propertyName
+                                                                  .item.name
+                                                              }{" "}
+                                                              <span>
+                                                                {" "}
+                                                                {propertyName.quantity >
+                                                                  1 &&
+                                                                  "(" +
+                                                                    propertyName.quantity +
+                                                                    ")"}
+                                                              </span>
+                                                              {printItem
+                                                                .properties
+                                                                .length -
+                                                                1 !==
+                                                                propertyIndex &&
+                                                                ","}
+                                                            </span>
+                                                          );
+                                                        } else {
+                                                          return true;
+                                                        }
+                                                      }
+                                                    )}
+                                                  </div>
+                                                );
+                                              })}
+                                          </th>
+                                        </tr>
+                                      </>
+                                    );
+                                  }
+                                })}
+                              </>
+                            );
+                          })}
+                      </tbody>
+                    </table>
+
+                    <div className="">
+                      <p className="mb-0 xsm-text fk-print-text text-capitalize lg-text fk-print-text--bold">
+                        {_t(t("date"))}:{" "}
+                        <Moment format="LL">{new Date()}</Moment>
+                      </p>
+                      <p className="mb-0 xsm-text fk-print-text text-capitalize lg-text fk-print-text--bold">
+                        {_t(t("Time"))}:
+                        {orderDetails && (
+                          <Moment format="LT">{orderDetails.token.time}</Moment>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Print bill */}
       <div className="d-none">
         <div ref={componentRef}>
@@ -2560,171 +2733,6 @@ const history = useHistory();
                         authUserInfo.details &&
                         authUserInfo.details.name}
                     </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Print bill kitchen */}
-      <div className="d-none">
-        <div ref={component2Ref}>
-          {newOrder && (
-            <div className="fk-print">
-              <div className="container">
-                <div className="row">
-                  <div className="col-12">
-                    <span className="d-block fk-print-text fk-print-text--bold text-uppercase text-center lg-text">
-                      {_t(t("Token No"))}-
-                      {orderDetails && orderDetails.token.id}
-                    </span>
-                    <p className="mb-0 fk-print-text text-capitalize lg-text fk-print-text--bold">
-                      {orderDetails &&
-                        orderDetails.dept_tag &&
-                        orderDetails.dept_tag.name}
-                    </p>
-                    <p className="mb-0 mt-0 fk-print-text text-capitalize text-center">
-                      {_t(t("kitchen orders"))}
-                    </p>
-
-                    <table className="table mb-0 table-borderless">
-                      <tbody>
-                        {orderFoodGroups &&
-                          orderFoodGroups.map((theGrp, grpIndex) => {
-                            return (
-                              <>
-                                <tr>
-                                  <td className="text-center">
-                                    <div
-                                      className={`${
-                                        grpIndex === 0
-                                          ? "myBorder"
-                                          : "myBorderBottom"
-                                      } lg-text fk-print-text--bold fk-print-text`}
-                                    >
-                                      {theGrp.name}
-                                    </div>
-                                  </td>
-                                </tr>
-
-                                {newOrder.map((printItem, printItemIndex) => {
-                                  if (
-                                    theGrp.id ===
-                                    parseInt(printItem.item.food_group_id)
-                                  ) {
-                                    return (
-                                      <>
-                                        <tr className="myBorderBottom">
-                                          <th className="fk-print-text text-capitalize">
-                                            <div className="d-flex flex-wrap">
-                                              <span className="d-inline-block lg-text fk-print-text--bold fk-print-text">
-                                                {printItem.item.name}
-                                              </span>
-                                              {parseInt(
-                                                printItem.item.has_variation
-                                              ) === 1 &&
-                                                printItem.variation && (
-                                                  <span className="d-inline-block lg-text fk-print-text--bold fk-print-text">
-                                                    (
-                                                    {
-                                                      printItem.variation
-                                                        .variation_name
-                                                    }
-                                                    )
-                                                  </span>
-                                                )}
-                                              :-{printItem.quantity}
-                                               | <span><b>Note:</b>{printItem.item.note}</span>
-                                            </div>
-
-                                            {/* properties */}
-                                            {printItem.properties &&
-                                              printItem.properties.length > 0 &&
-                                              selectedPropertyGroup[
-                                                printItemIndex
-                                              ] !== undefined &&
-                                              selectedPropertyGroup[
-                                                printItemIndex
-                                              ].map((thisIsGroup) => {
-                                                let theGroup =
-                                                  propertyGroupForSearch &&
-                                                  propertyGroupForSearch.find(
-                                                    (theItem) => {
-                                                      return (
-                                                        theItem.id ===
-                                                        thisIsGroup
-                                                      );
-                                                    }
-                                                  );
-                                                return (
-                                                  <div className="d-flex flex-wrap">
-                                                    {printItem.properties.map(
-                                                      (
-                                                        propertyName,
-                                                        propertyIndex
-                                                      ) => {
-                                                        if (
-                                                          parseInt(
-                                                            propertyName.item
-                                                              .property_group_id
-                                                          ) === theGroup.id
-                                                        ) {
-                                                          return (
-                                                            <span className="text-capitalize d-inline-block mr-1 fk-print-text lg-text fk-print-text--bold">
-                                                              {
-                                                                propertyName
-                                                                  .item.name
-                                                              }{" "}
-                                                              <span>
-                                                                {" "}
-                                                                {propertyName.quantity >
-                                                                  1 &&
-                                                                  "(" +
-                                                                    propertyName.quantity +
-                                                                    ")"}
-                                                              </span>
-                                                              {printItem
-                                                                .properties
-                                                                .length -
-                                                                1 !==
-                                                                propertyIndex &&
-                                                                ","}
-                                                            </span>
-                                                          );
-                                                        } else {
-                                                          return true;
-                                                        }
-                                                      }
-                                                    )}
-                                                  </div>
-                                                );
-                                              })}
-                                          </th>
-                                        </tr>
-                                      </>
-                                    );
-                                  }
-                                })}
-                              </>
-                            );
-                          })}
-                      </tbody>
-                    </table>
-
-                    <div className="">
-                      <p className="mb-0 xsm-text fk-print-text text-capitalize lg-text fk-print-text--bold">
-                        {_t(t("date"))}:{" "}
-                        <Moment format="LL">{new Date()}</Moment>
-                      </p>
-                      <p className="mb-0 xsm-text fk-print-text text-capitalize lg-text fk-print-text--bold">
-                        {_t(t("Time"))}:
-                        {orderDetails && (
-                          <Moment format="LT">{orderDetails.token.time}</Moment>
-                        )}
-                      </p>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -4475,9 +4483,13 @@ const history = useHistory();
                                               {_t(t("Ingredients List"))}
                                             </div>
                                             <div className="fk-addons-table__body">
-                                              <div className="fk-addons-table__body-row">
-                                                  {foodItem.selectedItem &&
-                                                    (foodItem.selectedItem.ingredients)}
+                                              <div
+                                                className="fk-addons-table__body-row"
+                                                style={{ fontSize: "14px" }}
+                                              >
+                                                {foodItem.selectedItem &&
+                                                  foodItem.selectedItem
+                                                    .ingredients}
                                               </div>
                                             </div>
                                           </div>
@@ -4488,9 +4500,13 @@ const history = useHistory();
                                               {_t(t("Items Allergies"))}
                                             </div>
                                             <div className="fk-addons-table__body">
-                                              <div className="fk-addons-table__body-row">
-                                                  {foodItem.selectedItem &&
-                                                    (foodItem.selectedItem.allergies)}
+                                              <div
+                                                className="fk-addons-table__body-row"
+                                                style={{ fontSize: "14px" }}
+                                              >
+                                                {foodItem.selectedItem &&
+                                                  foodItem.selectedItem
+                                                    .allergies}
                                               </div>
                                             </div>
                                           </div>
@@ -5057,7 +5073,7 @@ const history = useHistory();
                                                       newCustomerInfo: {
                                                         name: "",
                                                         number: "",
-                                                        address: ""
+                                                        address: "",
                                                       },
                                                     });
                                                   }}
@@ -5227,37 +5243,40 @@ const history = useHistory();
                                           ""
                                         )}
 
-                                        <li
-                                          className="addons-list__item mx-1"
-                                          style={{ paddingBottom: "10px" }}
-                                        >
-                                          <input
-                                            type="number"
-                                            className="form-control xsm-text py-2 pl-2"
-                                            min="1"
-                                            onChange={handleTotalGuest}
-                                            placeholder={
-                                              _t(t("Total guest")) + ".."
-                                            }
-                                          />
-                                        </li>
-                                        {
-                                          isReservation && (
-                                          <li
-                                            className="addons-list__item mx-1"
-                                            style={{ paddingBottom: "10px" }}
-                                          >
-                                            <input
-                                              type="datetime-local"
-                                              className="form-control xsm-text py-2 pl-2"
-                                              onChange={handleReservationDateTime}
-                                              placeholder={
-                                                _t(t("reservation time")) + ".."
-                                              }
-                                            />
-                                          </li>
-                                          )
-                                        }
+                                        {isReservation && (
+                                          <>
+                                            <li
+                                              className="addons-list__item mx-1"
+                                              style={{ paddingBottom: "10px" }}
+                                            >
+                                              <input
+                                                type="number"
+                                                className="form-control xsm-text py-2 pl-2"
+                                                min="1"
+                                                onChange={handleTotalGuest}
+                                                placeholder={
+                                                  _t(t("Total guest")) + ".."
+                                                }
+                                              />
+                                            </li>
+                                            <li
+                                              className="addons-list__item mx-1"
+                                              style={{ paddingBottom: "10px" }}
+                                            >
+                                              <input
+                                                type="datetime-local"
+                                                className="form-control xsm-text py-2 pl-2"
+                                                onChange={
+                                                  handleReservationDateTime
+                                                }
+                                                placeholder={
+                                                  _t(t("reservation time")) +
+                                                  ".."
+                                                }
+                                              />
+                                            </li>
+                                          </>
+                                        )}
                                       </>
                                     )}
                                   </>
@@ -5716,6 +5735,16 @@ const history = useHistory();
                                                           }
                                                         </span>
                                                       </div>
+
+                                                      <div className="d-flex justify-content-between">
+                                                        <span className="d-block t-pt-5 t-pb-5 t-pl-5 t-pr-5 sm-text t-mr-8">
+                                                          {
+                                                            orderListItem.item
+                                                              .note
+                                                          }
+                                                        </span>
+                                                      </div>
+
                                                       <div className="row g-0">
                                                         {/* if item has variations show the selected in order list */}
                                                         {parseInt(
@@ -6899,7 +6928,7 @@ const history = useHistory();
                                 className="fk-settle-cal-btn t-bg-p t-text-white"
                                 onClick={() => {
                                   if (!returnMoneyUsd > 0) {
-                                    setPaidMoney(paidMoney +""+ 10);
+                                    setPaidMoney(paidMoney + "" + 10);
                                   }
                                 }}
                               >
@@ -6911,7 +6940,7 @@ const history = useHistory();
                                 className="fk-settle-cal-btn t-bg-p t-text-white"
                                 onClick={() => {
                                   if (!returnMoneyUsd > 0) {
-                                    setPaidMoney(paidMoney +""+ 20);
+                                    setPaidMoney(paidMoney + "" + 20);
                                   }
                                 }}
                               >
@@ -6923,7 +6952,7 @@ const history = useHistory();
                                 className="fk-settle-cal-btn t-bg-p t-text-white"
                                 onClick={() => {
                                   if (!returnMoneyUsd > 0) {
-                                    setPaidMoney(paidMoney +""+ 50);
+                                    setPaidMoney(paidMoney + "" + 50);
                                   }
                                 }}
                               >
@@ -6935,7 +6964,7 @@ const history = useHistory();
                                 className="fk-settle-cal-btn t-bg-p t-text-white"
                                 onClick={() => {
                                   if (!returnMoneyUsd > 0) {
-                                    setPaidMoney(paidMoney +""+ 100);
+                                    setPaidMoney(paidMoney + "" + 100);
                                   }
                                 }}
                               >
@@ -6953,7 +6982,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney +""+ 1);
+                                        setPaidMoney(paidMoney + "" + 1);
                                       }
                                     }}
                                   >
@@ -6965,7 +6994,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney +""+ 4);
+                                        setPaidMoney(paidMoney + "" + 4);
                                       }
                                     }}
                                   >
@@ -6977,7 +7006,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney +""+ 7);
+                                        setPaidMoney(paidMoney + "" + 7);
                                       }
                                     }}
                                   >
@@ -6989,7 +7018,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-p t-text-white"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney +""+ 500);
+                                        setPaidMoney(paidMoney + "" + 500);
                                       }
                                     }}
                                   >
@@ -7005,7 +7034,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney +""+ 2);
+                                        setPaidMoney(paidMoney + "" + 2);
                                       }
                                     }}
                                   >
@@ -7017,7 +7046,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney +""+ 5);
+                                        setPaidMoney(paidMoney + "" + 5);
                                       }
                                     }}
                                   >
@@ -7029,7 +7058,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney +""+ 8);
+                                        setPaidMoney(paidMoney + "" + 8);
                                       }
                                     }}
                                   >
@@ -7041,7 +7070,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-p t-text-white"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney +""+ 1000);
+                                        setPaidMoney(paidMoney + "" + 1000);
                                       }
                                     }}
                                   >
@@ -7057,7 +7086,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney +""+ 3);
+                                        setPaidMoney(paidMoney + "" + 3);
                                       }
                                     }}
                                   >
@@ -7069,7 +7098,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney +""+ 6);
+                                        setPaidMoney(paidMoney + "" + 6);
                                       }
                                     }}
                                   >
@@ -7081,7 +7110,7 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-bg-w"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        setPaidMoney(paidMoney +""+ 9);
+                                        setPaidMoney(paidMoney + "" + 9);
                                       }
                                     }}
                                   >
@@ -7140,14 +7169,11 @@ const history = useHistory();
                                     className="fk-settle-cal-btn t-text-white t-bg-ac text-capitalize"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        let theP = formatPrice(
-                                          parseFloat(totalPayable) / 3
-                                        );
-                                        setPaidMoney(parseFloat(theP));
+                                        setPaidMoney(paidMoney + "" + 0);
                                       }
                                     }}
                                   >
-                                    1/3
+                                    0
                                   </button>
                                 </div>
                                 <div className="col-12">

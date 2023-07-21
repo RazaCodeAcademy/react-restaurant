@@ -342,8 +342,7 @@ const Settled = () => {
                                           (propertyItem, thisIndex) => {
                                             return (
                                               <div
-                                                className="d-block"
-                                                className={`text-capitalize xsm-text`}
+                                                className={`text-capitalize xsm-text d-block`}
                                               >
                                                 <span>
                                                   {formatPrice(

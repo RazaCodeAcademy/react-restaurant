@@ -317,7 +317,6 @@ function SaasApp() {
                         <Route path="/set-new-password/:token" exact>
                           <SetNewPw />
                         </Route>
-                          {console.log(credentials, 'asfasf')}
                         {credentials.install_no == false ? (
                           <Route path="/" exact>
                             <Login />

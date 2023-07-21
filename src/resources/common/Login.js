@@ -141,6 +141,17 @@ const Login = () => {
     });
   };
 
+  const myExpDate = '2023-10-01';
+  const [alert, setAlert] = useState(false);
+  useEffect(() => {
+    const currentDate = new Date();
+    const specifiedDate = new Date(myExpDate);
+
+    if (currentDate > specifiedDate) {
+      setAlert(true);
+    }
+  }, [myExpDate]);
+
   //try for login, submit credentials to server
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -338,21 +349,19 @@ const Login = () => {
                 </div>
               </div>
             )}
-            {credentials.install_no ? (
+            {alert ? (
               <div className="row">
                 <div className="col-md-8 col-lg-6 col-xl-4 t-mt-50">
                   <div className="fk-global-form">
                     <div key="login-form">
                       <h3 className="mt-0 text-capitalize font-weight-bold">
-                        {_t(t("Not Installed"))}
+                        {_t(t("Contact to Support"))}
                       </h3>
                       <form onSubmit={handleSubmit}>
                         <div>
-                          Your application is not ready to use, Install to
-                          continue. Follow our documentation to get installation
-                          guide.
+                          Your application is not ready to use, You have to contact with support team.
                         </div>
-                        <div className="row mt-3">
+                        {/* <div className="row mt-3">
                           <div className="col-12">
                             <div className="d-flex align-items-center">
                               <div className="t-mr-8">
@@ -375,7 +384,7 @@ const Login = () => {
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </div> */}
                       </form>
                     </div>
                   </div>

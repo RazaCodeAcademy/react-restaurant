@@ -1588,7 +1588,7 @@ const OrderHistories = () => {
                                                     </span>
                                                     {_t(t("Delete Order"))}
                                                   </button>
-                                                  <button
+                                                  {/* <button
                                                     className="dropdown-item sm-text text-capitalize"
                                                     onClick={() => {
                                                       handleDeleteOrderConfirmation(
@@ -1600,7 +1600,7 @@ const OrderHistories = () => {
                                                       <i className="fa fa-eye"></i>
                                                     </span>
                                                     {_t(t("View Order"))}
-                                                  </button>
+                                                  </button> */}
                                                 </div>
                                               </div>
                                             </td>
@@ -1770,7 +1770,7 @@ const OrderHistories = () => {
                                                     </span>
                                                     {_t(t("Delete Order"))}
                                                   </button>
-                                                  <button
+                                                  {/* <button
                                                     className="dropdown-item sm-text text-capitalize"
                                                     onClick={() => {
                                                       handleDeleteOrderConfirmation(
@@ -1782,7 +1782,7 @@ const OrderHistories = () => {
                                                       <i className="fa fa-eye"></i>
                                                     </span>
                                                     {_t(t("View Order"))}
-                                                  </button>
+                                                  </button> */}
                                                 </div>
                                               </div>
                                             </td>

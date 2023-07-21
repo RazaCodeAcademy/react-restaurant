@@ -2338,25 +2338,12 @@ const Submitted = () => {
                                     className="fk-settle-cal-btn t-text-white t-bg-ac text-capitalize"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        if (
-                                          checkOrderDetails &&
-                                          checkOrderDetails.item
-                                        ) {
-                                          let theP = formatPrice(
-                                            parseFloat(
-                                              (checkOrderDetails.item
-                                                .total_payable -
-                                                checkOrderDetails.item
-                                                  .paid_amount) /
-                                              3
-                                            )
-                                          );
-                                          setPaidMoney(parseFloat(theP));
-                                        }
+                                          setPaidMoney(paidMoney +""+ 0);
+                                        
                                       }
                                     }}
                                   >
-                                    1/3
+                                    0
                                   </button>
                                 </div>
                                 <div className="col-12">

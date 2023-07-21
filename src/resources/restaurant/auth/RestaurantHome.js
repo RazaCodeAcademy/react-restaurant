@@ -57,7 +57,7 @@ const RestaurantHome = () => {
               {!loading ? (
                 <>
                   {/* image, imgAltTxt, smallInfoIcon, infoTextColorName, infoText, title, redirectToUrl */}
-                  {authUserInfo.permissions !== null &&
+                  {/* {authUserInfo.permissions !== null &&
                     authUserInfo.permissions.includes("Work period")
                     ? restaurantMenuLink(
                       "/assets/img/product-img-1.jpg",
@@ -68,7 +68,7 @@ const RestaurantHome = () => {
                       [_t(t("Work Periods"))],
                       "/dashboard/work-periods"
                     )
-                    : null}
+                    : null} */}
 
                   {/* image, imgAltTxt, smallInfoIcon, infoTextColorName, infoText, title, redirectToUrl */}
                   {authUserInfo.permissions !== null &&
