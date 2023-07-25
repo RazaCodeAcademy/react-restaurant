@@ -35,6 +35,40 @@ import { FoodContext } from "../../../../contexts/Food";
 import Calculator from "./calc/Calculator";
 import { logDOM } from "@testing-library/react";
 
+// -----------------------------------stripe payment method-----------------------------------
+import {
+  Elements,
+  CardElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import StripeForm from "../../payment/StripeForm";
+
+const public_key =
+  "pk_test_51HeMxMGahXUsew7kgRWCjly9sFZQOImZzSHExaYqxd8jmFUl8psNrqhq5BXVZvNQ427YUQNpxwmoPX3gHRlY58lr00d78CtYbD";
+
+const stripeTestPromise = loadStripe(public_key);
+// import StripeCheckout from "react-stripe-checkout";
+
+const CARD_OPTIONS = {
+  hidePostalCode: true,
+  style: {
+    base: {
+      fontSize: "16px",
+      color: "#424770",
+      "::placeholder": {
+        color: "#aab7c4",
+      },
+    },
+    invalid: {
+      color: "#9e2146",
+    },
+  },
+};
+
+// -----------------------------------stripe payment method-----------------------------------
+
 const Pos = () => {
   const history = useHistory();
 
@@ -289,7 +323,7 @@ const Pos = () => {
 
     if (branchForSearch && branchForSearch.length > 0) {
       setTimeout(() => {
-        handleSetBranch(branchForSearch[0], customerForSearch, newSettings); // Pass customerForSearch as an argument
+        handleSetBranch(branchForSearch[0], customerForSearch); // Pass customerForSearch as an argument
       }, 400);
     }
   }, [authUserInfo, generalSettings, foodForSearch, foodGroupForSearch]);
@@ -1293,7 +1327,6 @@ const Pos = () => {
     totalPayable =
       subTotal + tempVat + usdServiceCharge - usdDiscount - tempCommission;
     setTotalPaybale(totalPayable);
-
     //calculate paid amount to set return amount
     handleCalculatePaid(orderDetails.payment_amount, orderDetails.payment_type);
   };
@@ -1321,7 +1354,7 @@ const Pos = () => {
 
   //set order detals additional info here
   //set branch
-  const handleSetBranch = (branch, customerData, newSettings) => {
+  const handleSetBranch = (branch, customerData) => {
     setLoading(true);
 
     // Check if customerData is available before filtering
@@ -1546,6 +1579,32 @@ const Pos = () => {
 
   const [paymentType, setPaymentType] = useState(0);
   const [paymentAmount, setPaymentAmount] = useState(0);
+  const [isShow, setIsShow] = useState(false);
+  const checkPaymentIsStripe = () => {
+    setIsShow(true);
+    if (paymentType == 2) {
+      if(orderDetails.payment_type){
+        // const tempPaymentType = orderDetails.payment_type;
+        // setOrderDetails({
+        //   ...orderDetails,
+        //   payment_type: orderDetails.payment_type,
+        // });
+        // setTimeout(() => {
+        //   setOrderDetails({
+        //     ...orderDetails,
+        //     payment_type: [tempPaymentType],
+        //   });
+        // }, 500);
+      }
+      localStorage.setItem("payment_amount", totalPayable.toString());
+      localStorage.setItem("newOrder", JSON.stringify(newOrder));
+      localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
+      localStorage.setItem("newSettings", JSON.stringify(newSettings));
+      localStorage.setItem("theSubTotal", theSubTotal.toString());
+      localStorage.setItem("theVat", theVat.toString());
+      // history.push(`/dashboard/manage/stripe/payment`);
+    }
+  }
 
   //payment type pos 2
   const handleSetpaymentTypeSingle = (payment_type) => {
@@ -1575,6 +1634,7 @@ const Pos = () => {
       });
       let theReturnMoney = theUsdPaid - totalPayable;
       setReturnMoneyUsd(theReturnMoney);
+      checkPaymentIsStripe();
     }
   };
 
@@ -1784,6 +1844,7 @@ const Pos = () => {
 
   //settle button
   const handleSettleOrderButton = (e) => {
+    checkPaymentIsStripe();
     if (newOrder && newOrder.length > 0) {
       if (
         orderDetails &&
@@ -2009,25 +2070,24 @@ const Pos = () => {
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
     onAfterPrint: () => {
-      // if (getSystemSettings(generalSettings, "print_kitchen_bill") === "1") {
-      //   handlePrint2();
-      // } else {
+      if (getSystemSettings(generalSettings, "print_kitchen_bill") === "1") {
+        handlePrint2();
+      } else {
         handleOrderSubmitSuccessful();
-      // }
+      }
     },
   });
 
   //for kithcen
   const handlePrint2 = useReactToPrint({
     content: () => component2Ref.current,
-    // onAfterPrint: () => {
-    //   handleOrderSubmitSuccessful();
-    // },
+    onAfterPrint: () => {
+      handleOrderSubmitSuccessful();
+    },
   });
 
   //call after successful order submit and settle
   const handleOrderSubmitSuccessful = () => {
-    handlePrint2();
     setNewOrder(null);
     setActiveItemInOrder(null);
     setSelectedVariation([]);
@@ -2071,15 +2131,6 @@ const Pos = () => {
     setShowSettle(false);
 
     setLoading(false);
-    if (paymentType == 2) {
-      localStorage.setItem("payment_amount", totalPayable.toString());
-      localStorage.setItem("newOrder", JSON.stringify(newOrder));
-      localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
-      localStorage.setItem("newSettings", JSON.stringify(newSettings));
-      localStorage.setItem("theSubTotal", theSubTotal.toString());
-      localStorage.setItem("theVat", theVat.toString());
-      history.push(`/dashboard/manage/stripe/payment`);
-    }
 
     //sound
     if (getSystemSettings(generalSettings, "play_sound") === "1") {
@@ -2087,6 +2138,81 @@ const Pos = () => {
       beep.play();
     }
   };
+
+  // stripe payment area
+  // const [name, setName] = useState("");
+  // const [success, setSuccess] = useState(false);
+  // const [message, setMessage] = useState({
+  //   success: false,
+  //   text: "",
+  // });
+  // const [cardNumber, setCardNumber] = useState("");
+
+  // const stripe = useStripe();
+  // const elements = useElements();
+
+  // const handleName = (e) => {
+  //   setName(e.target.value);
+  // };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   console.log(cardNumber);
+  //   const { error, paymentMethod } = await stripe.createPaymentMethod({
+  //     type: "card",
+  //     card: elements.getElement(CardElement),
+  //   });
+
+  //   if (paymentMethod && paymentMethod.card) {
+  //     setCardNumber(paymentMethod.card.last4);
+  //   } else {
+  //     setCardNumber("");
+  //   }
+
+  //   if (!error) {
+  //     try {
+  //       const { id } = paymentMethod;
+  //       let url = BASE_URL + "/settings/stripe";
+  //       let localCurrency = JSON.parse(localStorage.getItem("currency"));
+
+  //       let formData = {
+  //         name: name,
+  //         currency: localCurrency.code,
+  //         amount: paymentAmount,
+  //         stripeToken: id,
+  //       };
+
+  //       axios
+  //         .post(url, formData, {
+  //           headers: { Authorization: `Bearer ${getCookie()}` },
+  //         })
+  //         .then((res) => {
+  //           setSuccess(true);
+  //           setMessage({
+  //             success: res.data.success,
+  //             text: res.data.message,
+  //           });
+  //           handlePrint();
+  //           setTimeout(() => {
+  //             if (res.data.success) {
+  //               // removeLocalStorage();
+  //               history.push("/dashboard/pos");
+  //             } else {
+  //               window.location.reload();
+  //             }
+  //           }, 2000);
+  //         })
+  //         .catch((err) => {
+  //           console.log(err);
+  //         });
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   } else {
+  //     console.log(error.message);
+  //   }
+  // };
 
   return (
     <>
@@ -2102,174 +2228,6 @@ const Pos = () => {
       <audio id="myAudioOrder">
         <source src="/assets/beep/order.mp3" type="audio/mpeg" />
       </audio>
-
-      {/* Print bill kitchen */}
-      <div className="d-none">
-        <div ref={component2Ref}>
-          {newOrder && (
-            <div className="fk-print">
-              <div className="container">
-                <div className="row">
-                  <div className="col-12">
-                    <span className="d-block fk-print-text fk-print-text--bold text-uppercase text-center lg-text">
-                      {_t(t("Token No"))}-
-                      {orderDetails && orderDetails.token.id}
-                    </span>
-                    <p className="mb-0 fk-print-text text-capitalize lg-text fk-print-text--bold">
-                      {orderDetails &&
-                        orderDetails.dept_tag &&
-                        orderDetails.dept_tag.name}
-                    </p>
-                    <p className="mb-0 mt-0 fk-print-text text-capitalize text-center">
-                      {_t(t("kitchen orders"))}
-                    </p>
-
-                    <table className="table mb-0 table-borderless">
-                      <tbody>
-                        {orderFoodGroups &&
-                          orderFoodGroups.map((theGrp, grpIndex) => {
-                            return (
-                              <>
-                                <tr>
-                                  <td className="text-center">
-                                    <div
-                                      className={`${
-                                        grpIndex === 0
-                                          ? "myBorder"
-                                          : "myBorderBottom"
-                                      } lg-text fk-print-text--bold fk-print-text`}
-                                    >
-                                      {theGrp.name}
-                                    </div>
-                                  </td>
-                                </tr>
-
-                                {newOrder.map((printItem, printItemIndex) => {
-                                  if (
-                                    theGrp.id ===
-                                    parseInt(printItem.item.food_group_id)
-                                  ) {
-                                    return (
-                                      <>
-                                        <tr className="myBorderBottom">
-                                          <th className="fk-print-text text-capitalize">
-                                            <div className="d-flex flex-wrap">
-                                              <span className="d-inline-block lg-text fk-print-text--bold fk-print-text">
-                                                {printItem.item.name}
-                                              </span>
-                                              {parseInt(
-                                                printItem.item.has_variation
-                                              ) === 1 &&
-                                                printItem.variation && (
-                                                  <span className="d-inline-block lg-text fk-print-text--bold fk-print-text">
-                                                    (
-                                                    {
-                                                      printItem.variation
-                                                        .variation_name
-                                                    }
-                                                    )
-                                                  </span>
-                                                )}
-                                              :-{printItem.quantity}|{" "}
-                                              <span>
-                                                <b>Note:</b>
-                                                {printItem.item.note}
-                                              </span>
-                                            </div>
-
-                                            {/* properties */}
-                                            {printItem.properties &&
-                                              printItem.properties.length > 0 &&
-                                              selectedPropertyGroup[
-                                                printItemIndex
-                                              ] !== undefined &&
-                                              selectedPropertyGroup[
-                                                printItemIndex
-                                              ].map((thisIsGroup) => {
-                                                let theGroup =
-                                                  propertyGroupForSearch &&
-                                                  propertyGroupForSearch.find(
-                                                    (theItem) => {
-                                                      return (
-                                                        theItem.id ===
-                                                        thisIsGroup
-                                                      );
-                                                    }
-                                                  );
-                                                return (
-                                                  <div className="d-flex flex-wrap">
-                                                    {printItem.properties.map(
-                                                      (
-                                                        propertyName,
-                                                        propertyIndex
-                                                      ) => {
-                                                        if (
-                                                          parseInt(
-                                                            propertyName.item
-                                                              .property_group_id
-                                                          ) === theGroup.id
-                                                        ) {
-                                                          return (
-                                                            <span className="text-capitalize d-inline-block mr-1 fk-print-text lg-text fk-print-text--bold">
-                                                              {
-                                                                propertyName
-                                                                  .item.name
-                                                              }{" "}
-                                                              <span>
-                                                                {" "}
-                                                                {propertyName.quantity >
-                                                                  1 &&
-                                                                  "(" +
-                                                                    propertyName.quantity +
-                                                                    ")"}
-                                                              </span>
-                                                              {printItem
-                                                                .properties
-                                                                .length -
-                                                                1 !==
-                                                                propertyIndex &&
-                                                                ","}
-                                                            </span>
-                                                          );
-                                                        } else {
-                                                          return true;
-                                                        }
-                                                      }
-                                                    )}
-                                                  </div>
-                                                );
-                                              })}
-                                          </th>
-                                        </tr>
-                                      </>
-                                    );
-                                  }
-                                })}
-                              </>
-                            );
-                          })}
-                      </tbody>
-                    </table>
-
-                    <div className="">
-                      <p className="mb-0 xsm-text fk-print-text text-capitalize lg-text fk-print-text--bold">
-                        {_t(t("date"))}:{" "}
-                        <Moment format="LL">{new Date()}</Moment>
-                      </p>
-                      <p className="mb-0 xsm-text fk-print-text text-capitalize lg-text fk-print-text--bold">
-                        {_t(t("Time"))}:
-                        {orderDetails && (
-                          <Moment format="LT">{orderDetails.token.time}</Moment>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
 
       {/* Print bill */}
       <div className="d-none">
@@ -2311,9 +2269,40 @@ const Pos = () => {
                         orderDetails.dept_tag &&
                         orderDetails.dept_tag.name}
                     </p>
-                    <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize text-center">
-                      {_t(t("Customer Copy"))}
-                    </p>
+                    {console.log(orderDetails)}
+                    {
+                      orderDetails.newCustomer ? (
+                        <>
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize text-center">
+                          {_t(t("Customer Copy"))}
+                        </p>
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Name : {orderDetails.newCustomerInfo && orderDetails.newCustomerInfo.name}
+                        </p>
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Address : {orderDetails.newCustomerInfo && orderDetails.newCustomerInfo.address}
+                        </p>
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Phone : {orderDetails.newCustomerInfo && orderDetails.newCustomerInfo.number}
+                        </p>
+                        </>
+                      ) : 
+                      <>
+                      <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize text-center">
+                          {_t(t("Customer Copy"))}
+                        </p>
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Name : {orderDetails.customer && orderDetails.customer.name}
+                        </p>
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Address : {orderDetails.customer && orderDetails.customer.address}
+                        </p>
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Phone : {orderDetails.customer && orderDetails.customer.phn_no}
+                        </p>
+                      </>
+                    }
+                    
                     {/* <p className="mb-0 xsm-text fk-print-text text-capitalize">
                       {_t(t("Vat reg"))}: {_t(t("Applied"))}
                     </p> */}
@@ -2338,7 +2327,11 @@ const Pos = () => {
                     )}
 
                     <p className="mb-0 sm-text fk-print-text text-capitalize lg-text">
-                      PAID
+                      {orderDetails &&
+                      orderDetails.dept_tag &&
+                      orderDetails.dept_tag.id == 9
+                        ? "UNPAID"
+                        : "PAID"}
                     </p>
 
                     <table className="table mb-0 table-borderless akash-table-for-print-padding">
@@ -2733,6 +2726,174 @@ const Pos = () => {
                         authUserInfo.details &&
                         authUserInfo.details.name}
                     </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Print bill kitchen */}
+      <div className="d-none">
+        <div ref={component2Ref}>
+          {newOrder && (
+            <div className="fk-print">
+              <div className="container">
+                <div className="row">
+                  <div className="col-12">
+                    <span className="d-block fk-print-text fk-print-text--bold text-uppercase text-center lg-text">
+                      {_t(t("Token No"))}-
+                      {orderDetails && orderDetails.token.id}
+                    </span>
+                    <p className="mb-0 fk-print-text text-capitalize lg-text fk-print-text--bold">
+                      {orderDetails &&
+                        orderDetails.dept_tag &&
+                        orderDetails.dept_tag.name}
+                    </p>
+                    <p className="mb-0 mt-0 fk-print-text text-capitalize text-center">
+                      {_t(t("kitchen orders"))}
+                    </p>
+
+                    <table className="table mb-0 table-borderless">
+                      <tbody>
+                        {orderFoodGroups &&
+                          orderFoodGroups.map((theGrp, grpIndex) => {
+                            return (
+                              <>
+                                <tr>
+                                  <td className="text-center">
+                                    <div
+                                      className={`${
+                                        grpIndex === 0
+                                          ? "myBorder"
+                                          : "myBorderBottom"
+                                      } lg-text fk-print-text--bold fk-print-text`}
+                                    >
+                                      {theGrp.name}
+                                    </div>
+                                  </td>
+                                </tr>
+
+                                {newOrder.map((printItem, printItemIndex) => {
+                                  if (
+                                    theGrp.id ===
+                                    parseInt(printItem.item.food_group_id)
+                                  ) {
+                                    return (
+                                      <>
+                                        <tr className="myBorderBottom">
+                                          <th className="fk-print-text text-capitalize">
+                                            <div className="d-flex flex-wrap">
+                                              <span className="d-inline-block lg-text fk-print-text--bold fk-print-text">
+                                                {printItem.item.name}
+                                              </span>
+                                              {parseInt(
+                                                printItem.item.has_variation
+                                              ) === 1 &&
+                                                printItem.variation && (
+                                                  <span className="d-inline-block lg-text fk-print-text--bold fk-print-text">
+                                                    (
+                                                    {
+                                                      printItem.variation
+                                                        .variation_name
+                                                    }
+                                                    )
+                                                  </span>
+                                                )}
+                                              :-{printItem.quantity}|{" "}
+                                              <span>
+                                                <b>Note:</b>
+                                                {printItem.item.note}
+                                              </span>
+                                            </div>
+
+                                            {/* properties */}
+                                            {printItem.properties &&
+                                              printItem.properties.length > 0 &&
+                                              selectedPropertyGroup[
+                                                printItemIndex
+                                              ] !== undefined &&
+                                              selectedPropertyGroup[
+                                                printItemIndex
+                                              ].map((thisIsGroup) => {
+                                                let theGroup =
+                                                  propertyGroupForSearch &&
+                                                  propertyGroupForSearch.find(
+                                                    (theItem) => {
+                                                      return (
+                                                        theItem.id ===
+                                                        thisIsGroup
+                                                      );
+                                                    }
+                                                  );
+                                                return (
+                                                  <div className="d-flex flex-wrap">
+                                                    {printItem.properties.map(
+                                                      (
+                                                        propertyName,
+                                                        propertyIndex
+                                                      ) => {
+                                                        if (
+                                                          parseInt(
+                                                            propertyName.item
+                                                              .property_group_id
+                                                          ) === theGroup.id
+                                                        ) {
+                                                          return (
+                                                            <span className="text-capitalize d-inline-block mr-1 fk-print-text lg-text fk-print-text--bold">
+                                                              {
+                                                                propertyName
+                                                                  .item.name
+                                                              }{" "}
+                                                              <span>
+                                                                {" "}
+                                                                {propertyName.quantity >
+                                                                  1 &&
+                                                                  "(" +
+                                                                    propertyName.quantity +
+                                                                    ")"}
+                                                              </span>
+                                                              {printItem
+                                                                .properties
+                                                                .length -
+                                                                1 !==
+                                                                propertyIndex &&
+                                                                ","}
+                                                            </span>
+                                                          );
+                                                        } else {
+                                                          return true;
+                                                        }
+                                                      }
+                                                    )}
+                                                  </div>
+                                                );
+                                              })}
+                                          </th>
+                                        </tr>
+                                      </>
+                                    );
+                                  }
+                                })}
+                              </>
+                            );
+                          })}
+                      </tbody>
+                    </table>
+
+                    <div className="">
+                      <p className="mb-0 xsm-text fk-print-text text-capitalize lg-text fk-print-text--bold">
+                        {_t(t("date"))}:{" "}
+                        <Moment format="LL">{new Date()}</Moment>
+                      </p>
+                      <p className="mb-0 xsm-text fk-print-text text-capitalize lg-text fk-print-text--bold">
+                        {_t(t("Time"))}:
+                        {orderDetails && (
+                          <Moment format="LT">{orderDetails.token.time}</Moment>
+                        )}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -6585,288 +6746,305 @@ const Pos = () => {
         <div className="fk-settle">
           <div className="container-fluid">
             <div className="row gx-3">
-              <div className="col-lg-6 d-none d-lg-block">
-                <span className="sm-text d-block text-capitalize font-weight-bold py-3">
-                  new order
-                </span>
-                <div
-                  className="fk-settle__products d-flex flex-column"
-                  data-simplebar
-                >
-                  <div className="container-fluid">
-                    <div className="row gx-3">
-                      <div className="col-12">
-                        {/* POS Product list will be here  */}
-                        <div className="fk-price-table__body t-mt-10">
-                          <div className="fk-price-table__body-top">
-                            <div className="fk-table">
-                              <div className="fk-table__head">
-                                <div className="row g-0 border">
-                                  <div className="col-1 text-center border-right">
-                                    <span className="text-capitalize sm-text d-inline-block font-weight-bold t-pt-5 t-pb-5">
-                                      {_t(t("S/L"))}
-                                    </span>
-                                  </div>
-                                  <div className="col-6 text-center border-right">
-                                    <span className="text-capitalize sm-text d-inline-block font-weight-bold t-pt-5 t-pb-5">
-                                      {_t(t("food item"))}
-                                    </span>
-                                  </div>
-                                  <div className="col-2 text-center border-right">
-                                    <span className="text-capitalize sm-text d-inline-block font-weight-bold t-pt-5 t-pb-5">
-                                      {_t(t("QTY"))}
-                                    </span>
-                                  </div>
-                                  <div className="col-3 text-center">
-                                    <span className="text-capitalize sm-text d-inline-block font-weight-bold t-pt-5 t-pb-5">
-                                      {_t(t("price"))}
-                                    </span>
+              {isShow && orderDetails.payment_type &&
+              orderDetails.payment_type[0].id == 2 ? (
+                <div className="col-lg-6 px-5">
+                  <div className="fk-settle-cal container-fluid mt-5">
+                    <Elements stripe={stripeTestPromise}>
+                      <StripeForm />
+                    </Elements>
+                  </div>
+                </div>
+              ) : (
+                <div className="col-lg-6 d-none d-lg-block">
+                  <span className="sm-text d-block text-capitalize font-weight-bold py-3">
+                    new order
+                  </span>
+                  <div
+                    className="fk-settle__products d-flex flex-column"
+                    data-simplebar
+                  >
+                    <div className="container-fluid">
+                      <div className="row gx-3">
+                        <div className="col-12">
+                          {/* POS Product list will be here  */}
+                          <div className="fk-price-table__body t-mt-10">
+                            <div className="fk-price-table__body-top">
+                              <div className="fk-table">
+                                <div className="fk-table__head">
+                                  <div className="row g-0 border">
+                                    <div className="col-1 text-center border-right">
+                                      <span className="text-capitalize sm-text d-inline-block font-weight-bold t-pt-5 t-pb-5">
+                                        {_t(t("S/L"))}
+                                      </span>
+                                    </div>
+                                    <div className="col-6 text-center border-right">
+                                      <span className="text-capitalize sm-text d-inline-block font-weight-bold t-pt-5 t-pb-5">
+                                        {_t(t("food item"))}
+                                      </span>
+                                    </div>
+                                    <div className="col-2 text-center border-right">
+                                      <span className="text-capitalize sm-text d-inline-block font-weight-bold t-pt-5 t-pb-5">
+                                        {_t(t("QTY"))}
+                                      </span>
+                                    </div>
+                                    <div className="col-3 text-center">
+                                      <span className="text-capitalize sm-text d-inline-block font-weight-bold t-pt-5 t-pb-5">
+                                        {_t(t("price"))}
+                                      </span>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                              <div className="t-pb-30">
-                                <div className="sky-is-blue reverse-this">
-                                  {/* loop through order list items */}
-                                  {newOrder && newOrder.length > 0 ? (
-                                    newOrder.map(
-                                      (orderListItem, orderListItemIndex) => {
-                                        return (
-                                          <>
-                                            <div
-                                              className={`fk-table-container-order ${
-                                                orderListItemIndex ===
-                                                  activeItemInOrder && "active"
-                                              } `}
-                                              onClick={(e) => {
-                                                e.preventDefault();
-                                                //orderListItem's group wise all items
-                                                let tempItems =
-                                                  foodForSearch &&
-                                                  foodForSearch.filter(
-                                                    (tempItem) => {
-                                                      return (
-                                                        tempItem.food_group_id ===
-                                                        orderListItem.item
-                                                          .food_group_id
-                                                      );
-                                                    }
-                                                  );
-
-                                                //orderListItem's group
-                                                let foodGroup =
-                                                  foodGroupForSearch &&
-                                                  foodGroupForSearch.find(
-                                                    (groupItem) => {
-                                                      return (
-                                                        groupItem.id ===
-                                                        parseInt(
+                                <div className="t-pb-30">
+                                  <div className="sky-is-blue reverse-this">
+                                    {/* loop through order list items */}
+                                    {newOrder && newOrder.length > 0 ? (
+                                      newOrder.map(
+                                        (orderListItem, orderListItemIndex) => {
+                                          return (
+                                            <>
+                                              <div
+                                                className={`fk-table-container-order ${
+                                                  orderListItemIndex ===
+                                                    activeItemInOrder &&
+                                                  "active"
+                                                } `}
+                                                onClick={(e) => {
+                                                  e.preventDefault();
+                                                  //orderListItem's group wise all items
+                                                  let tempItems =
+                                                    foodForSearch &&
+                                                    foodForSearch.filter(
+                                                      (tempItem) => {
+                                                        return (
+                                                          tempItem.food_group_id ===
                                                           orderListItem.item
                                                             .food_group_id
-                                                        )
-                                                      );
-                                                    }
-                                                  );
-
-                                                // selected pos item
-                                                let selectedItemTemp =
-                                                  tempItems &&
-                                                  tempItems.find(
-                                                    (tempSelectedItem) => {
-                                                      return (
-                                                        tempSelectedItem.id ===
-                                                        orderListItem.item.id
-                                                      );
-                                                    }
-                                                  );
-
-                                                // Set variations, properties, selected item
-                                                setFoodItem({
-                                                  ...foodItem,
-                                                  foodGroup: foodGroup,
-                                                  items: tempItems,
-                                                  selectedItem:
-                                                    selectedItemTemp,
-                                                  variations:
-                                                    selectedItemTemp &&
-                                                    parseInt(
-                                                      selectedItemTemp.has_variation
-                                                    ) === 1
-                                                      ? selectedItemTemp.variations
-                                                      : null,
-
-                                                  properties:
-                                                    selectedItemTemp &&
-                                                    parseInt(
-                                                      selectedItemTemp.has_property
-                                                    ) === 1
-                                                      ? selectedItemTemp.properties
-                                                      : null,
-                                                });
-
-                                                //set active order list index for background color of selected
-                                                setActiveItemInOrder(
-                                                  orderListItemIndex
-                                                );
-                                              }}
-                                            >
-                                              <div
-                                                className={`row g-0 border-top-0 border-bottom `}
-                                              >
-                                                <div className="col-1 text-center border-left d-flex justify-content-center align-items-center">
-                                                  {newOrder.length -
-                                                    orderListItemIndex}
-                                                </div>
-                                                <div
-                                                  className={`col-6 border-left border-right py-2`}
-                                                >
-                                                  <div className="d-flex justify-content-between">
-                                                    <span className="text-capitalize d-block t-pt-5 t-pb-5 t-pl-5 t-pr-5 sm-text font-weight-bold t-mr-8">
-                                                      {orderListItem.item.name}
-                                                    </span>
-                                                  </div>
-                                                  <div className="row g-0">
-                                                    {/* if item has variations show the selected in order list */}
-                                                    {parseInt(
-                                                      orderListItem.item
-                                                        .has_variation
-                                                    ) === 1 && (
-                                                      <div className="col-12">
-                                                        <span className="text-capitalize sm-text d-inline-block font-weight-bold t-pr-5 t-pl-5">
-                                                          variation :
-                                                        </span>
-                                                        <span className="text-capitalize xsm-text d-inline-block badge rounded-pill bg-warning text-dark font-weight-md">
-                                                          {orderListItem.variation
-                                                            ? orderListItem
-                                                                .variation
-                                                                .variation_name
-                                                            : "-"}
-                                                        </span>
-                                                      </div>
-                                                    )}
-
-                                                    {/* if item has properties show the selected in order list, loop here  */}
-                                                    {orderListItem.properties &&
-                                                      orderListItem.properties
-                                                        .length > 0 &&
-                                                      selectedPropertyGroup[
-                                                        orderListItemIndex
-                                                      ] !== undefined &&
-                                                      selectedPropertyGroup[
-                                                        orderListItemIndex
-                                                      ].map((thisIsGroup) => {
-                                                        let theGroup =
-                                                          propertyGroupForSearch &&
-                                                          propertyGroupForSearch.find(
-                                                            (theItem) => {
-                                                              return (
-                                                                theItem.id ===
-                                                                thisIsGroup
-                                                              );
-                                                            }
-                                                          );
-                                                        return (
-                                                          <div className="col-12">
-                                                            <span className="text-capitalize sm-text d-inline-block font-weight-bold t-pr-5 t-pl-5">
-                                                              {theGroup &&
-                                                                theGroup.name}{" "}
-                                                              :
-                                                            </span>
-                                                            {orderListItem.properties.map(
-                                                              (
-                                                                propertyName
-                                                              ) => {
-                                                                if (
-                                                                  parseInt(
-                                                                    propertyName
-                                                                      .item
-                                                                      .property_group_id
-                                                                  ) ===
-                                                                  theGroup.id
-                                                                ) {
-                                                                  return (
-                                                                    <span className="text-capitalize xsm-text d-inline-block badge rounded-pill bg-warning text-dark font-weight-md mr-1">
-                                                                      {
-                                                                        propertyName
-                                                                          .item
-                                                                          .name
-                                                                      }{" "}
-                                                                      <span>
-                                                                        {" "}
-                                                                        {propertyName.quantity >
-                                                                          1 &&
-                                                                          "(" +
-                                                                            propertyName.quantity +
-                                                                            ")"}
-                                                                      </span>
-                                                                    </span>
-                                                                  );
-                                                                } else {
-                                                                  return true;
-                                                                }
-                                                              }
-                                                            )}
-                                                          </div>
                                                         );
-                                                      })}
-
-                                                    {/* if item has properties show the selected in order list  */}
-                                                  </div>
-                                                </div>
-                                                {/* Quantity */}
-                                                <div className="col-2 text-center border-right d-flex justify-content-center align-items-center">
-                                                  <div className="fk-qty t-pt-5 t-pb-5 justify-content-center">
-                                                    <input
-                                                      type="text"
-                                                      value={
-                                                        orderListItem.quantity
                                                       }
-                                                      className="fk-qty__input t-bg-clear"
-                                                      readOnly
-                                                    />
-                                                  </div>
-                                                </div>
-                                                {/* Quantity */}
+                                                    );
 
-                                                {/* Price */}
-                                                <div className="col-3 text-center border-right d-flex justify-content-center align-items-center">
-                                                  <div className="text-capitalize sm-text font-weight-bold t-pt-5 t-pb-5">
-                                                    {parseInt(
-                                                      orderListItem.item
-                                                        .has_variation
-                                                    ) === 1 ? (
-                                                      <>
-                                                        {currencySymbolLeft()}
+                                                  //orderListItem's group
+                                                  let foodGroup =
+                                                    foodGroupForSearch &&
+                                                    foodGroupForSearch.find(
+                                                      (groupItem) => {
+                                                        return (
+                                                          groupItem.id ===
+                                                          parseInt(
+                                                            orderListItem.item
+                                                              .food_group_id
+                                                          )
+                                                        );
+                                                      }
+                                                    );
 
-                                                        {showPriceOfEachOrderItem(
-                                                          orderListItemIndex
-                                                        )}
-                                                        {currencySymbolRight()}
-                                                      </>
-                                                    ) : (
-                                                      <>
-                                                        {currencySymbolLeft()}
-                                                        {showPriceOfEachOrderItem(
-                                                          orderListItemIndex
-                                                        )}
-                                                        {currencySymbolRight()}
-                                                      </>
-                                                    )}
+                                                  // selected pos item
+                                                  let selectedItemTemp =
+                                                    tempItems &&
+                                                    tempItems.find(
+                                                      (tempSelectedItem) => {
+                                                        return (
+                                                          tempSelectedItem.id ===
+                                                          orderListItem.item.id
+                                                        );
+                                                      }
+                                                    );
+
+                                                  // Set variations, properties, selected item
+                                                  setFoodItem({
+                                                    ...foodItem,
+                                                    foodGroup: foodGroup,
+                                                    items: tempItems,
+                                                    selectedItem:
+                                                      selectedItemTemp,
+                                                    variations:
+                                                      selectedItemTemp &&
+                                                      parseInt(
+                                                        selectedItemTemp.has_variation
+                                                      ) === 1
+                                                        ? selectedItemTemp.variations
+                                                        : null,
+
+                                                    properties:
+                                                      selectedItemTemp &&
+                                                      parseInt(
+                                                        selectedItemTemp.has_property
+                                                      ) === 1
+                                                        ? selectedItemTemp.properties
+                                                        : null,
+                                                  });
+
+                                                  //set active order list index for background color of selected
+                                                  setActiveItemInOrder(
+                                                    orderListItemIndex
+                                                  );
+                                                }}
+                                              >
+                                                <div
+                                                  className={`row g-0 border-top-0 border-bottom `}
+                                                >
+                                                  <div className="col-1 text-center border-left d-flex justify-content-center align-items-center">
+                                                    {newOrder.length -
+                                                      orderListItemIndex}
                                                   </div>
+                                                  <div
+                                                    className={`col-6 border-left border-right py-2`}
+                                                  >
+                                                    <div className="d-flex justify-content-between">
+                                                      <span className="text-capitalize d-block t-pt-5 t-pb-5 t-pl-5 t-pr-5 sm-text font-weight-bold t-mr-8">
+                                                        {
+                                                          orderListItem.item
+                                                            .name
+                                                        }
+                                                      </span>
+                                                    </div>
+                                                    <div className="row g-0">
+                                                      {/* if item has variations show the selected in order list */}
+                                                      {parseInt(
+                                                        orderListItem.item
+                                                          .has_variation
+                                                      ) === 1 && (
+                                                        <div className="col-12">
+                                                          <span className="text-capitalize sm-text d-inline-block font-weight-bold t-pr-5 t-pl-5">
+                                                            variation :
+                                                          </span>
+                                                          <span className="text-capitalize xsm-text d-inline-block badge rounded-pill bg-warning text-dark font-weight-md">
+                                                            {orderListItem.variation
+                                                              ? orderListItem
+                                                                  .variation
+                                                                  .variation_name
+                                                              : "-"}
+                                                          </span>
+                                                        </div>
+                                                      )}
+
+                                                      {/* if item has properties show the selected in order list, loop here  */}
+                                                      {orderListItem.properties &&
+                                                        orderListItem.properties
+                                                          .length > 0 &&
+                                                        selectedPropertyGroup[
+                                                          orderListItemIndex
+                                                        ] !== undefined &&
+                                                        selectedPropertyGroup[
+                                                          orderListItemIndex
+                                                        ].map((thisIsGroup) => {
+                                                          let theGroup =
+                                                            propertyGroupForSearch &&
+                                                            propertyGroupForSearch.find(
+                                                              (theItem) => {
+                                                                return (
+                                                                  theItem.id ===
+                                                                  thisIsGroup
+                                                                );
+                                                              }
+                                                            );
+                                                          return (
+                                                            <div className="col-12">
+                                                              <span className="text-capitalize sm-text d-inline-block font-weight-bold t-pr-5 t-pl-5">
+                                                                {theGroup &&
+                                                                  theGroup.name}{" "}
+                                                                :
+                                                              </span>
+                                                              {orderListItem.properties.map(
+                                                                (
+                                                                  propertyName
+                                                                ) => {
+                                                                  if (
+                                                                    parseInt(
+                                                                      propertyName
+                                                                        .item
+                                                                        .property_group_id
+                                                                    ) ===
+                                                                    theGroup.id
+                                                                  ) {
+                                                                    return (
+                                                                      <span className="text-capitalize xsm-text d-inline-block badge rounded-pill bg-warning text-dark font-weight-md mr-1">
+                                                                        {
+                                                                          propertyName
+                                                                            .item
+                                                                            .name
+                                                                        }{" "}
+                                                                        <span>
+                                                                          {" "}
+                                                                          {propertyName.quantity >
+                                                                            1 &&
+                                                                            "(" +
+                                                                              propertyName.quantity +
+                                                                              ")"}
+                                                                        </span>
+                                                                      </span>
+                                                                    );
+                                                                  } else {
+                                                                    return true;
+                                                                  }
+                                                                }
+                                                              )}
+                                                            </div>
+                                                          );
+                                                        })}
+
+                                                      {/* if item has properties show the selected in order list  */}
+                                                    </div>
+                                                  </div>
+                                                  {/* Quantity */}
+                                                  <div className="col-2 text-center border-right d-flex justify-content-center align-items-center">
+                                                    <div className="fk-qty t-pt-5 t-pb-5 justify-content-center">
+                                                      <input
+                                                        type="text"
+                                                        value={
+                                                          orderListItem.quantity
+                                                        }
+                                                        className="fk-qty__input t-bg-clear"
+                                                        readOnly
+                                                      />
+                                                    </div>
+                                                  </div>
+                                                  {/* Quantity */}
+
+                                                  {/* Price */}
+                                                  <div className="col-3 text-center border-right d-flex justify-content-center align-items-center">
+                                                    <div className="text-capitalize sm-text font-weight-bold t-pt-5 t-pb-5">
+                                                      {parseInt(
+                                                        orderListItem.item
+                                                          .has_variation
+                                                      ) === 1 ? (
+                                                        <>
+                                                          {currencySymbolLeft()}
+
+                                                          {showPriceOfEachOrderItem(
+                                                            orderListItemIndex
+                                                          )}
+                                                          {currencySymbolRight()}
+                                                        </>
+                                                      ) : (
+                                                        <>
+                                                          {currencySymbolLeft()}
+                                                          {showPriceOfEachOrderItem(
+                                                            orderListItemIndex
+                                                          )}
+                                                          {currencySymbolRight()}
+                                                        </>
+                                                      )}
+                                                    </div>
+                                                  </div>
+                                                  {/* Price */}
                                                 </div>
-                                                {/* Price */}
                                               </div>
-                                            </div>
-                                          </>
-                                        );
-                                      }
-                                    )
-                                  ) : (
-                                    <div className="text-primary text-center font-weight-bold pt-5 xsm-text text-uppercase">
-                                      {_t(
-                                        t("Select food item to add to the list")
-                                      )}
-                                    </div>
-                                  )}
+                                            </>
+                                          );
+                                        }
+                                      )
+                                    ) : (
+                                      <div className="text-primary text-center font-weight-bold pt-5 xsm-text text-uppercase">
+                                        {_t(
+                                          t(
+                                            "Select food item to add to the list"
+                                          )
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -6876,7 +7054,8 @@ const Pos = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
+
               <div className="col-lg-6">
                 <div className="row gx-3">
                   <div className="col-md-9">
@@ -7154,14 +7333,11 @@ const Pos = () => {
                                     className="fk-settle-cal-btn t-text-white t-bg-ac text-capitalize"
                                     onClick={() => {
                                       if (!returnMoneyUsd > 0) {
-                                        let theP = formatPrice(
-                                          parseFloat(totalPayable) / 2
-                                        );
-                                        setPaidMoney(parseFloat(theP));
+                                        setPaidMoney(paidMoney + "" + ".");
                                       }
                                     }}
                                   >
-                                    1/2
+                                    .
                                   </button>
                                 </div>
                                 <div className="col-12">
@@ -7202,6 +7378,7 @@ const Pos = () => {
                                 <button
                                   type="button"
                                   onClick={() => {
+                                    setIsShow(false)
                                     setShowSettle(false);
                                   }}
                                   className="w-100 t-text-dark t-heading-font btn alert alert-danger font-weight-bold text-uppercase py-3 mb-3"
@@ -7251,6 +7428,64 @@ const Pos = () => {
                   </div>
                 </div>
               </div>
+
+              {/* <div className="col-lg-6">
+              <div id="card-element"></div>
+              <div className="panel panel-default credit-card-box">
+                <div className="panel-heading display-table">
+                  <h3 className="panel-title">Payment Details</h3>
+                </div>
+                <div className="panel-body">
+                  {!success ? (
+                    <form onSubmit={handleSubmit}>
+                      <fieldset>
+                        <div className="row">
+                          <div className="col-xs-12 form-group required">
+                            <label className="control-label">
+                              Name on Card
+                            </label>{" "}
+                            <input
+                              className="form-control"
+                              value={name}
+                              size="4"
+                              type="text"
+                              id="name"
+                              onChange={handleName}
+                            />
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-xs-12 form-group required">
+                            <label className="control-label">Card Details</label>
+                            <CardElement
+                              options={CARD_OPTIONS}
+                            />
+                          </div>
+                        </div>
+                      </fieldset>
+                      <div className="row mt-4">
+                        <div className="col-xs-12">
+                          <button
+                            className="btn btn-danger btn-lg btn-block"
+                            type="submit"
+                          >
+                            Pay Now (${paymentAmount})
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  ) : (
+                    <h4
+                      className={`alert alert-${
+                        message.success ? "success" : "danger"
+                      } text-center py-3`}
+                    >
+                      {message.text}
+                    </h4>
+                  )}
+                </div>
+              </div>
+              </div> */}
             </div>
           </div>
         </div>

@@ -187,6 +187,93 @@ const OrderHistories = () => {
       });
   };
 
+    //cancel order confirmation modal
+    const handleCancelOrderConfirmation = (orderGroup) => {
+      confirmAlert({
+        customUI: ({ onClose }) => {
+          return (
+            <div className="card card-body">
+              <h1>{_t(t("Are you sure?"))}</h1>
+              <p className="text-center">
+                {_t(t("You want to cancel this order?"))}
+              </p>
+              <div className="d-flex justify-content-center">
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    handleCancelOrder(orderGroup);
+                    onClose();
+                  }}
+                >
+                  {_t(t("Yes, cancel it!"))}
+                </button>
+                <button className="btn btn-success ml-2 px-3" onClick={onClose}>
+                  {_t(t("No"))}
+                </button>
+              </div>
+            </div>
+          );
+        },
+      });
+    };
+  
+    //cancel order here
+    const handleCancelOrder = (orderGroup) => {
+      if (parseInt(orderGroup.is_accepted) === 0) {
+        let url = BASE_URL + "/settings/cancel-submitted-order";
+        let formData = {
+          id: orderGroup.id,
+        };
+        setLoading(true);
+        axios
+          .post(url, formData, {
+            headers: { Authorization: `Bearer ${getCookie()}` },
+          })
+          .then((res) => {
+            setLoading(false);
+            if (res.data === "accepted") {
+              toast.error(
+                `${_t(t("Can not cancel this order, this is being cooked"))}`,
+                {
+                  position: "bottom-center",
+                  closeButton: false,
+                  autoClose: 10000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  className: "text-center toast-notification",
+                }
+              );
+            }
+          })
+          .catch(() => {
+            setLoading(false);
+            toast.error(`${_t(t("Please try again"))}`, {
+              position: "bottom-center",
+              closeButton: false,
+              autoClose: 10000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              className: "text-center toast-notification",
+            });
+          });
+      } else {
+        toast.error(
+          `${_t(t("Can not cancel this order, this is being cooked"))}`,
+          {
+            position: "bottom-center",
+            closeButton: false,
+            autoClose: 10000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            className: "text-center toast-notification",
+          }
+        );
+      }
+    };
+
   //search submitted orders here
   const handleSearch = (e) => {
     let searchInput = e.target.value.toLowerCase();
@@ -1588,10 +1675,10 @@ const OrderHistories = () => {
                                                     </span>
                                                     {_t(t("Delete Order"))}
                                                   </button>
-                                                  {/* <button
+                                                  <button
                                                     className="dropdown-item sm-text text-capitalize"
                                                     onClick={() => {
-                                                      handleDeleteOrderConfirmation(
+                                                      handleCancelOrderConfirmation(
                                                         item
                                                       );
                                                     }}
@@ -1599,8 +1686,8 @@ const OrderHistories = () => {
                                                     <span className="t-mr-8">
                                                       <i className="fa fa-eye"></i>
                                                     </span>
-                                                    {_t(t("View Order"))}
-                                                  </button> */}
+                                                    {_t(t("Cancel Order"))}
+                                                  </button>
                                                 </div>
                                               </div>
                                             </td>
@@ -1770,10 +1857,10 @@ const OrderHistories = () => {
                                                     </span>
                                                     {_t(t("Delete Order"))}
                                                   </button>
-                                                  {/* <button
+                                                  <button
                                                     className="dropdown-item sm-text text-capitalize"
                                                     onClick={() => {
-                                                      handleDeleteOrderConfirmation(
+                                                      handleCancelOrderConfirmation(
                                                         item
                                                       );
                                                     }}
@@ -1781,8 +1868,8 @@ const OrderHistories = () => {
                                                     <span className="t-mr-8">
                                                       <i className="fa fa-eye"></i>
                                                     </span>
-                                                    {_t(t("View Order"))}
-                                                  </button> */}
+                                                    {_t(t("Cancel Order"))}
+                                                  </button>
                                                 </div>
                                               </div>
                                             </td>

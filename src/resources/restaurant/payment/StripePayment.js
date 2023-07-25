@@ -17,7 +17,6 @@ import "react-toastify/dist/ReactToastify.css";
 import $ from "jquery";
 
 // -----------------------------------stripe payment method-----------------------------------
-// import StripeCheckout from "react-stripe-checkout";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import StripeForm  from "./StripeForm"
@@ -26,6 +25,7 @@ const public_key =
   "pk_test_51HeMxMGahXUsew7kgRWCjly9sFZQOImZzSHExaYqxd8jmFUl8psNrqhq5BXVZvNQ427YUQNpxwmoPX3gHRlY58lr00d78CtYbD";
 
 const stripeTestPromise = loadStripe(public_key);
+// import StripeCheckout from "react-stripe-checkout";
 
 // -----------------------------------stripe payment method-----------------------------------
 

@@ -192,7 +192,7 @@ const AllItemList = () => {
     setVariations({ ...variations, uploading: true });
     
     let updatedAllergies = [];
-    if (foodItemEdit.editItem.allergies) {
+    if (selectedAllergies) {
       selectedAllergies.map((pItem) => {
         updatedAllergies.push(pItem.name);
       });

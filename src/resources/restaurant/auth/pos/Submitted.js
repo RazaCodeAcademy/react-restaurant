@@ -2316,21 +2316,13 @@ const Submitted = () => {
                                           checkOrderDetails &&
                                           checkOrderDetails.item
                                         ) {
-                                          let theP = formatPrice(
-                                            parseFloat(
-                                              (checkOrderDetails.item
-                                                .total_payable -
-                                                checkOrderDetails.item
-                                                  .paid_amount) /
-                                              2
-                                            )
-                                          );
-                                          setPaidMoney(parseFloat(theP));
+                                          
+                                          setPaidMoney(paidMoney +""+ ".");
                                         }
                                       }
                                     }}
                                   >
-                                    1/2
+                                    .
                                   </button>
                                 </div>
                                 <div className="col-12">
