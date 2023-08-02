@@ -220,6 +220,7 @@ const Pos = () => {
       name: "",
       number: "",
       address: "",
+      zipcode: "",
     },
     token: null,
     serviceCharge: 0,
@@ -917,6 +918,7 @@ const Pos = () => {
         name: "",
         number: "",
         address: "",
+        zipcode: "",
       },
       token: null,
       serviceCharge: 0,
@@ -1404,6 +1406,7 @@ const Pos = () => {
         name: "",
         number: "",
         address: "",
+        zipcode: "",
       },
       token: null,
       serviceCharge: 0,
@@ -1583,7 +1586,7 @@ const Pos = () => {
   const checkPaymentIsStripe = () => {
     setIsShow(true);
     if (paymentType == 2) {
-      if(orderDetails.payment_type){
+      if (orderDetails.payment_type) {
         // const tempPaymentType = orderDetails.payment_type;
         // setOrderDetails({
         //   ...orderDetails,
@@ -1604,14 +1607,14 @@ const Pos = () => {
       localStorage.setItem("theVat", theVat.toString());
       // history.push(`/dashboard/manage/stripe/payment`);
     }
-  }
+  };
 
   //payment type pos 2
   const handleSetpaymentTypeSingle = (payment_type) => {
     setPaymentType(payment_type.id);
     let localCurrency = JSON.parse(localStorage.getItem("currency"));
     let theUsdPaid = paidMoney / localCurrency.rate;
-    if (theUsdPaid < totalPayable) {
+    if (theUsdPaid < totalPayable && payment_type.id !== 1) {
       setReturnMoneyUsd(0);
       toast.error(
         `${_t(
@@ -1636,6 +1639,16 @@ const Pos = () => {
       setReturnMoneyUsd(theReturnMoney);
       checkPaymentIsStripe();
     }
+
+    setTimeout(() => {
+      if (
+        payment_type.id == 1
+      ) {
+        if (!loading) {
+          handleSubmitOrder();
+        }
+      }
+    }, 500);
   };
 
   //payment type amount
@@ -1704,28 +1717,30 @@ const Pos = () => {
 
   //send server req
   const handleSubmitOrder = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     if (newOrder && newOrder.length > 0) {
-      if (paidMoney !== 0) {
-        toast.error(
-          `${_t(
-            t("Settle order to add payments, or remove payment's amount")
-          )}`,
-          {
-            position: "bottom-center",
-            closeButton: false,
-            autoClose: 10000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            className: "text-center toast-notification",
-          }
-        );
-      } else {
-        axiosRequest();
-      }
+      // console.log(orderDetails);
+      axiosRequest();
+      // if (paidMoney !== 0) {
+      //   toast.error(
+      //     `${_t(
+      //       t("Settle order to add payments, or remove payment's amount")
+      //     )}`,
+      //     {
+      //       position: "bottom-center",
+      //       closeButton: false,
+      //       autoClose: 10000,
+      //       hideProgressBar: false,
+      //       closeOnClick: true,
+      //       pauseOnHover: true,
+      //       className: "text-center toast-notification",
+      //     }
+      //   );
+      // } else {
+      //   axiosRequest();
+      // }
     } else {
-      toast.error(`${_t(t("Please add items in order list asffsfasf"))}`, {
+      toast.error(`${_t(t("Please add items in order list"))}`, {
         position: "bottom-center",
         autoClose: 10000,
         hideProgressBar: false,
@@ -1772,7 +1787,7 @@ const Pos = () => {
       .then((res) => {
         if (res.data !== "ended") {
           getFoodGroup();
-          handlePrint2();
+          handlePrint();
           setCustomerForSearch(res.data[0][1]);
           setWorkPeriodListForSearch(res.data[1][1]);
           let tempCustomers =
@@ -2113,6 +2128,7 @@ const Pos = () => {
         name: "",
         number: "",
         address: "",
+        zipcode: "",
       },
       token: null,
       serviceCharge: 0,
@@ -2270,39 +2286,49 @@ const Pos = () => {
                         orderDetails.dept_tag.name}
                     </p>
                     {console.log(orderDetails)}
-                    {
-                      orderDetails.newCustomer ? (
-                        <>
+                    {orderDetails.newCustomer ? (
+                      <>
                         <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize text-center">
                           {_t(t("Customer Copy"))}
                         </p>
                         <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Name : {orderDetails.newCustomerInfo && orderDetails.newCustomerInfo.name}
+                          Customer Name :{" "}
+                          {orderDetails.newCustomerInfo &&
+                            orderDetails.newCustomerInfo.name}
                         </p>
                         <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Address : {orderDetails.newCustomerInfo && orderDetails.newCustomerInfo.address}
+                          Customer Address :{" "}
+                          {orderDetails.newCustomerInfo &&
+                            orderDetails.newCustomerInfo.address}
                         </p>
                         <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Phone : {orderDetails.newCustomerInfo && orderDetails.newCustomerInfo.number}
+                          Customer Phone :{" "}
+                          {orderDetails.newCustomerInfo &&
+                            orderDetails.newCustomerInfo.number}
                         </p>
-                        </>
-                      ) : 
+                      </>
+                    ) : (
                       <>
-                      <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize text-center">
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize text-center">
                           {_t(t("Customer Copy"))}
                         </p>
                         <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Name : {orderDetails.customer && orderDetails.customer.name}
+                          Customer Name :{" "}
+                          {orderDetails.customer && orderDetails.customer.name}
                         </p>
                         <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Address : {orderDetails.customer && orderDetails.customer.address}
+                          Customer Address :{" "}
+                          {orderDetails.customer &&
+                            orderDetails.customer.address}
                         </p>
                         <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Phone : {orderDetails.customer && orderDetails.customer.phn_no}
+                          Customer Phone :{" "}
+                          {orderDetails.customer &&
+                            orderDetails.customer.phn_no}
                         </p>
                       </>
-                    }
-                    
+                    )}
+
                     {/* <p className="mb-0 xsm-text fk-print-text text-capitalize">
                       {_t(t("Vat reg"))}: {_t(t("Applied"))}
                     </p> */}
@@ -2327,9 +2353,8 @@ const Pos = () => {
                     )}
 
                     <p className="mb-0 sm-text fk-print-text text-capitalize lg-text">
-                      {orderDetails &&
-                      orderDetails.dept_tag &&
-                      orderDetails.dept_tag.id == 9
+                      {paymentType &&
+                        paymentType == 1
                         ? "UNPAID"
                         : "PAID"}
                     </p>
@@ -4003,6 +4028,17 @@ const Pos = () => {
                                   onChange={handleNewCustomer}
                                 />
                               </li>
+                              <li className="pb-2">
+                                <input
+                                  type="text"
+                                  name="zipcode"
+                                  className="form-control font-10px mt-2 rounded-lg"
+                                  autoComplete="off"
+                                  placeholder="Zipcode"
+                                  value={orderDetails.newCustomerInfo.zipcode}
+                                  onChange={handleNewCustomer}
+                                />
+                              </li>
                               <li className="pb-1 text-right">
                                 <button
                                   className="btn t-bg-white text-dark xsm-text text-uppercase btn-sm py-0 px-2 mr-1"
@@ -4014,6 +4050,7 @@ const Pos = () => {
                                         name: "",
                                         number: "",
                                         address: "",
+                                        zipcode: "",
                                       },
                                     });
                                   }}
@@ -5224,6 +5261,20 @@ const Pos = () => {
                                                   onChange={handleNewCustomer}
                                                 />
                                               </li>
+                                              <li className="pb-2">
+                                                <input
+                                                  type="text"
+                                                  name="zipcode"
+                                                  className="form-control font-10px mt-2 rounded-lg"
+                                                  autoComplete="off"
+                                                  placeholder="Zipcode"
+                                                  value={
+                                                    orderDetails.newCustomerInfo
+                                                      .zipcode
+                                                  }
+                                                  onChange={handleNewCustomer}
+                                                />
+                                              </li>
                                               <li className="pb-1 text-right">
                                                 <button
                                                   className="btn t-bg-white text-dark xsm-text text-uppercase btn-sm py-0 px-2 mr-1"
@@ -5235,6 +5286,7 @@ const Pos = () => {
                                                         name: "",
                                                         number: "",
                                                         address: "",
+                                                        zipcode: "",
                                                       },
                                                     });
                                                   }}
@@ -6746,7 +6798,8 @@ const Pos = () => {
         <div className="fk-settle">
           <div className="container-fluid">
             <div className="row gx-3">
-              {isShow && orderDetails.payment_type &&
+              {isShow &&
+              orderDetails.payment_type &&
               orderDetails.payment_type[0].id == 2 ? (
                 <div className="col-lg-6 px-5">
                   <div className="fk-settle-cal container-fluid mt-5">
@@ -7378,7 +7431,7 @@ const Pos = () => {
                                 <button
                                   type="button"
                                   onClick={() => {
-                                    setIsShow(false)
+                                    setIsShow(false);
                                     setShowSettle(false);
                                   }}
                                   className="w-100 t-text-dark t-heading-font btn alert alert-danger font-weight-bold text-uppercase py-3 mb-3"
@@ -7409,8 +7462,9 @@ const Pos = () => {
                                           }`}
                                           onClick={() => {
                                             handleSetpaymentTypeSingle(
-                                              groupItem
-                                            );
+                                                groupItem
+                                              );
+                                             
                                           }}
                                         >
                                           {groupItem.name}
