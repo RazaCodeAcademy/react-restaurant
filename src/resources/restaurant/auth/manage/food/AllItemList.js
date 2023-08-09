@@ -196,7 +196,7 @@ const AllItemList = () => {
       selectedAllergies.map((pItem) => {
         updatedAllergies.push(pItem.name);
       });
-      updatedAllergies = updatedAllergies.join(",");
+      updatedAllergies = updatedAllergies.join(", ");
     }
     
     let formData = {

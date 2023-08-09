@@ -46,7 +46,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import StripeForm from "../../payment/StripeForm";
 
 const public_key =
-  "pk_test_51HeMxMGahXUsew7kgRWCjly9sFZQOImZzSHExaYqxd8jmFUl8psNrqhq5BXVZvNQ427YUQNpxwmoPX3gHRlY58lr00d78CtYbD";
+  "pk_live_51NPm09GqyM3ux2URac4Gt7OXMCDgAHcccZcUJuXePIkbX3t87JWLGY6tCftGnPt3HTP1GE3qTBRrqLqIOZiLDqpY00AwrygRj0";
 
 const stripeTestPromise = loadStripe(public_key);
 // import StripeCheckout from "react-stripe-checkout";
@@ -2306,6 +2306,11 @@ const Pos = () => {
                           {orderDetails.newCustomerInfo &&
                             orderDetails.newCustomerInfo.number}
                         </p>
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Zipcode :{" "}
+                          {orderDetails.newCustomerInfo &&
+                            orderDetails.newCustomerInfo.zipcode}
+                        </p>
                       </>
                     ) : (
                       <>
@@ -2325,6 +2330,11 @@ const Pos = () => {
                           Customer Phone :{" "}
                           {orderDetails.customer &&
                             orderDetails.customer.phn_no}
+                        </p>
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Zipcode :{" "}
+                          {orderDetails.customer &&
+                            orderDetails.customer.zipcode}
                         </p>
                       </>
                     )}

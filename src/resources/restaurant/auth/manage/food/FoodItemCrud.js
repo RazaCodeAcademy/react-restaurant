@@ -207,7 +207,7 @@ const FoodItemCrud = () => {
       newItem.allergies.map((pItem) => {
         tempArray.push(pItem.name);
       });
-      formData.append("allergies", tempArray.join(','));
+      formData.append("allergies", tempArray.join(', '));
     }
 
     formData.append("hasVariation", newItem.hasVariation === true ? 1 : 0);
