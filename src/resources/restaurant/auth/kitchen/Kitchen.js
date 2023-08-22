@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 import { NavLink } from "react-router-dom";
 
 //axios and base url
@@ -6,7 +7,12 @@ import axios from "axios";
 import { BASE_URL } from "../../../../BaseUrl";
 
 //functions
-import { _t, getCookie } from "../../../../functions/Functions";
+import {
+  _t,
+  getCookie,
+  getSystemSettings,
+  formatPrice,
+} from "../../../../functions/Functions";
 import { useTranslation } from "react-i18next";
 
 //3rd party packages
@@ -23,6 +29,8 @@ import Countdown from "react-countdown-now";
 //importing context consumer here
 import { RestaurantContext } from "../../../../contexts/Restaurant";
 import { FoodContext } from "../../../../contexts/Food";
+import { SettingsContext } from "../../../../contexts/Settings";
+import { UserContext } from "../../../../contexts/User";
 
 const Kitchen = () => {
   const { t } = useTranslation();
@@ -35,6 +43,22 @@ const Kitchen = () => {
     loading,
     setLoading,
   } = useContext(RestaurantContext);
+
+  //getting context values here
+  const {
+    //common
+    generalSettings,
+    showManageStock,
+  } = useContext(SettingsContext);
+
+  const {
+    authUserInfo,
+    //customer
+    customerForSearch,
+    setCustomerForSearch,
+    //waiter
+    waiterForSearch,
+  } = useContext(UserContext);
 
   const {
     //food group
@@ -53,6 +77,10 @@ const Kitchen = () => {
     list: null,
     searched: false,
   });
+
+  setTimeout(() => {
+    window.location.reload();
+  }, 60000);
 
   useEffect(() => {
     //get all orders when coming to kithcen
@@ -349,18 +377,18 @@ const Kitchen = () => {
   const [itemID, setItemID] = useState(0);
   const [itemIndex, setItemIndex] = useState("");
   const [inputValue, setInputValue] = useState("");
+  const [selectedOrder, setSelectedOrder] = useState();
 
   const openModal = (item_id, index) => {
     setItemID(item_id);
     setItemIndex(index);
-    setIsOpen(prev=>!prev);
+    setIsOpen((prev) => !prev);
   };
 
   const saveAcceptOrder = () => {
-    createCounter(new Date(), inputValue, itemIndex)
+    createCounter(new Date(), inputValue, itemIndex);
     handleAcceptOrReject(itemID, inputValue, itemIndex);
-    setIsOpen(prev=>!prev);
-    
+    setIsOpen((prev) => !prev);
   };
 
   const createCounter = (serverDateTime, minutes, index) => {
@@ -370,14 +398,29 @@ const Kitchen = () => {
     const updatedData = [...kithcenNewOrders];
     updatedData[index].accepted_time = futureDateTime; // Update the remaining time
     setKithcenNewOrders(updatedData);
-  }
+  };
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
 
   const closeModal = () => {
-    setIsOpen(prev=>!prev);
+    setIsOpen((prev) => !prev);
+  };
+
+  const componentRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
+  // Function to handle printing for the selected order
+  const handlePrintOrder = (order) => {
+    console.log(order);
+    setSelectedOrder(order);
+    setTimeout(() => {
+      handlePrint(); // Trigger the printing after a brief delay
+    }, 100); // Adjust the delay as needed
   };
 
   return (
@@ -385,6 +428,463 @@ const Kitchen = () => {
       <Helmet>
         <title>{_t(t("Kitchen"))}</title>
       </Helmet>
+      <div className="d-none">
+        <div ref={componentRef}>
+          <h1>{selectedOrder ? console.log(selectedOrder) : ""}</h1>
+        </div>
+        <div ref={componentRef}>
+          {selectedOrder && (
+            <div className="fk-print">
+              <div className="container">
+                <div className="row">
+                  <div className="col-12">
+                    <span className="d-block fk-print-text font-weight-bold text-uppercase text-center sm-text">
+                      {getSystemSettings(generalSettings, "siteName")}
+                      {","}
+                      {selectedOrder &&
+                        selectedOrder.branch_name}
+                    </span>
+                    <p className="mb-0 sm-text fk-print-text text-center text-capitalize">
+                      {selectedOrder &&
+                        selectedOrder.branch !== null &&
+                        selectedOrder.branch}
+                    </p>
+                    <p className="mb-0 sm-text fk-print-text text-center text-capitalize">
+                      {_t(t("call"))}:{" "}
+                      {selectedOrder &&
+                      selectedOrder.branch !== null &&
+                      selectedOrder.branch
+                        ? selectedOrder.branch
+                        : ""}
+                    </p>
+                    <p className="mb-0 sm-text fk-print-text text-center text-capitalize">
+                      {getSystemSettings(generalSettings, "type_print_heading")}
+                    </p>
+                    <span className="d-block fk-print-text text-uppercase text-center lg-text myBorderTopCustomer">
+                      {_t(t("Token No"))}-
+                      {selectedOrder && selectedOrder.token.id}
+                    </span>
+                    <p className="mb-0 fk-print-text text-capitalize lg-text">
+                      {selectedOrder &&
+                        selectedOrder.dept_tag &&
+                        selectedOrder.dept_tag.name}
+                    </p>
+                    {selectedOrder.newCustomer ? (
+                      <>
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Name :{" "}
+                          {selectedOrder &&
+                            selectedOrder.customer_name}
+                        </p>
+                        {/* <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Address :{" "}
+                          {selectedOrder.newCustomerInfo &&
+                            selectedOrder.newCustomerInfo.address}
+                        </p>
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Phone :{" "}
+                          {selectedOrder.newCustomerInfo &&
+                            selectedOrder.newCustomerInfo.number}
+                        </p>
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Zipcode :{" "}
+                          {selectedOrder.newCustomerInfo &&
+                            selectedOrder.newCustomerInfo.zipcode}
+                        </p> */}
+                      </>
+                    ) : (
+                      <>
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Name :{" "}
+                          {selectedOrder &&
+                            selectedOrder.customer_name}
+                        </p>
+                        {/* <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Address :{" "}
+                          {selectedOrder.customer &&
+                            selectedOrder.customer.address}
+                        </p>
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Phone :{" "}
+                          {selectedOrder.customer &&
+                            selectedOrder.customer.phn_no}
+                        </p>
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Zipcode :{" "}
+                          {selectedOrder.customer &&
+                            selectedOrder.customer.zipcode}
+                        </p> */}
+                      </>
+                    )}
+
+                    {/* <p className="mb-0 xsm-text fk-print-text text-capitalize">
+                      {_t(t("Vat reg"))}: {_t(t("Applied"))}
+                    </p> */}
+                    <p className="mb-0 xsm-text fk-print-text text-capitalize">
+                      {_t(t("date"))}: <Moment format="LL">{new Date()}</Moment>
+                      {", "}
+                      {selectedOrder && (
+                        <Moment format="LT">{selectedOrder.token.time}</Moment>
+                      )}
+                    </p>
+                    <p className="mb-0 xsm-text fk-print-text text-capitalize">
+                      {_t(t("Total guests"))}:{" "}
+                      {selectedOrder && selectedOrder.total_guest}
+                    </p>
+
+                    {selectedOrder && selectedOrder !== null ? (
+                      <p className="mb-0 xsm-text fk-print-text text-capitalize">
+                        {_t(t("waiter name"))}: {selectedOrder.waiter_name}
+                      </p>
+                    ) : (
+                      ""
+                    )}
+
+                    <p className="mb-0 sm-text fk-print-text text-capitalize lg-text">
+                      {"UNPAID"}
+                    </p>
+
+                    <table className="table mb-0 table-borderless akash-table-for-print-padding">
+                      <thead>
+                        <tr>
+                          <th
+                            scope="col"
+                            className="fk-print-text xsm-text text-capitalize"
+                          >
+                            {_t(t("qty"))} {_t(t("item"))}
+                          </th>
+                          <th
+                            scope="col"
+                            className="fk-print-text xsm-text text-capitalize text-right"
+                          >
+                            {_t(t("T"))}.{_t(t("price"))}
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        {selectedOrder.orderedItems.map(
+                          (printItem, printItemIndex) => {
+                            return (
+                              <tr>
+                                <td className="fk-print-text xsm-text text-capitalize">
+                                  <div className="d-flex flex-wrap">
+                                    <span className="d-inline-block xsm-text">
+                                      -{printItem.quantity}{" "}
+                                      {printItem.food_item}
+                                      {printItem.note && <span><b> Note:</b> {printItem.note}</span>}
+                                      {parseInt(
+                                        printItem.has_variation
+                                      ) === 1 &&
+                                        printItem.variation &&
+                                        "(" +
+                                          printItem.variation.variation_name +
+                                          ")"}
+                                    </span>
+                                  </div>
+
+                                  {/* properties */}
+                                  {/* {printItem.properties &&
+                                  printItem.properties.length > 0 &&
+                                  selectedPropertyGroup[printItemIndex] !==
+                                    undefined &&
+                                  selectedPropertyGroup[printItemIndex].map(
+                                    (thisIsGroup) => {
+                                      let theGroup =
+                                        propertyGroupForSearch &&
+                                        propertyGroupForSearch.find(
+                                          (theItem) => {
+                                            return theItem.id === thisIsGroup;
+                                          }
+                                        );
+                                      return (
+                                        <div className="d-block">
+                                          {printItem.properties.map(
+                                            (propertyName, propertyIndex) => {
+                                              if (
+                                                parseInt(
+                                                  propertyName.item
+                                                    .property_group_id
+                                                ) === theGroup.id
+                                              ) {
+                                                return (
+                                                  <span className="text-capitalize xsm-text d-inline-block mr-1">
+                                                    -{printItem.quantity}
+                                                    {propertyName.quantity > 1
+                                                      ? "*" +
+                                                        propertyName.quantity
+                                                      : ""}{" "}
+                                                    {propertyName.item.name}
+                                                    <br />
+                                                  </span>
+                                                );
+                                              } else {
+                                                return true;
+                                              }
+                                            }
+                                          )}
+                                        </div>
+                                      );
+                                    }
+                                  )} */}
+                                </td>
+                                <td className="fk-print-text xsm-text text-capitalize text-right">
+                                  <div className="d-block xsm-text">
+                                    {/* {showPriceOfEachOrderItemPrint(
+                                    printItemIndex
+                                  )} */}
+                                  </div>
+
+                                  {/* {printItem.properties &&
+                                  printItem.properties.length > 0 &&
+                                  selectedPropertyGroup[printItemIndex] !==
+                                    undefined &&
+                                  selectedPropertyGroup[printItemIndex].map(
+                                    (
+                                      thisIsGroup,
+                                      thisIsGroupPaddingTopIndex
+                                    ) => {
+                                      let theGroup =
+                                        propertyGroupForSearch &&
+                                        propertyGroupForSearch.find(
+                                          (theItem) => {
+                                            return theItem.id === thisIsGroup;
+                                          }
+                                        );
+                                      return (
+                                        <div
+                                          className={`text-capitalize d-block xsm-text ${
+                                            thisIsGroupPaddingTopIndex === 0
+                                              ? [
+                                                  parseInt(
+                                                    printItem.item.has_variation
+                                                  ) === 1
+                                                    ? [
+                                                        printItem.properties &&
+                                                        printItem.properties
+                                                          .length > 0
+                                                          ? "addonPadding35"
+                                                          : "addonPadding24",
+                                                      ]
+                                                    : [
+                                                        printItem.properties &&
+                                                        printItem.properties
+                                                          .length > 0
+                                                          ? "addonPadding24"
+                                                          : "",
+                                                      ],
+                                                ]
+                                              : ""
+                                          }`}
+                                        >
+                                          {printItem.properties.map(
+                                            (propertyName, propertyIndex) => {
+                                              if (
+                                                parseInt(
+                                                  propertyName.item
+                                                    .property_group_id
+                                                ) === theGroup.id
+                                              ) {
+                                                return (
+                                                  <span>
+                                                    {formatPrice(
+                                                      printItem.quantity *
+                                                        propertyName.quantity *
+                                                        propertyName.item
+                                                          .extra_price
+                                                    )}
+                                                    <br />
+                                                  </span>
+                                                );
+                                              } else {
+                                                return true;
+                                              }
+                                            }
+                                          )}
+                                        </div>
+                                      );
+                                    }
+                                  )} */}
+                                </td>
+                              </tr>
+                            );
+                          }
+                        )}
+                      </tbody>
+                    </table>
+                    <div className="myBorder"></div>
+                    <table className="table mb-0 table-borderless">
+                      <tbody>
+                        <tr>
+                          <th className="fk-print-text xsm-text text-capitalize">
+                            <span className="d-block">{_t(t("total"))}</span>
+                          </th>
+                          <td className="fk-print-text xsm-text text-capitalize text-right">
+                            { selectedOrder.order_bill}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    {selectedOrder.vat > 0 && (
+                      <table className="table mb-0 table-borderless">
+                        <tbody>
+                            <tr>
+                              <th className="fk-print-text xsm-text">
+                                <span className="d-block xsm-text">
+                                  TAX({selectedOrder.vat}
+                                  %)
+                                </span>
+                              </th>
+                              <td className="fk-print-text xsm-text text-capitalize text-right">
+                                {selectedOrder.vat}
+                              </td>
+                            </tr>
+                        </tbody>
+                      </table>
+                    )}
+
+                    {getSystemSettings(generalSettings, "sDiscount") ===
+                      "flat" && (
+                      <>
+                        {selectedOrder.serviceCharge > 0 && (
+                          <table className="table mb-0 table-borderless">
+                            <tbody>
+                              <tr>
+                                <th className="fk-print-text xsm-text text-capitalize">
+                                  <span className="d-block">
+                                    {_t(t("S.Charge"))}
+                                  </span>
+                                </th>
+
+                                {selectedOrder && (
+                                  <td className="fk-print-text xsm-text text-capitalize text-right">
+                                    {formatPrice(selectedOrder.serviceCharge)}
+                                  </td>
+                                )}
+                              </tr>
+                            </tbody>
+                          </table>
+                        )}
+
+                        {selectedOrder.discount > 0 && (
+                          <table className="table mb-0 table-borderless">
+                            <tbody>
+                              <tr>
+                                <th className="fk-print-text xsm-text text-capitalize">
+                                  <span className="d-block">
+                                    {_t(t("discount"))}
+                                  </span>
+                                </th>
+                                {selectedOrder && (
+                                  <td className="fk-print-text xsm-text text-capitalize text-right">
+                                    {formatPrice(selectedOrder.discount)}
+                                  </td>
+                                )}
+                              </tr>
+                            </tbody>
+                          </table>
+                        )}
+                      </>
+                    )}
+
+                    {getSystemSettings(generalSettings, "sDiscount") ===
+                      "percentage" && (
+                      <>
+                        {selectedOrder.serviceCharge > 0 && (
+                          <table className="table mb-0 table-borderless">
+                            <tbody>
+                              <tr>
+                                <th className="fk-print-text xsm-text text-capitalize">
+                                  <span className="d-block">
+                                    {_t(t("S.Charge"))}
+                                    {selectedOrder &&
+                                      "(" + selectedOrder.serviceCharge + "%)"}
+                                  </span>
+                                </th>
+
+                                {selectedOrder && (
+                                  <td className="fk-print-text xsm-text text-capitalize text-right">
+                                    {formatPrice(
+                                      selectedOrder.theSubTotal *
+                                        (selectedOrder.serviceCharge / 100)
+                                    )}
+                                  </td>
+                                )}
+                              </tr>
+                            </tbody>
+                          </table>
+                        )}
+
+                        {selectedOrder.discount > 0 && (
+                          <table className="table mb-0 table-borderless">
+                            <tbody>
+                              <tr>
+                                <th className="fk-print-text xsm-text text-capitalize">
+                                  <span className="d-block">
+                                    {_t(t("discount"))}
+                                    {selectedOrder &&
+                                      "(" + selectedOrder.discount + "%)"}
+                                  </span>
+                                </th>
+                                {selectedOrder && (
+                                  <td className="fk-print-text xsm-text text-capitalize text-right">
+                                    {formatPrice(
+                                      selectedOrder.theSubTotal *
+                                        (selectedOrder.discount / 100)
+                                    )}
+                                  </td>
+                                )}
+                              </tr>
+                            </tbody>
+                          </table>
+                        )}
+                      </>
+                    )}
+
+                    <div className="myBorder"></div>
+                    <table className="table mb-0 table-borderless">
+                      <tbody>
+                        <tr>
+                          <th className="fk-print-text xsm-text text-capitalize">
+                            <span className="d-block">
+                              {_t(t("grand total"))}
+                            </span>
+                          </th>
+                          <td className="fk-print-text xsm-text text-capitalize text-right">
+                            {selectedOrder.total_payable}
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="fk-print-text xsm-text text-capitalize">
+                            <span className="d-block">
+                              {_t(t("Return Amount"))}
+                            </span>
+                          </th>
+                          <td className="fk-print-text xsm-text text-capitalize text-right">
+                            {0.00}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <div className="myBorder"></div>
+                    <p className="mb-0 xsm-text fk-print-text text-center text-capitalize">
+                      {getSystemSettings(generalSettings, "type_print_footer")}
+                    </p>
+                    <p className="mb-0 xsm-text fk-print-text text-capitalize text-center">
+                      {_t(t("bill prepared by"))}:{" "}
+                      {authUserInfo &&
+                        authUserInfo.details &&
+                        authUserInfo.details.name}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
       <div>
         {isOpen && (
           <div className="modal-overlay">
@@ -438,7 +938,7 @@ const Kitchen = () => {
                     </li>
                   </ul>
                 </div>
-                <div className="col-md-2">
+                {/* <div className="col-md-2">
                   <NavLink
                     to="/dashboard/kitchen/online"
                     onClick={() => {
@@ -452,7 +952,7 @@ const Kitchen = () => {
                   >
                     {_t(t("Online Orders"))}
                   </NavLink>
-                </div>
+                </div> */}
                 <div className="col-md-2">
                   <button
                     type="button"
@@ -518,9 +1018,18 @@ const Kitchen = () => {
                                     type="button"
                                     className="btn btn-danger xsm-text text-uppercase btn-lg mr-2"
                                   >
-                                    <Countdown date={new Date(item.accepted_time)} />
+                                    <Countdown
+                                      date={new Date(item.accepted_time)}
+                                    />
                                   </button>
                                 )}
+                                <button
+                                  type="button"
+                                  className="btn btn-success xsm-text text-uppercase btn-lg mr-2"
+                                  onClick={() => handlePrintOrder(item)}
+                                >
+                                  {_t(t("Print Slip"))}
+                                </button>
                                 <button
                                   type="button"
                                   className="btn btn-success xsm-text text-uppercase btn-lg mr-2"
@@ -830,7 +1339,9 @@ const Kitchen = () => {
                                     type="button"
                                     className="btn btn-danger xsm-text text-uppercase btn-lg mr-2"
                                   >
-                                    <Countdown date={new Date(item.accepted_time)} />
+                                    <Countdown
+                                      date={new Date(item.accepted_time)}
+                                    />
                                   </button>
                                 )}
                                 <button

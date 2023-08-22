@@ -325,9 +325,31 @@ const Pos = () => {
     if (branchForSearch && branchForSearch.length > 0) {
       setTimeout(() => {
         handleSetBranch(branchForSearch[0], customerForSearch); // Pass customerForSearch as an argument
-      }, 400);
+      }, 1000);
     }
   }, [authUserInfo, generalSettings, foodForSearch, foodGroupForSearch]);
+
+  //search food here
+  // const handleSearch = (e) => {
+  //   let searchInput = e.target.value.toLowerCase();
+  //   if (searchInput.length === 0) {
+  //     setSearchedFoodItem({ ...searchedFoodItem, searched: false });
+  //   } else {
+  //     let searchedList = foodForSearch.filter((item) => {
+  //       let lowerCaseItemName = item.name.toLowerCase();
+  //       let lowerCaseItemGroup = item.food_group.toLowerCase();
+  //       return (
+  //         lowerCaseItemName.includes(searchInput) ||
+  //         lowerCaseItemGroup.includes(searchInput)
+  //       );
+  //     });
+  //     setSearchedFoodItem({
+  //       ...searchedFoodItem,
+  //       list: searchedList,
+  //       searched: true,
+  //     });
+  //   }
+  // };
 
   //stock
   const handleGetStock = (id) => {
@@ -1584,9 +1606,9 @@ const Pos = () => {
   const [paymentAmount, setPaymentAmount] = useState(0);
   const [isShow, setIsShow] = useState(false);
   const checkPaymentIsStripe = () => {
-    setIsShow(true);
+    localStorage.setItem("payment_amount", totalPayable.toString());
     if (paymentType == 2) {
-      if (orderDetails.payment_type) {
+      // if (orderDetails.payment_type) {
         // const tempPaymentType = orderDetails.payment_type;
         // setOrderDetails({
         //   ...orderDetails,
@@ -1598,8 +1620,7 @@ const Pos = () => {
         //     payment_type: [tempPaymentType],
         //   });
         // }, 500);
-      }
-      localStorage.setItem("payment_amount", totalPayable.toString());
+      // }
       localStorage.setItem("newOrder", JSON.stringify(newOrder));
       localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
       localStorage.setItem("newSettings", JSON.stringify(newSettings));
@@ -1607,6 +1628,7 @@ const Pos = () => {
       localStorage.setItem("theVat", theVat.toString());
       // history.push(`/dashboard/manage/stripe/payment`);
     }
+    setIsShow(true);
   };
 
   //payment type pos 2
@@ -1900,6 +1922,7 @@ const Pos = () => {
 
   //handle settle order
   const handleSettleOrder = (e) => {
+    checkPaymentIsStripe();
     e.preventDefault();
     if (newOrder && newOrder.length > 0) {
       if (paidMoney < totalPayable) {
@@ -2086,7 +2109,9 @@ const Pos = () => {
     content: () => componentRef.current,
     onAfterPrint: () => {
       if (getSystemSettings(generalSettings, "print_kitchen_bill") === "1") {
-        handlePrint2();
+        setTimeout(() => {
+          handlePrint2();
+        }, 1000);
       } else {
         handleOrderSubmitSuccessful();
       }
@@ -2095,7 +2120,7 @@ const Pos = () => {
 
   //for kithcen
   const handlePrint2 = useReactToPrint({
-    content: () => component2Ref.current,
+    content: () => componentRef.current,
     onAfterPrint: () => {
       handleOrderSubmitSuccessful();
     },
@@ -2285,7 +2310,6 @@ const Pos = () => {
                         orderDetails.dept_tag &&
                         orderDetails.dept_tag.name}
                     </p>
-                    {console.log(orderDetails)}
                     {orderDetails.newCustomer ? (
                       <>
                         <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize text-center">
@@ -4489,6 +4513,9 @@ const Pos = () => {
                       </div> */}
                       <div className="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
                         <div className="row align-items-center gx-2">
+                          <div className="col">
+                          <input type="text" className="form-control" placeholder="Search item type..." onChange={handleSearch}></input>
+                          </div>
                           <div className="col">
                             {window.location.pathname ===
                             "/dashboard/pos/settled" ? (

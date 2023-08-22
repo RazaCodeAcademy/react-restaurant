@@ -666,8 +666,6 @@ const CustomerCrud = () => {
                                 <button
                                   type="button"
                                   className="btn btn-primary xsm-text text-uppercase btn-lg btn-block"
-                                  data-toggle="modal"
-                                  data-target="#addCustomer"
                                   onClick={() => {
                                     handleFileUpload()
                                   }}
