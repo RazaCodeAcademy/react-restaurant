@@ -327,6 +327,9 @@ const Pos = () => {
         handleSetBranch(branchForSearch[0], customerForSearch); // Pass customerForSearch as an argument
       }, 1000);
     }
+    // if (branchForSearch && branchForSearch.length > 0) {
+    //   handleSetBranch(branchForSearch[0], customerForSearch);
+    // }
   }, [authUserInfo, generalSettings, foodForSearch, foodGroupForSearch]);
 
   //search food here
@@ -383,11 +386,25 @@ const Pos = () => {
 
   const [inputValue, setInputValue] = useState("");
 
+  // const handleKitchenNote = (event) => {
+  //   setInputValue(event.target.value);
+  //   if (activeItemInOrder != null) {
+  //     let updated = [...newOrder];
+  //     updated[activeItemInOrder].item.note = event.target.value;
+  //     setNewOrder(updated);
+  //   }
+  // };
+
   const handleKitchenNote = (event) => {
     setInputValue(event.target.value);
     if (activeItemInOrder != null) {
-      let updated = [...newOrder];
+      // Create a deep copy of the newOrder array
+      let updated = JSON.parse(JSON.stringify(newOrder));
+  
+      // Update the kitchen note of the specific item in the cloned array
       updated[activeItemInOrder].item.note = event.target.value;
+  
+      // Update the state with the cloned and updated array
       setNewOrder(updated);
     }
   };
@@ -2108,13 +2125,13 @@ const Pos = () => {
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
     onAfterPrint: () => {
-      if (getSystemSettings(generalSettings, "print_kitchen_bill") === "1") {
-        setTimeout(() => {
-          handlePrint2();
-        }, 1000);
-      } else {
+      // if (getSystemSettings(generalSettings, "print_kitchen_bill") === "1") {
+      //   setTimeout(() => {
+      //     handlePrint2();
+      //   }, 1000);
+      // } else {
         handleOrderSubmitSuccessful();
-      }
+      // }
     },
   });
 
@@ -2305,78 +2322,16 @@ const Pos = () => {
                       {_t(t("Token No"))}-
                       {orderDetails && orderDetails.token.id}
                     </span>
-                    <p className="mb-0 fk-print-text text-capitalize lg-text">
+                    <p className="mb-0 fk-print-text text-capitalize lg-text text-center">
                       {orderDetails &&
                         orderDetails.dept_tag &&
                         orderDetails.dept_tag.name}
                     </p>
-                    {orderDetails.newCustomer ? (
-                      <>
-                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize text-center">
-                          {_t(t("Customer Copy"))}
-                        </p>
-                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Name :{" "}
-                          {orderDetails.newCustomerInfo &&
-                            orderDetails.newCustomerInfo.name}
-                        </p>
-                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Address :{" "}
-                          {orderDetails.newCustomerInfo &&
-                            orderDetails.newCustomerInfo.address}
-                        </p>
-                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Phone :{" "}
-                          {orderDetails.newCustomerInfo &&
-                            orderDetails.newCustomerInfo.number}
-                        </p>
-                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Zipcode :{" "}
-                          {orderDetails.newCustomerInfo &&
-                            orderDetails.newCustomerInfo.zipcode}
-                        </p>
-                      </>
-                    ) : (
-                      <>
-                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize text-center">
-                          {_t(t("Customer Copy"))}
-                        </p>
-                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Name :{" "}
-                          {orderDetails.customer && orderDetails.customer.name}
-                        </p>
-                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Address :{" "}
-                          {orderDetails.customer &&
-                            orderDetails.customer.address}
-                        </p>
-                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Phone :{" "}
-                          {orderDetails.customer &&
-                            orderDetails.customer.phn_no}
-                        </p>
-                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Zipcode :{" "}
-                          {orderDetails.customer &&
-                            orderDetails.customer.zipcode}
-                        </p>
-                      </>
-                    )}
 
                     {/* <p className="mb-0 xsm-text fk-print-text text-capitalize">
                       {_t(t("Vat reg"))}: {_t(t("Applied"))}
                     </p> */}
-                    <p className="mb-0 xsm-text fk-print-text text-capitalize">
-                      {_t(t("date"))}: <Moment format="LL">{new Date()}</Moment>
-                      {", "}
-                      {orderDetails && (
-                        <Moment format="LT">{orderDetails.token.time}</Moment>
-                      )}
-                    </p>
-                    <p className="mb-0 xsm-text fk-print-text text-capitalize">
-                      {_t(t("Total guests"))}:{" "}
-                      {orderDetails && orderDetails.total_guest}
-                    </p>
+                    
 
                     {orderDetails && orderDetails.waiter !== null ? (
                       <p className="mb-0 xsm-text fk-print-text text-capitalize">
@@ -2386,7 +2341,7 @@ const Pos = () => {
                       ""
                     )}
 
-                    <p className="mb-0 sm-text fk-print-text text-capitalize lg-text">
+                    <p className="mb-0 sm-text fk-print-text text-capitalize lg-text text-center">
                       {paymentType &&
                         paymentType == 1
                         ? "UNPAID"
@@ -2398,13 +2353,15 @@ const Pos = () => {
                         <tr>
                           <th
                             scope="col"
-                            className="fk-print-text xsm-text text-capitalize"
+                            className="fk-print-text text-capitalize"
+                            style={{fontSize: '14px'}}
                           >
                             {_t(t("qty"))} {_t(t("item"))}
                           </th>
                           <th
                             scope="col"
-                            className="fk-print-text xsm-text text-capitalize text-right"
+                            className="fk-print-text text-capitalize text-right"
+                            style={{fontSize: '14px'}}
                           >
                             {_t(t("T"))}.{_t(t("price"))}
                           </th>
@@ -2415,10 +2372,11 @@ const Pos = () => {
                         {newOrder.map((printItem, printItemIndex) => {
                           return (
                             <tr>
-                              <td className="fk-print-text xsm-text text-capitalize">
+                              <td className="fk-print-text text-capitalize" style={{fontSize: '14px'}}>
                                 <div className="d-flex flex-wrap">
-                                  <span className="d-inline-block xsm-text">
+                                  <span className="d-inline-block" style={{fontSize: '14px'}}>
                                     -{printItem.quantity} {printItem.item.name}
+                                    {printItem.item.note && <span><b> Note:</b> {printItem.item.note}</span>}
                                     {parseInt(printItem.item.has_variation) ===
                                       1 &&
                                       printItem.variation &&
@@ -2453,7 +2411,7 @@ const Pos = () => {
                                                 ) === theGroup.id
                                               ) {
                                                 return (
-                                                  <span className="text-capitalize xsm-text d-inline-block mr-1">
+                                                  <span className="text-capitalize d-inline-block mr-1" style={{fontSize: '14px'}}>
                                                     -{printItem.quantity}
                                                     {propertyName.quantity > 1
                                                       ? "*" +
@@ -2473,8 +2431,8 @@ const Pos = () => {
                                     }
                                   )}
                               </td>
-                              <td className="fk-print-text xsm-text text-capitalize text-right">
-                                <div className="d-block xsm-text">
+                              <td className="fk-print-text text-capitalize text-right" style={{fontSize: '14px'}}>
+                                <div className="d-block" style={{fontSize: '14px'}}>
                                   {showPriceOfEachOrderItemPrint(
                                     printItemIndex
                                   )}
@@ -2498,7 +2456,8 @@ const Pos = () => {
                                         );
                                       return (
                                         <div
-                                          className={`text-capitalize d-block xsm-text ${
+                                        style={{fontSize: '14px'}}
+                                          className={`text-capitalize d-block ${
                                             thisIsGroupPaddingTopIndex === 0
                                               ? [
                                                   parseInt(
@@ -2560,10 +2519,10 @@ const Pos = () => {
                     <table className="table mb-0 table-borderless">
                       <tbody>
                         <tr>
-                          <th className="fk-print-text xsm-text text-capitalize">
+                          <th className="fk-print-text text-capitalize" style={{fontSize: '14px'}}>
                             <span className="d-block">{_t(t("total"))}</span>
                           </th>
-                          <td className="fk-print-text xsm-text text-capitalize text-right">
+                          <td className="fk-print-text text-capitalize text-right" style={{fontSize: '14px'}}>
                             {formatPrice(theSubTotal)}
                           </td>
                         </tr>
@@ -2576,13 +2535,13 @@ const Pos = () => {
                           {getSystemSettings(generalSettings, "vat_system") ===
                           "igst" ? (
                             <tr>
-                              <th className="fk-print-text xsm-text">
-                                <span className="d-block xsm-text">
+                              <th className="fk-print-text" style={{fontSize: '14px'}}>
+                                <span className="d-block" style={{fontSize: '14px'}}>
                                   VAT({newSettings !== null && newSettings.vat}
                                   %)
                                 </span>
                               </th>
-                              <td className="fk-print-text xsm-text text-capitalize text-right">
+                              <td className="fk-print-text text-capitalize text-right" style={{fontSize: '14px'}}>
                                 {formatPrice(theVat)}
                               </td>
                             </tr>
@@ -2592,14 +2551,14 @@ const Pos = () => {
                             ) === "cgst" ? (
                             <>
                               <tr>
-                                <th className="fk-print-text xsm-text">
-                                  <span className="d-block xsm-text">
+                                <th className="fk-print-text" style={{fontSize: '14px'}}>
+                                  <span className="d-block" style={{fontSize: '14px'}}>
                                     CGST(
                                     {getSystemSettings(generalSettings, "cgst")}
                                     %)
                                   </span>
                                 </th>
-                                <td className="fk-print-text xsm-text text-capitalize text-right">
+                                <td className="fk-print-text text-capitalize text-right" style={{fontSize: '14px'}}>
                                   {formatPrice(
                                     theSubTotal *
                                       (parseFloat(
@@ -2613,14 +2572,14 @@ const Pos = () => {
                                 </td>
                               </tr>
                               <tr>
-                                <th className="fk-print-text xsm-text">
-                                  <span className="d-block xsm-text">
+                                <th className="fk-print-text" style={{fontSize: '14px'}}>
+                                  <span className="d-block" style={{fontSize: '14px'}}>
                                     SGST(
                                     {getSystemSettings(generalSettings, "sgst")}
                                     %)
                                   </span>
                                 </th>
-                                <td className="fk-print-text xsm-text text-capitalize text-right">
+                                <td className="fk-print-text text-capitalize text-right" style={{fontSize: '14px'}}>
                                   {formatPrice(
                                     theSubTotal *
                                       (parseFloat(
@@ -2636,13 +2595,13 @@ const Pos = () => {
                             </>
                           ) : (
                             <tr>
-                              <th className="fk-print-text xsm-text">
-                                <span className="d-block xsm-text">
+                              <th className="fk-print-text" style={{fontSize: '14px'}}>
+                                <span className="d-block" style={{fontSize: '14px'}}>
                                   TAX({newSettings !== null && newSettings.tax}
                                   %)
                                 </span>
                               </th>
-                              <td className="fk-print-text xsm-text text-capitalize text-right">
+                              <td className="fk-print-text text-capitalize text-right" style={{fontSize: '14px'}}>
                                 {formatPrice(theVat)}
                               </td>
                             </tr>
@@ -2658,14 +2617,14 @@ const Pos = () => {
                           <table className="table mb-0 table-borderless">
                             <tbody>
                               <tr>
-                                <th className="fk-print-text xsm-text text-capitalize">
+                                <th className="fk-print-text text-capitalize" style={{fontSize: '14px'}}>
                                   <span className="d-block">
                                     {_t(t("S.Charge"))}
                                   </span>
                                 </th>
 
                                 {orderDetails && (
-                                  <td className="fk-print-text xsm-text text-capitalize text-right">
+                                  <td className="fk-print-text text-capitalize text-right" style={{fontSize: '14px'}}>
                                     {formatPrice(orderDetails.serviceCharge)}
                                   </td>
                                 )}
@@ -2678,13 +2637,13 @@ const Pos = () => {
                           <table className="table mb-0 table-borderless">
                             <tbody>
                               <tr>
-                                <th className="fk-print-text xsm-text text-capitalize">
+                                <th className="fk-print-text text-capitalize" style={{fontSize: '14px'}}>
                                   <span className="d-block">
                                     {_t(t("discount"))}
                                   </span>
                                 </th>
                                 {orderDetails && (
-                                  <td className="fk-print-text xsm-text text-capitalize text-right">
+                                  <td className="fk-print-text text-capitalize text-right" style={{fontSize: '14px'}}>
                                     {formatPrice(orderDetails.discount)}
                                   </td>
                                 )}
@@ -2702,7 +2661,7 @@ const Pos = () => {
                           <table className="table mb-0 table-borderless">
                             <tbody>
                               <tr>
-                                <th className="fk-print-text xsm-text text-capitalize">
+                                <th className="fk-print-text text-capitalize" style={{fontSize: '14px'}}>
                                   <span className="d-block">
                                     {_t(t("S.Charge"))}
                                     {orderDetails &&
@@ -2711,7 +2670,7 @@ const Pos = () => {
                                 </th>
 
                                 {orderDetails && (
-                                  <td className="fk-print-text xsm-text text-capitalize text-right">
+                                  <td className="fk-print-text text-capitalize text-right" style={{fontSize: '14px'}}>
                                     {formatPrice(
                                       theSubTotal *
                                         (orderDetails.serviceCharge / 100)
@@ -2727,7 +2686,7 @@ const Pos = () => {
                           <table className="table mb-0 table-borderless">
                             <tbody>
                               <tr>
-                                <th className="fk-print-text xsm-text text-capitalize">
+                                <th className="fk-print-text text-capitalize" style={{fontSize: '14px'}}>
                                   <span className="d-block">
                                     {_t(t("discount"))}
                                     {orderDetails &&
@@ -2735,7 +2694,7 @@ const Pos = () => {
                                   </span>
                                 </th>
                                 {orderDetails && (
-                                  <td className="fk-print-text xsm-text text-capitalize text-right">
+                                  <td className="fk-print-text text-capitalize text-right" style={{fontSize: '14px'}}>
                                     {formatPrice(
                                       theSubTotal *
                                         (orderDetails.discount / 100)
@@ -2753,16 +2712,16 @@ const Pos = () => {
                     <table className="table mb-0 table-borderless">
                       <tbody>
                         <tr>
-                          <th className="fk-print-text xsm-text text-capitalize">
+                          <th className="fk-print-text text-capitalize" style={{fontSize: '14px'}}>
                             <span className="d-block">
                               {_t(t("grand total"))}
                             </span>
                           </th>
-                          <td className="fk-print-text xsm-text text-capitalize text-right">
+                          <td className="fk-print-text text-capitalize text-right" style={{fontSize: '14px'}}>
                             {formatPrice(totalPayable)}
                           </td>
                         </tr>
-                        <tr>
+                        {/* <tr>
                           <th className="fk-print-text xsm-text text-capitalize">
                             <span className="d-block">
                               {_t(t("Return Amount"))}
@@ -2771,20 +2730,86 @@ const Pos = () => {
                           <td className="fk-print-text xsm-text text-capitalize text-right">
                             {formatPrice(returnMoneyUsd)}
                           </td>
-                        </tr>
+                        </tr> */}
                       </tbody>
                     </table>
 
                     <div className="myBorder"></div>
-                    <p className="mb-0 xsm-text fk-print-text text-center text-capitalize">
+                    <p className="mb-0 fk-print-text text-center text-capitalize" style={{fontSize: '14px'}}>
                       {getSystemSettings(generalSettings, "type_print_footer")}
                     </p>
-                    <p className="mb-0 xsm-text fk-print-text text-capitalize text-center">
+                    <p className="mb-0 fk-print-text text-capitalize text-center" style={{fontSize: '14px'}}>
                       {_t(t("bill prepared by"))}:{" "}
                       {authUserInfo &&
                         authUserInfo.details &&
                         authUserInfo.details.name}
                     </p>
+
+                    {orderDetails.newCustomer ? (
+                      <>
+                      <br/>
+                        {/* <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize text-center">
+                          {_t(t("Customer Copy"))}
+                        </p> */}
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Name :{" "}
+                          {orderDetails.newCustomerInfo &&
+                            orderDetails.newCustomerInfo.name}
+                        </p>
+                        <p className="mb-0 mt-0 fk-print-text text-capitalize" style={{fontSize: '14px'}}>
+                          Customer Address :{" "}
+                          {orderDetails.newCustomerInfo &&
+                            orderDetails.newCustomerInfo.address}
+                        </p>
+                        <p className="mb-0 mt-0 fk-print-text text-capitalize" style={{fontSize: '14px'}}>
+                          Customer Phone :{" "}
+                          {orderDetails.newCustomerInfo &&
+                            orderDetails.newCustomerInfo.number}
+                        </p>
+                        <p className="mb-0 mt-0 fk-print-text text-capitalize" style={{fontSize: '14px'}}>
+                          Customer Zipcode :{" "}
+                          {orderDetails.newCustomerInfo &&
+                            orderDetails.newCustomerInfo.zipcode}
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                      <br/>
+                        {/* <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize text-center">
+                          {_t(t("Customer Copy"))}
+                        </p> */}
+                        <p className="mb-0 mt-0 fk-print-text text-capitalize" style={{fontSize: '14px'}}>
+                          Customer Name :{" "}
+                          {orderDetails.customer && orderDetails.customer.name}
+                        </p>
+                        <p className="mb-0 mt-0 fk-print-text text-capitalize" style={{fontSize: '14px'}}>
+                          Customer Address :{" "}
+                          {orderDetails.customer &&
+                            orderDetails.customer.address}
+                        </p>
+                        <p className="mb-0 mt-0 fk-print-text text-capitalize" style={{fontSize: '14px'}}>
+                          Customer Phone :{" "}
+                          {orderDetails.customer &&
+                            orderDetails.customer.phn_no}
+                        </p>
+                        <p className="mb-0 mt-0 fk-print-text text-capitalize" style={{fontSize: '14px'}}>
+                          Customer Zipcode :{" "}
+                          {orderDetails.customer &&
+                            orderDetails.customer.zipcode}
+                        </p>
+                        <p className="mb-0 fk-print-text text-capitalize" style={{fontSize: '14px'}}>
+                      {_t(t("date"))}: <Moment format="LL">{new Date()}</Moment>
+                      {", "}
+                      {orderDetails && (
+                        <Moment format="LT">{orderDetails.token.time}</Moment>
+                      )}
+                    </p>
+                    {/* <p className="mb-0 xsm-text fk-print-text text-capitalize">
+                      {_t(t("Total guests"))}:{" "}
+                      {orderDetails && orderDetails.total_guest}
+                    </p> */}
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -5059,6 +5084,9 @@ const Pos = () => {
                                           return (
                                             <div
                                               onClick={() => {
+                                                setActiveItemInOrder(
+                                                  tempFoodItemIndex
+                                                );
                                                 if (showManageStock) {
                                                   if (
                                                     handleGetStock(
@@ -5241,7 +5269,7 @@ const Pos = () => {
                                             onChange={handleSetCustomer}
                                             maxMenuHeight="200px"
                                             placeholder={
-                                              _t(t("Customer")) + ".."
+                                              _t(t("Customers")) + ".."
                                             }
                                           />
                                         </li>
@@ -5965,6 +5993,8 @@ const Pos = () => {
                                                     setActiveItemInOrder(
                                                       orderListItemIndex
                                                     );
+                                                    setInputValue(orderListItem.item
+                                                              .note)
                                                   }}
                                                 >
                                                   <div
@@ -5992,6 +6022,7 @@ const Pos = () => {
                                                             orderListItem.item
                                                               .note
                                                           }
+                                                          
                                                         </span>
                                                       </div>
 

@@ -81,7 +81,7 @@ const Kitchen = () => {
   setTimeout(() => {
     window.location.reload();
   }, 60000);
-
+ 
   useEffect(() => {
     //get all orders when coming to kithcen
     getKitchenNewOrders();
@@ -434,15 +434,14 @@ const Kitchen = () => {
         </div>
         <div ref={componentRef}>
           {selectedOrder && (
-            <div className="fk-print">
+            <div className="fk-print" style={{fontSize: '14px'}}>
               <div className="container">
                 <div className="row">
                   <div className="col-12">
                     <span className="d-block fk-print-text font-weight-bold text-uppercase text-center sm-text">
                       {getSystemSettings(generalSettings, "siteName")}
                       {","}
-                      {selectedOrder &&
-                        selectedOrder.branch_name}
+                      {selectedOrder && selectedOrder.branch_name}
                     </span>
                     <p className="mb-0 sm-text fk-print-text text-center text-capitalize">
                       {selectedOrder &&
@@ -464,83 +463,12 @@ const Kitchen = () => {
                       {_t(t("Token No"))}-
                       {selectedOrder && selectedOrder.token.id}
                     </span>
-                    <p className="mb-0 fk-print-text text-capitalize lg-text">
+                    <p className="mb-0 fk-print-text text-capitalize lg-text text-center">
                       {selectedOrder &&
-                        selectedOrder.dept_tag &&
-                        selectedOrder.dept_tag.name}
+                        selectedOrder.dept_tag_name &&
+                        selectedOrder.dept_tag_name}
                     </p>
-                    {selectedOrder.newCustomer ? (
-                      <>
-                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Name :{" "}
-                          {selectedOrder &&
-                            selectedOrder.customer_name}
-                        </p>
-                        {/* <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Address :{" "}
-                          {selectedOrder.newCustomerInfo &&
-                            selectedOrder.newCustomerInfo.address}
-                        </p>
-                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Phone :{" "}
-                          {selectedOrder.newCustomerInfo &&
-                            selectedOrder.newCustomerInfo.number}
-                        </p>
-                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Zipcode :{" "}
-                          {selectedOrder.newCustomerInfo &&
-                            selectedOrder.newCustomerInfo.zipcode}
-                        </p> */}
-                      </>
-                    ) : (
-                      <>
-                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Name :{" "}
-                          {selectedOrder &&
-                            selectedOrder.customer_name}
-                        </p>
-                        {/* <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Address :{" "}
-                          {selectedOrder.customer &&
-                            selectedOrder.customer.address}
-                        </p>
-                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Phone :{" "}
-                          {selectedOrder.customer &&
-                            selectedOrder.customer.phn_no}
-                        </p>
-                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
-                          Customer Zipcode :{" "}
-                          {selectedOrder.customer &&
-                            selectedOrder.customer.zipcode}
-                        </p> */}
-                      </>
-                    )}
-
-                    {/* <p className="mb-0 xsm-text fk-print-text text-capitalize">
-                      {_t(t("Vat reg"))}: {_t(t("Applied"))}
-                    </p> */}
-                    <p className="mb-0 xsm-text fk-print-text text-capitalize">
-                      {_t(t("date"))}: <Moment format="LL">{new Date()}</Moment>
-                      {", "}
-                      {selectedOrder && (
-                        <Moment format="LT">{selectedOrder.token.time}</Moment>
-                      )}
-                    </p>
-                    <p className="mb-0 xsm-text fk-print-text text-capitalize">
-                      {_t(t("Total guests"))}:{" "}
-                      {selectedOrder && selectedOrder.total_guest}
-                    </p>
-
-                    {selectedOrder && selectedOrder !== null ? (
-                      <p className="mb-0 xsm-text fk-print-text text-capitalize">
-                        {_t(t("waiter name"))}: {selectedOrder.waiter_name}
-                      </p>
-                    ) : (
-                      ""
-                    )}
-
-                    <p className="mb-0 sm-text fk-print-text text-capitalize lg-text">
+                    <p className="mb-0 sm-text fk-print-text text-capitalize lg-text text-center">
                       {"UNPAID"}
                     </p>
 
@@ -550,12 +478,14 @@ const Kitchen = () => {
                           <th
                             scope="col"
                             className="fk-print-text xsm-text text-capitalize"
+                            style={{fontSize: '14px'}}
                           >
                             {_t(t("qty"))} {_t(t("item"))}
                           </th>
                           <th
                             scope="col"
                             className="fk-print-text xsm-text text-capitalize text-right"
+                            style={{fontSize: '14px'}}
                           >
                             {_t(t("T"))}.{_t(t("price"))}
                           </th>
@@ -567,15 +497,18 @@ const Kitchen = () => {
                           (printItem, printItemIndex) => {
                             return (
                               <tr>
-                                <td className="fk-print-text xsm-text text-capitalize">
+                                <td className="fk-print-text text-capitalize">
                                   <div className="d-flex flex-wrap">
-                                    <span className="d-inline-block xsm-text">
+                                    <span className="d-inline-block" style={{fontSize: '14px'}}>
                                       -{printItem.quantity}{" "}
                                       {printItem.food_item}
-                                      {printItem.note && <span><b> Note:</b> {printItem.note}</span>}
-                                      {parseInt(
-                                        printItem.has_variation
-                                      ) === 1 &&
+                                      {printItem.note && (
+                                        <span>
+                                          <b> Note:</b> {printItem.note}
+                                        </span>
+                                      )}
+                                      {parseInt(printItem.has_variation) ===
+                                        1 &&
                                         printItem.variation &&
                                         "(" +
                                           printItem.variation.variation_name +
@@ -716,11 +649,11 @@ const Kitchen = () => {
                     <table className="table mb-0 table-borderless">
                       <tbody>
                         <tr>
-                          <th className="fk-print-text xsm-text text-capitalize">
+                          <th className="fk-print-text text-capitalize" style={{fontSize: '14px'}}>
                             <span className="d-block">{_t(t("total"))}</span>
                           </th>
-                          <td className="fk-print-text xsm-text text-capitalize text-right">
-                            { selectedOrder.order_bill}
+                          <td className="fk-print-text text-capitalize text-right" style={{fontSize: '14px'}}>
+                            {selectedOrder.order_bill}
                           </td>
                         </tr>
                       </tbody>
@@ -729,17 +662,17 @@ const Kitchen = () => {
                     {selectedOrder.vat > 0 && (
                       <table className="table mb-0 table-borderless">
                         <tbody>
-                            <tr>
-                              <th className="fk-print-text xsm-text">
-                                <span className="d-block xsm-text">
-                                  TAX({selectedOrder.vat}
-                                  %)
-                                </span>
-                              </th>
-                              <td className="fk-print-text xsm-text text-capitalize text-right">
-                                {selectedOrder.vat}
-                              </td>
-                            </tr>
+                          <tr>
+                            <th className="fk-print-text" style={{fontSize: '14px'}}>
+                              <span className="d-block" style={{fontSize: '14px'}}>
+                                TAX({selectedOrder.vat}
+                                %)
+                              </span>
+                            </th>
+                            <td className="fk-print-text text-capitalize text-right" style={{fontSize: '14px'}}>
+                              {selectedOrder.vat}
+                            </td>
+                          </tr>
                         </tbody>
                       </table>
                     )}
@@ -751,14 +684,14 @@ const Kitchen = () => {
                           <table className="table mb-0 table-borderless">
                             <tbody>
                               <tr>
-                                <th className="fk-print-text xsm-text text-capitalize">
+                                <th className="fk-print-text text-capitalize" style={{fontSize: '14px'}}>
                                   <span className="d-block">
                                     {_t(t("S.Charge"))}
                                   </span>
                                 </th>
 
                                 {selectedOrder && (
-                                  <td className="fk-print-text xsm-text text-capitalize text-right">
+                                  <td className="fk-print-text text-capitalize text-right" style={{fontSize: '14px'}}>
                                     {formatPrice(selectedOrder.serviceCharge)}
                                   </td>
                                 )}
@@ -771,13 +704,13 @@ const Kitchen = () => {
                           <table className="table mb-0 table-borderless">
                             <tbody>
                               <tr>
-                                <th className="fk-print-text xsm-text text-capitalize">
+                                <th className="fk-print-text text-capitalize" style={{fontSize: '14px'}}>
                                   <span className="d-block">
                                     {_t(t("discount"))}
                                   </span>
                                 </th>
                                 {selectedOrder && (
-                                  <td className="fk-print-text xsm-text text-capitalize text-right">
+                                  <td className="fk-print-text text-capitalize text-right" style={{fontSize: '14px'}}>
                                     {formatPrice(selectedOrder.discount)}
                                   </td>
                                 )}
@@ -795,7 +728,7 @@ const Kitchen = () => {
                           <table className="table mb-0 table-borderless">
                             <tbody>
                               <tr>
-                                <th className="fk-print-text xsm-text text-capitalize">
+                                <th className="fk-print-text text-capitalize" style={{fontSize: '14px'}}>
                                   <span className="d-block">
                                     {_t(t("S.Charge"))}
                                     {selectedOrder &&
@@ -804,7 +737,7 @@ const Kitchen = () => {
                                 </th>
 
                                 {selectedOrder && (
-                                  <td className="fk-print-text xsm-text text-capitalize text-right">
+                                  <td className="fk-print-text text-capitalize text-right" style={{fontSize: '14px'}}>
                                     {formatPrice(
                                       selectedOrder.theSubTotal *
                                         (selectedOrder.serviceCharge / 100)
@@ -820,7 +753,7 @@ const Kitchen = () => {
                           <table className="table mb-0 table-borderless">
                             <tbody>
                               <tr>
-                                <th className="fk-print-text xsm-text text-capitalize">
+                                <th className="fk-print-text text-capitalize" style={{fontSize: '14px'}}>
                                   <span className="d-block">
                                     {_t(t("discount"))}
                                     {selectedOrder &&
@@ -828,7 +761,7 @@ const Kitchen = () => {
                                   </span>
                                 </th>
                                 {selectedOrder && (
-                                  <td className="fk-print-text xsm-text text-capitalize text-right">
+                                  <td className="fk-print-text text-capitalize text-right" style={{fontSize: '14px'}}>
                                     {formatPrice(
                                       selectedOrder.theSubTotal *
                                         (selectedOrder.discount / 100)
@@ -846,16 +779,16 @@ const Kitchen = () => {
                     <table className="table mb-0 table-borderless">
                       <tbody>
                         <tr>
-                          <th className="fk-print-text xsm-text text-capitalize">
+                          <th className="fk-print-text text-capitalize" style={{fontSize: '14px'}}>
                             <span className="d-block">
                               {_t(t("grand total"))}
                             </span>
                           </th>
-                          <td className="fk-print-text xsm-text text-capitalize text-right">
+                          <td className="fk-print-text text-capitalize text-right" style={{fontSize: '14px'}}>
                             {selectedOrder.total_payable}
                           </td>
                         </tr>
-                        <tr>
+                        {/* <tr>
                           <th className="fk-print-text xsm-text text-capitalize">
                             <span className="d-block">
                               {_t(t("Return Amount"))}
@@ -864,20 +797,89 @@ const Kitchen = () => {
                           <td className="fk-print-text xsm-text text-capitalize text-right">
                             {0.00}
                           </td>
-                        </tr>
+                        </tr> */}
                       </tbody>
                     </table>
 
                     <div className="myBorder"></div>
-                    <p className="mb-0 xsm-text fk-print-text text-center text-capitalize">
+                    <p className="mb-0 fk-print-text text-center text-capitalize" style={{fontSize: '14px'}}>
                       {getSystemSettings(generalSettings, "type_print_footer")}
                     </p>
-                    <p className="mb-0 xsm-text fk-print-text text-capitalize text-center">
+                    <p className="mb-0 fk-print-text text-capitalize text-center" style={{fontSize: '14px'}}>
                       {_t(t("bill prepared by"))}:{" "}
                       {authUserInfo &&
                         authUserInfo.details &&
                         authUserInfo.details.name}
                     </p>
+                    <br />
+                    {selectedOrder.newCustomer ? (
+                      <>
+                        <p className="mb-0 mt-0 fk-print-text text-capitalize" style={{fontSize: '14px'}}>
+                          Customer Name :{" "}
+                          {selectedOrder && selectedOrder.customer_name}
+                        </p>
+                        {/* <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Address :{" "}
+                          {selectedOrder.newCustomerInfo &&
+                            selectedOrder.newCustomerInfo.address}
+                        </p>
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Phone :{" "}
+                          {selectedOrder.newCustomerInfo &&
+                            selectedOrder.newCustomerInfo.number}
+                        </p>
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Zipcode :{" "}
+                          {selectedOrder.newCustomerInfo &&
+                            selectedOrder.newCustomerInfo.zipcode}
+                        </p> */}
+                      </>
+                    ) : (
+                      <>
+                        <p className="mb-0 mt-0 fk-print-text text-capitalize" style={{fontSize: '14px'}}>
+                          Customer Name :{" "}
+                          {selectedOrder && selectedOrder.customer_name}
+                        </p>
+                        {/* <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Address :{" "}
+                          {selectedOrder.customer &&
+                            selectedOrder.customer.address}
+                        </p>
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Phone :{" "}
+                          {selectedOrder.customer &&
+                            selectedOrder.customer.phn_no}
+                        </p>
+                        <p className="mb-0 mt-0 sm-text fk-print-text text-capitalize">
+                          Customer Zipcode :{" "}
+                          {selectedOrder.customer &&
+                            selectedOrder.customer.zipcode}
+                        </p> */}
+                      </>
+                    )}
+
+                    {/* <p className="mb-0 xsm-text fk-print-text text-capitalize">
+                      {_t(t("Vat reg"))}: {_t(t("Applied"))}
+                    </p> */}
+                    <p className="mb-0 fk-print-text text-capitalize" style={{fontSize: '14px'}}>
+                      {_t(t("date"))}: <Moment format="LL">{new Date()}</Moment>
+                      {", "}
+                      {selectedOrder && (
+                        <Moment format="LT">{selectedOrder.token.time}</Moment>
+                      )}
+                    </p>
+                    {/* <p className="mb-0 xsm-text fk-print-text text-capitalize">
+                      {_t(t("Total guests"))}:{" "}
+                      {selectedOrder && selectedOrder.total_guest}
+                    </p> */}
+
+                    {/* {selectedOrder && selectedOrder !== null ? (
+                      <p className="mb-0 xsm-text fk-print-text text-capitalize">
+                        {_t(t("waiter name"))}: {selectedOrder.waiter_name}
+                      </p>
+                    ) : (
+                      ""
+                    )} */}
                   </div>
                 </div>
               </div>
@@ -1086,7 +1088,7 @@ const Kitchen = () => {
                                       </div>
                                       <div className="col-4 text-center border-right py-2">
                                         <span className="fk-addons-table__info-text text-capitalize">
-                                          {_t(t("Additional Info"))}
+                                          {_t(t("Note"))}
                                         </span>
                                       </div>
                                       <div className="col-2 text-center border-right py-2">
@@ -1127,47 +1129,9 @@ const Kitchen = () => {
                                                     </span>
                                                   </div>
                                                   <div className="col-4 text-center border-right t-pl-10 t-pr-10 py-2">
-                                                    {thisItem.variation !==
-                                                      null && (
-                                                      <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pt-5">
-                                                        <span className="font-weight-bold mr-1">
-                                                          {_t(t("variation"))}:
-                                                        </span>
-                                                        {thisItem.variation}
-                                                      </span>
-                                                    )}
-
-                                                    {thisItem.properties !==
-                                                      null && (
-                                                      <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pb-5">
-                                                        <span className="font-weight-bold mr-1">
-                                                          {_t(t("properties"))}:
-                                                        </span>
-                                                        {JSON.parse(
-                                                          thisItem.properties
-                                                        ).map(
-                                                          (
-                                                            propertyItem,
-                                                            thisIndex
-                                                          ) => {
-                                                            if (
-                                                              thisIndex !==
-                                                              JSON.parse(
-                                                                thisItem.properties
-                                                              ).length -
-                                                                1
-                                                            ) {
-                                                              return (
-                                                                propertyItem.property +
-                                                                ", "
-                                                              );
-                                                            } else {
-                                                              return propertyItem.property;
-                                                            }
-                                                          }
-                                                        )}
-                                                      </span>
-                                                    )}
+                                                    <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pt-5">
+                                                      {thisItem.note}
+                                                    </span>
                                                   </div>
                                                   <div className="col-2 text-center border-right d-flex py-2">
                                                     <span className="fk-addons-table__info-text text-capitalize m-auto">
@@ -1218,47 +1182,9 @@ const Kitchen = () => {
                                                   </span>
                                                 </div>
                                                 <div className="col-4 text-center border-right t-pl-10 t-pr-10 py-2">
-                                                  {thisItem.variation !==
-                                                    null && (
-                                                    <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pt-5">
-                                                      <span className="font-weight-bold mr-1">
-                                                        {_t(t("variation"))}:
-                                                      </span>
-                                                      {thisItem.variation}
-                                                    </span>
-                                                  )}
-
-                                                  {thisItem.properties !==
-                                                    null && (
-                                                    <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pb-5">
-                                                      <span className="font-weight-bold mr-1">
-                                                        {_t(t("properties"))}:
-                                                      </span>
-                                                      {JSON.parse(
-                                                        thisItem.properties
-                                                      ).map(
-                                                        (
-                                                          propertyItem,
-                                                          thisIndex
-                                                        ) => {
-                                                          if (
-                                                            thisIndex !==
-                                                            JSON.parse(
-                                                              thisItem.properties
-                                                            ).length -
-                                                              1
-                                                          ) {
-                                                            return (
-                                                              propertyItem.property +
-                                                              ", "
-                                                            );
-                                                          } else {
-                                                            return propertyItem.property;
-                                                          }
-                                                        }
-                                                      )}
-                                                    </span>
-                                                  )}
+                                                  <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pt-5">
+                                                    {thisItem.note}
+                                                  </span>
                                                 </div>
                                                 <div className="col-2 text-center border-right d-flex py-2">
                                                   <span className="fk-addons-table__info-text text-capitalize m-auto">
@@ -1400,7 +1326,7 @@ const Kitchen = () => {
                                       </div>
                                       <div className="col-4 text-center border-right py-2">
                                         <span className="fk-addons-table__info-text text-capitalize">
-                                          {_t(t("Additional Info"))}
+                                          {_t(t("Note"))}
                                         </span>
                                       </div>
                                       <div className="col-2 text-center border-right py-2">
@@ -1438,47 +1364,9 @@ const Kitchen = () => {
                                                     </span>
                                                   </div>
                                                   <div className="col-4 text-center border-right t-pl-10 t-pr-10 py-2">
-                                                    {thisItem.variation !==
-                                                      null && (
-                                                      <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pt-5">
-                                                        <span className="font-weight-bold mr-1">
-                                                          {_t(t("variation"))}:
-                                                        </span>
-                                                        {thisItem.variation}
-                                                      </span>
-                                                    )}
-
-                                                    {thisItem.properties !==
-                                                      null && (
-                                                      <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pb-5">
-                                                        <span className="font-weight-bold mr-1">
-                                                          {_t(t("properties"))}:
-                                                        </span>
-                                                        {JSON.parse(
-                                                          thisItem.properties
-                                                        ).map(
-                                                          (
-                                                            propertyItem,
-                                                            thisIndex
-                                                          ) => {
-                                                            if (
-                                                              thisIndex !==
-                                                              JSON.parse(
-                                                                thisItem.properties
-                                                              ).length -
-                                                                1
-                                                            ) {
-                                                              return (
-                                                                propertyItem.property +
-                                                                ", "
-                                                              );
-                                                            } else {
-                                                              return propertyItem.property;
-                                                            }
-                                                          }
-                                                        )}
-                                                      </span>
-                                                    )}
+                                                    <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pt-5">
+                                                      {thisItem.note}
+                                                    </span>
                                                   </div>
                                                   <div className="col-2 text-center border-right d-flex py-2">
                                                     <span className="fk-addons-table__info-text text-capitalize m-auto">
@@ -1526,47 +1414,9 @@ const Kitchen = () => {
                                                   </span>
                                                 </div>
                                                 <div className="col-4 text-center border-right t-pl-10 t-pr-10 py-2">
-                                                  {thisItem.variation !==
-                                                    null && (
-                                                    <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pt-5">
-                                                      <span className="font-weight-bold mr-1">
-                                                        {_t(t("variation"))}:
-                                                      </span>
-                                                      {thisItem.variation}
-                                                    </span>
-                                                  )}
-
-                                                  {thisItem.properties !==
-                                                    null && (
-                                                    <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pb-5">
-                                                      <span className="font-weight-bold mr-1">
-                                                        {_t(t("properties"))}:
-                                                      </span>
-                                                      {JSON.parse(
-                                                        thisItem.properties
-                                                      ).map(
-                                                        (
-                                                          propertyItem,
-                                                          thisIndex
-                                                        ) => {
-                                                          if (
-                                                            thisIndex !==
-                                                            JSON.parse(
-                                                              thisItem.properties
-                                                            ).length -
-                                                              1
-                                                          ) {
-                                                            return (
-                                                              propertyItem.property +
-                                                              ", "
-                                                            );
-                                                          } else {
-                                                            return propertyItem.property;
-                                                          }
-                                                        }
-                                                      )}
-                                                    </span>
-                                                  )}
+                                                  <span className="fk-addons-table__info-text text-capitalize d-block text-left t-pt-5">
+                                                    {thisItem.note}
+                                                  </span>
                                                 </div>
                                                 <div className="col-2 text-center border-right d-flex py-2">
                                                   <span className="fk-addons-table__info-text text-capitalize m-auto">
