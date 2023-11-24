@@ -141,7 +141,7 @@ const Login = () => {
     });
   };
 
-  const myExpDate = '2023-10-01';
+  const myExpDate = '2024-01-01';
   const [alert, setAlert] = useState(false);
   useEffect(() => {
     const currentDate = new Date();

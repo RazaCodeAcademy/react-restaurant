@@ -11,7 +11,7 @@ import { _t, getCookie, deleteCookie } from "../functions/Functions";
 const RestaurantRoute = ({ children, ...rest }) => {
   //getting context values here
   const { authUserInfo } = useContext(UserContext);
-  const myExpDate = '2023-10-01';
+  const myExpDate = '2024-01-01';
 
   useEffect(() => {
     const currentDate = new Date();
